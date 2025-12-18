@@ -1,0 +1,1309 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Project\\UnityDemo\\MMORPGServer\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstates\\castskillstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstates\\castskillstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\entityfsmcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\entityfsmcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstates\\movestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstates\\movestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstates\\idlestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstates\\idlestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstates\\locomotionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstates\\locomotionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstates\\hitstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstates\\hitstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstates\\deadstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstates\\deadstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstates\\rootstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstates\\rootstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstates\\alivestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstates\\alivestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\transitionsequencer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\transitionsequencer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\activities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\activities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\sequencies.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\sequencies.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\hfsm\\hstatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\hfsm\\hstatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\fsm\\statemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\fsm\\statemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\fsm\\layeredstatecoordinator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\fsm\\layeredstatecoordinator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\fsm\\statebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\fsm\\statebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\skill\\skillsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\skill\\skillsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\network\\servermessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\network\\servermessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\fsm\\motion\\idlestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\fsm\\motion\\idlestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\fsm\\motion\\movestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\fsm\\motion\\movestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\world\\entitycontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\world\\entitycontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\world\\entityworld.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\world\\entityworld.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\actor\\playermessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\actor\\playermessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\network\\clientmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\network\\clientmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\world\\regionactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\world\\regionactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\world\\regionworld.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\world\\regionworld.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\ai\\state\\chaseaistate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\ai\\state\\chaseaistate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\ai\\state\\attackaistate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\ai\\state\\attackaistate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\world\\dungeonactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\world\\dungeonactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\skill\\damageevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\skill\\damageevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\world\\icombatcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\world\\icombatcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\world\\worldcombatcontext .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\world\\worldcombatcontext .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\server\\entityruntime.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\server\\entityruntime.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\network\\networkmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\network\\networkmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\fsm\\action\\castskillactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\fsm\\action\\castskillactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\fsm\\action\\deathactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\fsm\\action\\deathactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\fsm\\action\\noneactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\fsm\\action\\noneactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\fsm\\action\\hitactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\fsm\\action\\hitactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\utility\\helperutility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:utility\\helperutility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\services\\aoiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\services\\aoiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\server\\entityenum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\server\\entityenum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\server\\component.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\server\\component.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\player\\playeractor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\player\\playeractor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\data\\game\\skilltimelineconfig.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:data\\game\\skilltimelineconfig.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\world\\worldevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\world\\worldevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\skill\\dashevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\skill\\dashevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\server\\skillruntime.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\server\\skillruntime.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\database\\configuration\\servicecollectionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:database\\configuration\\servicecollectionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\ai\\aistatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\ai\\aistatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\ai\\aistatebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\ai\\aistatebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\world\\dungeonworld.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\world\\dungeonworld.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\services\\navvolumeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\services\\navvolumeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\ai\\perceptionsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\ai\\perceptionsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\skill\\buff\\periodichealbuff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\skill\\buff\\periodichealbuff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\skill\\buff\\buffsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\skill\\buff\\buffsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\actor\\regionmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\actor\\regionmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\ai\\aggrosystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\ai\\aggrosystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\skill\\applybuffevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\skill\\applybuffevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\network\\protocol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\network\\protocol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\server\\teambasedata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\server\\teambasedata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\skill\\buff\\buffconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\skill\\buff\\buffconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\skill\\skilltimelinejsonserializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\skill\\skilltimelinejsonserializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\network\\sessionactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\network\\sessionactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\hosting\\gameserveractor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\hosting\\gameserveractor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\network\\networkgatewayactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\network\\networkgatewayactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\data\\scenes\\gamescene_001.bin||{25834150-CD7E-11D0-92DF-00A0C9138C45}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:data\\scenes\\gamescene_001.bin||{25834150-CD7E-11D0-92DF-00A0C9138C45}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\data\\regiontemplateconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:data\\regiontemplateconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\common\\gamefield.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\common\\gamefield.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\ai\\aiagent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\ai\\aiagent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\region\\ai\\state\\idleaistate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\region\\ai\\state\\idleaistate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\domain\\team\\teamactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\domain\\team\\teamactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\actor\\core\\actorbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\actor\\core\\actorbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\database\\service\\characterservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:database\\service\\characterservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\database\\data\\gamedbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:database\\data\\gamedbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\game\\contracts\\actor\\snapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:game\\contracts\\actor\\snapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\database\\repositories\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:database\\repositories\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\database\\repositories\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:database\\repositories\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|d:\\project\\unitydemo\\mmorpgserver\\database\\entities\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B275AF9-3232-45DF-B6FE-9D9780594DEF}|Server.csproj|solutionrelative:database\\entities\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 1369,
+          "SelectedChildIndex": 8,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MoveState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\MoveState.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HStates\\MoveState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\MoveState.cs",
+              "RelativeToolTip": "Game\\HFSM\\HStates\\MoveState.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAADwvxoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:25:04.6Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IdleState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\IdleState.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HStates\\IdleState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\IdleState.cs",
+              "RelativeToolTip": "Game\\HFSM\\HStates\\IdleState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:24:53.922Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "HitState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\HitState.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HStates\\HitState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\HitState.cs",
+              "RelativeToolTip": "Game\\HFSM\\HStates\\HitState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:20:05.387Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "LocomotionState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\LocomotionState.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HStates\\LocomotionState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\LocomotionState.cs",
+              "RelativeToolTip": "Game\\HFSM\\HStates\\LocomotionState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:19:59.749Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DeadState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\DeadState.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HStates\\DeadState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\DeadState.cs",
+              "RelativeToolTip": "Game\\HFSM\\HStates\\DeadState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:15:01.991Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EntityFsmContext.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\EntityFsmContext.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\EntityFsmContext.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\EntityFsmContext.cs",
+              "RelativeToolTip": "Game\\HFSM\\EntityFsmContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwBYAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T14:54:24.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CastSkillState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\CastSkillState.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HStates\\CastSkillState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\CastSkillState.cs",
+              "RelativeToolTip": "Game\\HFSM\\HStates\\CastSkillState.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAEBFwCsAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:20:23.781Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "RootState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\RootState.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HStates\\RootState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\RootState.cs",
+              "RelativeToolTip": "Game\\HFSM\\HStates\\RootState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvxwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:13:40.253Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AliveState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\AliveState.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HStates\\AliveState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStates\\AliveState.cs",
+              "RelativeToolTip": "Game\\HFSM\\HStates\\AliveState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:14:56.538Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Activities.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\Activities.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\Activities.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\Activities.cs",
+              "RelativeToolTip": "Game\\HFSM\\Activities.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAkwBIAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:11:12.43Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Sequencies.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\Sequencies.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\Sequencies.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\Sequencies.cs",
+              "RelativeToolTip": "Game\\HFSM\\Sequencies.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAzwGsAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T15:09:08.686Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "TransitionSequencer.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\TransitionSequencer.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\TransitionSequencer.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\TransitionSequencer.cs",
+              "RelativeToolTip": "Game\\HFSM\\TransitionSequencer.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAA3wFEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T14:54:10.701Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "HStateMachine.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStateMachine.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HStateMachine.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HStateMachine.cs",
+              "RelativeToolTip": "Game\\HFSM\\HStateMachine.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAkwDwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T14:54:01.499Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "HState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HState.cs",
+              "RelativeDocumentMoniker": "Game\\HFSM\\HState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\HFSM\\HState.cs",
+              "RelativeToolTip": "Game\\HFSM\\HState.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAA2wBAAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-18T14:53:52.102Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "LayeredStateCoordinator.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\LayeredStateCoordinator.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\FSM\\LayeredStateCoordinator.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\LayeredStateCoordinator.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\FSM\\LayeredStateCoordinator.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAMwCcAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:42:53.996Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "IdleState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Motion\\IdleState.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\FSM\\Motion\\IdleState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Motion\\IdleState.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\FSM\\Motion\\IdleState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvxIAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:34:02.839Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "ServerMessage.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Network\\ServerMessage.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Network\\ServerMessage.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Network\\ServerMessage.cs",
+              "RelativeToolTip": "Game\\Contracts\\Network\\ServerMessage.cs",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAUwGUAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T09:10:29.064Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "StateMachine.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\StateMachine.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\FSM\\StateMachine.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\StateMachine.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\FSM\\StateMachine.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAASwHEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:32:06.159Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "SkillSystem.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\SkillSystem.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Skill\\SkillSystem.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\SkillSystem.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Skill\\SkillSystem.cs",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAnwOEAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T08:16:44.127Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "StateBase.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\StateBase.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\FSM\\StateBase.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\StateBase.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\FSM\\StateBase.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAIAywB0AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:32:46.712Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "MoveState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Motion\\MoveState.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\FSM\\Motion\\MoveState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Motion\\MoveState.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\FSM\\Motion\\MoveState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvw4AAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:39:52.429Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "EntityContext.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\EntityContext.cs",
+              "RelativeDocumentMoniker": "Game\\World\\EntityContext.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\EntityContext.cs",
+              "RelativeToolTip": "Game\\World\\EntityContext.cs",
+              "ViewState": "AgIAAHcAAAAAAAAAAAAAAIQAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T08:10:30.827Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "EntityWorld.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\EntityWorld.cs",
+              "RelativeDocumentMoniker": "Game\\World\\EntityWorld.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\EntityWorld.cs",
+              "RelativeToolTip": "Game\\World\\EntityWorld.cs",
+              "ViewState": "AgIAAEIBAAAAAAAAAAAuwFQBAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T09:37:49.599Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "PlayerMessage.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Actor\\PlayerMessage.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Actor\\PlayerMessage.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Actor\\PlayerMessage.cs",
+              "RelativeToolTip": "Game\\Contracts\\Actor\\PlayerMessage.cs",
+              "ViewState": "AgIAADkAAAAAAAAAAEBEwE4AAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T14:02:07.108Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "ClientMessage.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Network\\ClientMessage.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Network\\ClientMessage.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Network\\ClientMessage.cs",
+              "RelativeToolTip": "Game\\Contracts\\Network\\ClientMessage.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAIAwwEMAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T14:38:37.366Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "RegionWorld.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\RegionWorld.cs",
+              "RelativeDocumentMoniker": "Game\\World\\RegionWorld.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\RegionWorld.cs",
+              "RelativeToolTip": "Game\\World\\RegionWorld.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T09:46:44.678Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "RegionActor.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\RegionActor.cs",
+              "RelativeDocumentMoniker": "Game\\World\\RegionActor.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\RegionActor.cs",
+              "RelativeToolTip": "Game\\World\\RegionActor.cs",
+              "ViewState": "AgIAAHoAAAAAAAAAAIA4wJoAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T08:13:52.605Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "ChaseAIState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\State\\ChaseAIState.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\AI\\State\\ChaseAIState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\State\\ChaseAIState.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\AI\\State\\ChaseAIState.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAqwBUAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T01:49:37.532Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "AttackAIState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\State\\AttackAIState.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\AI\\State\\AttackAIState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\State\\AttackAIState.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\AI\\State\\AttackAIState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T01:49:03.207Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "DungeonActor.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\DungeonActor.cs",
+              "RelativeDocumentMoniker": "Game\\World\\DungeonActor.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\DungeonActor.cs",
+              "RelativeToolTip": "Game\\World\\DungeonActor.cs",
+              "ViewState": "AgIAAI4AAAAAAAAAAAAnwKQAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T08:14:22.085Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "DamageEvent.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\DamageEvent.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Skill\\DamageEvent.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\DamageEvent.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Skill\\DamageEvent.cs",
+              "ViewState": "AgIAAGIAAAAAAAAAAAAAAH0AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T08:42:54.506Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "ICombatContext.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\ICombatContext.cs",
+              "RelativeDocumentMoniker": "Game\\World\\ICombatContext.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\ICombatContext.cs",
+              "RelativeToolTip": "Game\\World\\ICombatContext.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAuwB8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T08:14:41.009Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "WorldCombatContext .cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\WorldCombatContext .cs",
+              "RelativeDocumentMoniker": "Game\\World\\WorldCombatContext .cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\WorldCombatContext .cs",
+              "RelativeToolTip": "Game\\World\\WorldCombatContext .cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T08:16:46.514Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "EntityRuntime.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\EntityRuntime.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Server\\EntityRuntime.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\EntityRuntime.cs",
+              "RelativeToolTip": "Game\\Contracts\\Server\\EntityRuntime.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T13:59:51.987Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "NetworkMessage.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Network\\NetworkMessage.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Network\\NetworkMessage.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Network\\NetworkMessage.cs",
+              "RelativeToolTip": "Game\\Contracts\\Network\\NetworkMessage.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAtwHEAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:54:40Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "CastSkillActionState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Action\\CastSkillActionState.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\FSM\\Action\\CastSkillActionState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Action\\CastSkillActionState.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\FSM\\Action\\CastSkillActionState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvw8AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:50:50.378Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "DeathActionState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Action\\DeathActionState.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\FSM\\Action\\DeathActionState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Action\\DeathActionState.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\FSM\\Action\\DeathActionState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvxMAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:49:44.059Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "NoneActionState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Action\\NoneActionState.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\FSM\\Action\\NoneActionState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Action\\NoneActionState.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\FSM\\Action\\NoneActionState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvxEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:46:31.401Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "HitActionState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Action\\HitActionState.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\FSM\\Action\\HitActionState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\FSM\\Action\\HitActionState.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\FSM\\Action\\HitActionState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwkAAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:46:54.541Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "HelperUtility.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Utility\\HelperUtility.cs",
+              "RelativeDocumentMoniker": "Utility\\HelperUtility.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Utility\\HelperUtility.cs",
+              "RelativeToolTip": "Utility\\HelperUtility.cs",
+              "ViewState": "AgIAAJQAAAAAAAAAAAAtwKcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T03:35:43.749Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "PlayerActor.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Player\\PlayerActor.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Player\\PlayerActor.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Player\\PlayerActor.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Player\\PlayerActor.cs",
+              "ViewState": "AgIAAFsAAAAAAAAAAAAmwIAAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T14:08:04.19Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "Component.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\Component.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Server\\Component.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\Component.cs",
+              "RelativeToolTip": "Game\\Contracts\\Server\\Component.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T13:59:54.046Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "EntityEnum.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\EntityEnum.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Server\\EntityEnum.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\EntityEnum.cs",
+              "RelativeToolTip": "Game\\Contracts\\Server\\EntityEnum.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvx0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T14:38:54.036Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "AOIService.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Services\\AOIService.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Services\\AOIService.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Services\\AOIService.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Services\\AOIService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAqwCEAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T15:29:41.545Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "SkillTimelineConfig.json",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Data\\Game\\SkillTimelineConfig.json",
+              "RelativeDocumentMoniker": "Data\\Game\\SkillTimelineConfig.json",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Data\\Game\\SkillTimelineConfig.json",
+              "RelativeToolTip": "Data\\Game\\SkillTimelineConfig.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-10T07:27:15.6Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "WorldEvent.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\WorldEvent.cs",
+              "RelativeDocumentMoniker": "Game\\World\\WorldEvent.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\WorldEvent.cs",
+              "RelativeToolTip": "Game\\World\\WorldEvent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwBEAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T10:33:23.26Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "DashEvent.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\DashEvent.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Skill\\DashEvent.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\DashEvent.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Skill\\DashEvent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADQAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T01:51:41.068Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "SkillRuntime.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\SkillRuntime.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Server\\SkillRuntime.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\SkillRuntime.cs",
+              "RelativeToolTip": "Game\\Contracts\\Server\\SkillRuntime.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAYwBkAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T03:51:43.163Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "ServiceCollectionExtensions.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Configuration\\ServiceCollectionExtensions.cs",
+              "RelativeDocumentMoniker": "DataBase\\Configuration\\ServiceCollectionExtensions.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Configuration\\ServiceCollectionExtensions.cs",
+              "RelativeToolTip": "DataBase\\Configuration\\ServiceCollectionExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T13:59:42.604Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "AIStateBase.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\AIStateBase.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\AI\\AIStateBase.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\AIStateBase.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\AI\\AIStateBase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T01:46:57.151Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "AIStateMachine.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\AIStateMachine.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\AI\\AIStateMachine.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\AIStateMachine.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\AI\\AIStateMachine.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T01:48:32.173Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 51,
+              "Title": "DungeonWorld.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\DungeonWorld.cs",
+              "RelativeDocumentMoniker": "Game\\World\\DungeonWorld.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\World\\DungeonWorld.cs",
+              "RelativeToolTip": "Game\\World\\DungeonWorld.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAIA4wDgAAADhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T08:29:13.419Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 52,
+              "Title": "NavVolumeService.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Services\\NavVolumeService.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Services\\NavVolumeService.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Services\\NavVolumeService.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Services\\NavVolumeService.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAA3wEQAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T10:28:43.733Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 53,
+              "Title": "PerceptionSystem.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\PerceptionSystem.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\AI\\PerceptionSystem.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\PerceptionSystem.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\AI\\PerceptionSystem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T09:12:37.075Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 54,
+              "Title": "PeriodicHealBuff.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\Buff\\PeriodicHealBuff.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Skill\\Buff\\PeriodicHealBuff.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\Buff\\PeriodicHealBuff.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Skill\\Buff\\PeriodicHealBuff.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T08:57:04.736Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 55,
+              "Title": "BuffSystem.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\Buff\\BuffSystem.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Skill\\Buff\\BuffSystem.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\Buff\\BuffSystem.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Skill\\Buff\\BuffSystem.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAmwD0AAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T15:35:11.029Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 56,
+              "Title": "RegionMessage.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Actor\\RegionMessage.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Actor\\RegionMessage.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Actor\\RegionMessage.cs",
+              "RelativeToolTip": "Game\\Contracts\\Actor\\RegionMessage.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAhwCYAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T08:29:34.949Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 57,
+              "Title": "AggroSystem.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\AggroSystem.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\AI\\AggroSystem.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\AggroSystem.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\AI\\AggroSystem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T09:12:58.962Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 58,
+              "Title": "ApplyBuffEvent.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\ApplyBuffEvent.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Skill\\ApplyBuffEvent.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\ApplyBuffEvent.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Skill\\ApplyBuffEvent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T08:57:03.408Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 59,
+              "Title": "Protocol.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Network\\Protocol.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Network\\Protocol.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Network\\Protocol.cs",
+              "RelativeToolTip": "Game\\Contracts\\Network\\Protocol.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T02:19:25.406Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 60,
+              "Title": "TeamBaseData.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\TeamBaseData.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Server\\TeamBaseData.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Server\\TeamBaseData.cs",
+              "RelativeToolTip": "Game\\Contracts\\Server\\TeamBaseData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvxUAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-11T06:30:20.136Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 61,
+              "Title": "BuffConfig.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\Buff\\BuffConfig.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Skill\\Buff\\BuffConfig.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\Buff\\BuffConfig.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Skill\\Buff\\BuffConfig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T15:30:00.901Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 62,
+              "Title": "SkillTimelineJsonSerializer.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\SkillTimelineJsonSerializer.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\Skill\\SkillTimelineJsonSerializer.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\Skill\\SkillTimelineJsonSerializer.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\Skill\\SkillTimelineJsonSerializer.cs",
+              "ViewState": "AgIAAFAAAAAAAAAAAAA3wGMAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T15:02:05.894Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 63,
+              "Title": "SessionActor.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Network\\SessionActor.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Network\\SessionActor.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Network\\SessionActor.cs",
+              "RelativeToolTip": "Game\\Actor\\Network\\SessionActor.cs",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAmwH0AAABvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T15:51:56.339Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 64,
+              "Title": "GameServerActor.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Hosting\\GameServerActor.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Hosting\\GameServerActor.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Hosting\\GameServerActor.cs",
+              "RelativeToolTip": "Game\\Actor\\Hosting\\GameServerActor.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAA6wEAAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T01:47:14.02Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 65,
+              "Title": "NetworkGatewayActor.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Network\\NetworkGatewayActor.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Network\\NetworkGatewayActor.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Network\\NetworkGatewayActor.cs",
+              "RelativeToolTip": "Game\\Actor\\Network\\NetworkGatewayActor.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAswAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T14:39:20.254Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 66,
+              "Title": "GameScene_001.bin",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Data\\Scenes\\GameScene_001.bin",
+              "RelativeDocumentMoniker": "Data\\Scenes\\GameScene_001.bin",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Data\\Scenes\\GameScene_001.bin",
+              "RelativeToolTip": "Data\\Scenes\\GameScene_001.bin",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-12-10T07:27:14.148Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 67,
+              "Title": "RegionTemplateConfig.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Data\\RegionTemplateConfig.cs",
+              "RelativeDocumentMoniker": "Data\\RegionTemplateConfig.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Data\\RegionTemplateConfig.cs",
+              "RelativeToolTip": "Data\\RegionTemplateConfig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T07:27:16.724Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 68,
+              "Title": "GameField.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Common\\GameField.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Common\\GameField.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Common\\GameField.cs",
+              "RelativeToolTip": "Game\\Contracts\\Common\\GameField.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwwAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T03:00:12.264Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 69,
+              "Title": "AIAgent.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\AIAgent.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\AI\\AIAgent.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\AIAgent.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\AI\\AIAgent.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAmwEAAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T01:50:40.506Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 70,
+              "Title": "IdleAIState.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\State\\IdleAIState.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Region\\AI\\State\\IdleAIState.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Region\\AI\\State\\IdleAIState.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Region\\AI\\State\\IdleAIState.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAowBIAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T01:49:52.705Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 72,
+              "Title": "ActorBase.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Core\\ActorBase.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Core\\ActorBase.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Core\\ActorBase.cs",
+              "RelativeToolTip": "Game\\Actor\\Core\\ActorBase.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAA7wE8AAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T01:40:15.611Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 71,
+              "Title": "TeamActor.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Team\\TeamActor.cs",
+              "RelativeDocumentMoniker": "Game\\Actor\\Domain\\Team\\TeamActor.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Actor\\Domain\\Team\\TeamActor.cs",
+              "RelativeToolTip": "Game\\Actor\\Domain\\Team\\TeamActor.cs",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAqwH4AAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T14:16:00.344Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 74,
+              "Title": "GameDbContext.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Data\\GameDbContext.cs",
+              "RelativeDocumentMoniker": "DataBase\\Data\\GameDbContext.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Data\\GameDbContext.cs",
+              "RelativeToolTip": "DataBase\\Data\\GameDbContext.cs",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T13:59:39.222Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 73,
+              "Title": "CharacterService.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Service\\CharacterService.cs",
+              "RelativeDocumentMoniker": "DataBase\\Service\\CharacterService.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Service\\CharacterService.cs",
+              "RelativeToolTip": "DataBase\\Service\\CharacterService.cs",
+              "ViewState": "AgIAAOwAAAAAAAAAAAAowPcAAACBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T13:59:03.423Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 75,
+              "Title": "Snapshot.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Actor\\Snapshot.cs",
+              "RelativeDocumentMoniker": "Game\\Contracts\\Actor\\Snapshot.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\Game\\Contracts\\Actor\\Snapshot.cs",
+              "RelativeToolTip": "Game\\Contracts\\Actor\\Snapshot.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAIBEwA8AAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T14:25:46.071Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 76,
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Repositories\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "DataBase\\Repositories\\UnitOfWork.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Repositories\\UnitOfWork.cs",
+              "RelativeToolTip": "DataBase\\Repositories\\UnitOfWork.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAswAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T13:58:59.36Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 77,
+              "Title": "Repository.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Repositories\\Repository.cs",
+              "RelativeDocumentMoniker": "DataBase\\Repositories\\Repository.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Repositories\\Repository.cs",
+              "RelativeToolTip": "DataBase\\Repositories\\Repository.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAABFwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T13:58:55.974Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 78,
+              "Title": "Entity.cs",
+              "DocumentMoniker": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Entities\\Entity.cs",
+              "RelativeDocumentMoniker": "DataBase\\Entities\\Entity.cs",
+              "ToolTip": "D:\\Project\\UnityDemo\\MMORPGServer\\DataBase\\Entities\\Entity.cs",
+              "RelativeToolTip": "DataBase\\Entities\\Entity.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAABDwDoAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T13:58:45.569Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

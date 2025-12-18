@@ -1,0 +1,27 @@
+{
+    "data": [
+        {
+            "entityId": "1001",
+            "entityType": 2,
+            "position": {
+                "x": -30,
+                "y": 0.25,
+                "z": 30
+            },
+            "spawnPattern": 0,
+            "count": 1,
+            "radius": 2.0,
+            "rectangleSize": {
+                "x": 3.0,
+                "y": 3.0
+            },
+            "lineLength": 5.0,
+            "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+            }
+        }
+    ]
+}

@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Server.Game.Contracts.Server
+{
+    public enum EntityType
+    {
+        Character,
+        Monster,
+        Npc,
+    }
+
+
+    public enum MotionStateType
+    {
+        Idle,
+        Move,
+        Jump
+    }
+
+    public enum ActionStateType
+    {
+        None,
+        Hit,
+        Death,
+        CastSkill
+    }
+
+    public enum ProfessionType
+    {
+        Warrior,
+        Mage,
+    }
+
+    public enum SkillCastInputType
+    {
+        None,           // 不需要额外选择（自施、直接朝前释放、锁定当前目标这种）
+        UnitTarget,     // 选中一个单位（点怪、点队友）
+        Direction,      // 选一个方向（通常以自己为原点：扇形、直线冲刺等）
+        GroundPosition, // 在地面选一个点（AOE 落地圈）
+    }
+
+}

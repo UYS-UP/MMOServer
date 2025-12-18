@@ -1,0 +1,68 @@
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Server.Game.Actor.Core
+{
+    public class ActorSystem : IActorSystem
+    {
+        private readonly ConcurrentDictionary<string, ActorBase> actors = new ConcurrentDictionary<string, ActorBase>();
+
+        public ActorBase GetActor(string actorId)
+        {
+            actors.TryGetValue(actorId, out var actor);
+            return actor;  // 返回 ActorRef
+        }
+
+        public string CreateActor<T>(T actor) where T : ActorBase
+        {
+            if (actors.ContainsKey(actor.ActorId))
+            {
+                throw new InvalidOperationException($"Actor {actor.ActorId} 已存在");
+            }
+
+            try
+            {
+                if (!actors.TryAdd(actor.ActorId, actor))
+                {
+                    throw new InvalidOperationException($"Actor {actor.ActorId} 添加失败");
+                }
+                actor.Initialize(this);
+                Console.WriteLine($"[ActorSystem] 创建 Actor: {actor.ActorId}");
+                return actor.ActorId;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ActorSystem] 创建 Actor 失败: {actor.ActorId}, 原因: {ex}");
+                throw;
+            }
+        }
+
+        public void StopActor(string actorId)
+        {
+            if (actors.TryRemove(actorId, out var actor))
+            {
+                actor.Stop();
+                Console.WriteLine($"Actor {actorId} 已停止");
+            }
+        }
+
+        public void StopAllActors()
+        {
+            foreach (var actor in actors.Values)
+            {
+                actor.Stop();
+            }
+            actors.Clear();
+            Console.WriteLine("所有 Actor 已停止");
+        }
+
+        public bool IsActorAlive(string actorId)
+        {
+            return actors.ContainsKey(actorId);
+        }
+    }
+}

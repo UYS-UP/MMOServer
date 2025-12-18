@@ -1,0 +1,31 @@
+[
+  {
+    "Id": "0001_Attack",
+    "Anim": "Attack",
+    "Cooldown": 2,
+    "Priority": 10,
+    "Timeline": [
+      {
+        "At": 1.67,
+        "Effects": [
+          {
+            "Type": "DamageCone",
+            "Params": {
+              "range": 1.5,
+              "angle": 45,
+              "damage": 20
+            }
+          }
+        ]
+      },
+      {
+        "At": 2,
+        "Effects": [
+          {
+            "Type": "SkillEnd"
+          }
+        ]
+      }
+    ]
+  }
+]

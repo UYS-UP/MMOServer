@@ -1,0 +1,61 @@
+{
+  "Skills": [
+    {
+      "Id": 0,
+      "Name": "Attack",
+      "Duration": 1.6,
+      "Tracks": [
+        {
+          "$type": "Server.Game.Actor.Domain.Region.Combat.DamageTrack, Server",
+          "Events": [
+            {
+              "$type": "Server.Game.Actor.Domain.Region.Combat.DamageEvent, Server",
+              "Damage": 100,
+              "CenterOffset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Shape": 0,
+              "CircleRadius": 3.0,
+              "SectorRadius": 3.0,
+              "SectorAngle": 90.0,
+              "BoxLength": 3.0,
+              "BoxWidth": 2.0,
+              "BoxHeight": 2.0,
+              "StartTime": 0.329999983,
+              "EndTime": 0.33
+            }
+          ],
+          "TrackName": "Damage Track"
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "0": [
+    {
+      "DamageEvent": {
+        "TriggerTime": 0.33,
+        "Params": [
+          {
+            "CenterOffset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Shape": 0,
+            "CircleRaduius": 3.0
+          }
+        ]
+      }
+    },
+    {
+      "EndEvent": {
+
+      }
+    }
+  ]
+}

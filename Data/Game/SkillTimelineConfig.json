@@ -1,0 +1,26 @@
+[
+  {
+    "Id": 0,
+    "Name": "Attack01",
+    "Duration": 2,
+    "Events": [
+     
+    ]
+  },
+  {
+    "Id": 1,
+    "Name": "Attack02",
+    "Duration": 1.667,
+    "Events": [
+      
+    ]
+  },
+  {
+    "Id": 2,
+    "Name": "Attack02",
+    "Duration": 1.967,
+    "Events": [
+     
+    ]
+  }
+]

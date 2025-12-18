@@ -1,0 +1,15 @@
+数据库数据：Entity，Role，Monster
+服务端数据：EntityServerData，RoleServerData，MonsterServerData
+客户端数据：NetworkEntity，NetworkRole，NetworkMonster
+
+服务端发包必须携带ServerTick
+客户端发包必须携带ClientTick
+服务端回包必须携带ServerTick和ClientTick
+
+例如AI移动同步是服务端发包，只需携带ServerTick
+而客户端移动同步是客户端发包，服务端校验进行回报需要ServerTick和ClientTick
+如果移动无效则IsValid字段为false，会返回最新的位置信息，否则就直接进行转发
+
+Actor消息分为两类
+1. Actor映射消息，例如NetworkPlayerRegister => PlayerRegister
+2. Actor内部消息
