@@ -1,15 +1,14 @@
 ﻿using Google.Protobuf;
 using Server.DataBase.Entities;
 using Server.Game.Actor.Core;
-using Server.Game.Actor.Domain.Region.AStar;
-using Server.Game.Actor.Domain.Region.FSM;
-using Server.Game.Actor.Domain.Region.Services;
-using Server.Game.Actor.Domain.Region.Skill;
-using Server.Game.Actor.Domain.Region.Skill.Buff;
 using Server.Game.Actor.Domain.Team;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
+using Server.Game.World.AStar;
+using Server.Game.World.Services;
+using Server.Game.World.Skill;
+using Server.Game.World.Skill.Buff;
 using System.Numerics;
 using System.Threading.Tasks;
 
@@ -58,7 +57,7 @@ namespace Server.Game.World
                 };
                 var buff = new BuffSystem();
                 var areaBuff = new AreaBuffSystem();
-                var skill = new SkillSystem(buff);
+                var skill = new SkillSystem();
                 var aoi = new AOIService(120, 100, 100);
                 var nav = new NavVolumeService(template.NavMeshPath);
                 var pathfinder = new AStarPathfind(nav);
@@ -97,8 +96,7 @@ namespace Server.Game.World
                 Yaw = message.Yaw,
                 Direction = Vector3.Zero,
                 Speed = message.Speed,
-                MotionState = MotionStateType.Idle,
-                ActionState = ActionStateType.None,
+                State = EntityState.Idle 
             };
 
             var combat = new CombatComponent

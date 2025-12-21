@@ -1,10 +1,10 @@
 ﻿using Google.Protobuf.WellKnownTypes;
-using Server.Game.Actor.Domain.Region.AStar;
-using Server.Game.Actor.Domain.Region.Services;
-using Server.Game.Actor.Domain.Region.Skill;
-using Server.Game.Actor.Domain.Region.Skill.Buff;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
+using Server.Game.World.AStar;
+using Server.Game.World.Services;
+using Server.Game.World.Skill;
+using Server.Game.World.Skill.Buff;
 using System;
 using System.Collections.Generic;
 using System.Linq;

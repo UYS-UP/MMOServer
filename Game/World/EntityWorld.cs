@@ -3,18 +3,16 @@ using NPOI.SS.Formula.Functions;
 using Server.DataBase.Entities;
 using Server.Game.Actor.Domain.Chat;
 using Server.Game.Actor.Domain.Player;
-using Server.Game.Actor.Domain.Region.AI;
-using Server.Game.Actor.Domain.Region.AStar;
-using Server.Game.Actor.Domain.Region.FSM;
-using Server.Game.Actor.Domain.Region.FSM.Action;
-using Server.Game.Actor.Domain.Region.FSM.Motion;
-using Server.Game.Actor.Domain.Region.Services;
-using Server.Game.Actor.Domain.Region.Skill;
-using Server.Game.Actor.Domain.Region.Skill.Buff;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Common;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
+using Server.Game.HFSM;
+using Server.Game.World.AI;
+using Server.Game.World.AStar;
+using Server.Game.World.Services;
+using Server.Game.World.Skill;
+using Server.Game.World.Skill.Buff;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,9 +97,10 @@ namespace Server.Game.World
                     }
                 case ExecuteSkillWorldEvent executeSkillWorldEvent:
                     {
-                        //var payload = new ServerEntityReleaseSkill(Context.Tick, executeSkillWorldEvent.Caster.EntityId, executeSkillWorldEvent.SkillId,
-                        //        executeSkillWorldEvent.Caster.Kinematics.Position, executeSkillWorldEvent.Caster.Kinematics.Yaw, executeSkillWorldEvent.Caster.Kinematics.StateType);
-                        //BroadcastToVisible(executeSkillWorldEvent.Caster.EntityId, Protocol.EntityReleaseSkill, payload, true);
+                        Console.WriteLine("ExecuteSkill:" + executeSkillWorldEvent.SkillId);
+                        var payload = new ServerEntityReleaseSkill(Context.Tick, executeSkillWorldEvent.Caster.EntityId, executeSkillWorldEvent.SkillId,
+                                executeSkillWorldEvent.Caster.Kinematics.Position, executeSkillWorldEvent.Caster.Kinematics.Yaw, executeSkillWorldEvent.Caster.Kinematics.State);
+                        BroadcastToVisible(executeSkillWorldEvent.Caster.EntityId, Protocol.EntityReleaseSkill, payload, false);
                     }
                     break;
             }
@@ -124,6 +123,7 @@ namespace Server.Game.World
         public void HandleCharacterSpawn(EntityRuntime entity)
         {
             Context.AddEntity(entity);
+            entity.HFSM = new EntityHFSM(entity, Combat);
             AOI.Add(entity.Identity.EntityId, entity.Kinematics.Position);
 
             Context.Actor.AddTell(GameField.GetActor<PlayerActor>(entity.Profile.PlayerId), new CharacterEntitySnapshot(
@@ -134,12 +134,6 @@ namespace Server.Game.World
                         Context.Actor.AddTell(GameField.GetActor<ChatActor>(),
                             new CharacterEnterRegion(Context.Id, entity.Profile.PlayerId));
 
-            entity.FSM = new LayeredStateCoordinator(entity);
-            entity.FSM.Motion.AddState(MotionStateType.Idle, new IdleState());
-            entity.FSM.Motion.AddState(MotionStateType.Move, new MoveState());
-            entity.FSM.Action.AddState(ActionStateType.None, new NoneActionState());
-            entity.FSM.Motion.SetInitialState(MotionStateType.Idle);
-            entity.FSM.Action.SetInitialState(ActionStateType.None);
             var spawnEntity = Context.GetNetworkEntityByEntityId(entity.Identity.EntityId);
             var visibleEntities = AOI.GetVisibleSet(spawnEntity.EntityId);
 
@@ -218,25 +212,30 @@ namespace Server.Game.World
 
         public void HandleCharacterCastSkill(int clientTick, int skillId, string entityId, SkillCastInputType skillCastInputType, Vector3 targetPosition, Vector3 targetDirection, string targetEntityId)
         {
-            //if (!Context.TryGetEntity(entityId, out var entity)) return;
+            if (!Context.TryGetEntity(entityId, out var entity)) return;
 
-            //if (!Skill.CastSkill(Combat, skillId, entity, skillCastInputType, targetPosition, targetDirection, targetEntityId, out var reason))
-            //{
-            //    Context.Gateway.AddSend(entity.Profile.PlayerId,
-            //        Protocol.PlayerReleaseSkill, new ServerPlayerReleaseSkill(Context.Tick, clientTick, skillId,
-            //        entity.Kinematics.StateType, false, reason));
-            //    return;
-            //}
+            var castData = new SkillCastData
+            {
+                SkillId = skillId,
+                InputType = skillCastInputType,
+                TargetPosition = targetPosition,
+                TargetDirection = targetDirection,
+                TargetEntityId = targetEntityId
+            };
+            if(skillId == 1)
+            {
+                Console.WriteLine();
+            }
+            entity.HFSM.Ctx.OnReceiveSkillInput(castData);
         }
 
 
         public void HandleEntiyRelaseSkill(int skillId, string entityId)
         {
-            if (!Context.TryGetEntity(entityId, out var entity))
-                return;
-            entity.Kinematics.Direction = Vector3.Zero;
-            if (!Skill.CastSkill(Combat, skillId, entity, SkillCastInputType.None, Vector3.Zero, Vector3.Zero, string.Empty, out var _))
-                return;
+            if (!Context.TryGetEntity(entityId, out var entity)) return;
+            var castData = new SkillCastData(skillId);
+
+            entity.HFSM.Ctx.OnReceiveSkillInput(castData);
         }
 
         public virtual void OnTickUpdate(int tick, float deltaTime)
@@ -252,8 +251,7 @@ namespace Server.Game.World
             UpdateFSM(deltaTime);
             ProccessWorldEvents();
 
-            // 玩家位置同步(每3帧一次)
-            if (tickCounter % 3 == 0)
+            if (tickCounter % 2 == 0)
             {
                 BroadcastMovement();
             }
@@ -306,14 +304,17 @@ namespace Server.Game.World
                 }
 
 
-                var last = Context.GetEntityLastBroadcast(entity.EntityId);
-                bool stateChanged = last.Action != entity.Kinematics.ActionState || last.Motion != entity.Kinematics.MotionState;
-                bool moved = entity.Kinematics.Direction != Vector3.Zero; // 或 position delta 更稳
+                var lastSnap = Context.GetEntityLastBroadcast(entity.EntityId);
 
-
-                if (moved || stateChanged)
+                var snap = new BroadcastSnapshot
                 {
-
+                    State = entity.Kinematics.State,
+                    Position = entity.Kinematics.Position,
+                    Yaw = entity.Kinematics.Yaw,
+                    Dir = entity.Kinematics.Direction
+                };
+                if (!lastSnap.Equals(snap))
+                {
                     var payload = new ServerEntityMoveSync(
                         Context.Tick,
                         entity.EntityId,
@@ -321,38 +322,27 @@ namespace Server.Game.World
                         entity.Kinematics.Position,
                         entity.Kinematics.Yaw,
                         entity.Kinematics.Direction,
-                        entity.Kinematics.MotionState,
-                        entity.Kinematics.ActionState,
+                        entity.Kinematics.State,
                         entity.Kinematics.Speed
                     );
+                    Context.UpdateEntityLastBroadcast(entity.EntityId, snap);
                     BroadcastToVisible(entity.EntityId, Protocol.EntityMove, payload);
-                    Context.UpdateEntityLastBroadcast(entity.EntityId, entity.Kinematics.ActionState, entity.Kinematics.MotionState);
+
                 }
+
+                
+                
             }
         }
 
         private void UpdateFSM(float deltaTime)
         {
-            var batchIntents = new List<EntityIntent>();
             foreach (var kv in Context.Entities)
             {
-                var fsm = kv.Value.FSM;
-                fsm.Intents.Clear();
-                fsm.Update(deltaTime);
+                var entity = kv.Value;
+                if (entity.HFSM == null) continue;
 
-                batchIntents.AddRange(fsm.Intents);
-            }
-
-
-            if (batchIntents.Count <= 0) return;
-            foreach (var intent in batchIntents)
-            {
-                switch (intent)
-                {
-                    case RemoveEntityIntent removeEntityIntent:
-                        HandleEntityDeath(removeEntityIntent.Entity.Identity.EntityId, removeEntityIntent.Entity.Identity.Type);
-                        break;
-                }
+                entity.HFSM.Update(deltaTime);
             }
         }
 
@@ -372,7 +362,7 @@ namespace Server.Game.World
 
             foreach (var (entityId, agent) in Context.AIAgents)
             {
-                if (agent.Entity.Kinematics.ActionState == ActionStateType.Death) continue;
+                if (agent.Entity.Kinematics.State == EntityState.Dead) continue;
 
                 var perceived = agent.Perception.Tick(agent, Context.Entities, AOI.GetVisibleSet(entityId));
                 agent.Aggro.Tick(agent, Context.Entities, perceived);

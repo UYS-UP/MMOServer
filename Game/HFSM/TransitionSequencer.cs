@@ -82,6 +82,19 @@ namespace Server.Game.HFSM
         }
 
 
+        public void RequestTransition(HState from, HState to)
+        {
+            if (to == null || from == to) return;
+            if (sequence == null)
+            {
+                BeginTransition(from, to);
+                return;
+            }
+            pending = (from, to);
+        }
+
+
+
         public static HState Lca(HState a, HState b)
         {
             var aPrent = new HashSet<HState>();

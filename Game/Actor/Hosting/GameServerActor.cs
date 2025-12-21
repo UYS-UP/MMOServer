@@ -1,5 +1,4 @@
 ﻿using Server.Game.Actor.Domain.Auth;
-using Server.Game.Actor.Domain.Region;
 using Server.Game.Actor.Domain.Time;
 using Server.Game.Actor.Network;
 using Server.Network;

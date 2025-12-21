@@ -1,5 +1,4 @@
-﻿using Server.Game.Actor.Domain.Region.FSM;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Server.Game.Contracts.Server
 {
@@ -15,8 +14,7 @@ namespace Server.Game.Contracts.Server
         public float Yaw;
         public Vector3 Direction;
         public float Speed;
-        public MotionStateType MotionState; 
-        public ActionStateType ActionState;
+        public EntityState State;
     }
 
     public class CombatComponent : IEntityComponent
@@ -45,7 +43,6 @@ namespace Server.Game.Contracts.Server
     {
         public Dictionary<int, SkillRuntime> Skills;
         public int MaxSkillSlots = 6;
-        public bool IsBusy = false;
     }
 
     public class IdentityComponent : IEntityComponent

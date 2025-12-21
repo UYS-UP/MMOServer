@@ -1,8 +1,9 @@
-﻿using Server.Game.Actor.Domain.Region.FSM;
-using Server.Game.Actor.Domain.Region.Skill.Buff;
-using Server.Game.Contracts.Server;
+﻿using Server.Game.Contracts.Server;
+using Server.Game.World.Skill;
+using Server.Game.World.Skill.Buff;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -69,14 +70,25 @@ namespace Server.Game.World
    
         }
 
+        #region 技能系统
 
-
-
+        public bool TryCastSkill(EntityRuntime caster, SkillCastData data, out string reason)
+        {
+            return world.Skill.TryCastSkill(this, caster, data, out reason);
+        }
 
         public void InterruptSkill(string casterId)
         {
-            world.Skill.InterruptSkill(casterId);
+            world.Skill.ForceInterrupt(casterId);
         }
+
+
+        public bool IsSkillRunning(string casterId)
+        {
+            return world.Skill.IsCasting(casterId);
+        }
+
+        #endregion
 
         public void RemoveBuff(string entityId, int buffId)
         {
@@ -87,5 +99,6 @@ namespace Server.Game.World
         {
             world.EmitEvent(worldEvent);
         }
+
     }
 }

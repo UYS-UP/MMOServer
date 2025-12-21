@@ -1,7 +1,6 @@
 ﻿using MessagePack;
 using Server.DataBase.Entities;
 using Server.Game.Actor.Domain.Player;
-using Server.Game.Actor.Domain.Region;
 using Server.Game.Contracts.Server;
 using Server.Game.World;
 using Server.Utility;
@@ -40,33 +39,33 @@ namespace Server.Game.Contracts.Network
     [MessagePackObject]
     public class ServerEntityReleaseSkill : TickMessage
     {
-        //[Key(1)] public string ReleaserId;
-        //[Key(2)] public int SkillId;
-        //[Key(3)] public short[] Position;
-        //[Key(4)] public short Yaw;
-        //[Key(5)] public EntityStateType State;
+        [Key(1)] public string ReleaserId;
+        [Key(2)] public int SkillId;
+        [Key(3)] public short[] Position;
+        [Key(4)] public short Yaw;
+        [Key(5)] public EntityState State;
 
-        //public ServerEntityReleaseSkill(int tick, string releaserId, int skillId, short[] position, short yaw, EntityStateType state)
-        //{
-        //    Tick = tick;
-        //    ReleaserId = releaserId;
-        //    SkillId = skillId;
-        //    Position = position;
-        //    Yaw = yaw;
-        //    State = state;
-        //}
+        public ServerEntityReleaseSkill(int tick, string releaserId, int skillId, short[] position, short yaw, EntityState state)
+        {
+            Tick = tick;
+            ReleaserId = releaserId;
+            SkillId = skillId;
+            Position = position;
+            Yaw = yaw;
+            State = state;
+        }
 
-        //public ServerEntityReleaseSkill(int tick, string releaserId, int skillId, Vector3 position, float yaw, EntityStateType state)
-        //{
-        //    Tick = tick;
-        //    ReleaserId = releaserId;
-        //    SkillId = skillId;
-        //    Position = HelperUtility.Vector3ToShortArray(position);
-        //    Yaw = HelperUtility.YawToShort(yaw);
-        //    State = state;
-        //}
+        public ServerEntityReleaseSkill(int tick, string releaserId, int skillId, Vector3 position, float yaw, EntityState state)
+        {
+            Tick = tick;
+            ReleaserId = releaserId;
+            SkillId = skillId;
+            Position = HelperUtility.Vector3ToShortArray(position);
+            Yaw = HelperUtility.YawToShort(yaw);
+            State = state;
+        }
 
-        //public ServerEntityReleaseSkill() { }
+        public ServerEntityReleaseSkill() { }
     }
 
     [MessagePackObject]
@@ -102,13 +101,12 @@ namespace Server.Game.Contracts.Network
         [Key(3)] public short[] Position;
         [Key(4)] public short Yaw;
         [Key(5)] public sbyte[] Direction;
-        [Key(6)] public MotionStateType Motion;
-        [Key(7)] public ActionStateType Action;
+        [Key(6)] public EntityState State;
         [Key(8)] public float Speed;
 
         public ServerEntityMoveSync() { }
 
-        public ServerEntityMoveSync(int tick, string entityId, EntityType type, short[] position, short yaw, sbyte[] direction, MotionStateType motion, ActionStateType action, float moveSpeed)
+        public ServerEntityMoveSync(int tick, string entityId, EntityType type, short[] position, short yaw, sbyte[] direction, EntityState state, float moveSpeed)
         {
             Tick = tick;
             EntityId = entityId;
@@ -116,12 +114,11 @@ namespace Server.Game.Contracts.Network
             Position = position;
             Yaw = yaw;
             Direction = direction;
-            Motion = motion;
-            Action = action;
             Speed = moveSpeed;
+            State = state;
         }
 
-        public ServerEntityMoveSync(int tick, string entityId, EntityType type, Vector3 position, float yaw, Vector3 direction, MotionStateType motion, ActionStateType action, float moveSpeed)
+        public ServerEntityMoveSync(int tick, string entityId, EntityType type, Vector3 position, float yaw, Vector3 direction, EntityState state, float moveSpeed)
         {
             Tick = tick;
             EntityId = entityId;
@@ -129,9 +126,8 @@ namespace Server.Game.Contracts.Network
             Position = HelperUtility.Vector3ToShortArray(position);
             Yaw = HelperUtility.YawToShort(yaw);
             Direction = HelperUtility.Vector3ToSbyteArray(direction);
-            Motion = motion;
-            Action = action;
             Speed = moveSpeed;
+            State = state;
         }
     }
 

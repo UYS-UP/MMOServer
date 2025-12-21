@@ -15,7 +15,7 @@ namespace Server.Game.HFSM
 
         public HStateMachine()
         {
-            Sequencer = new TransitionSequencer();
+            Sequencer = new TransitionSequencer(this);
         }
 
         public void SetRoot(HState root)

@@ -1,6 +1,6 @@
-﻿using Server.Game.Actor.Domain.Region.FSM;
-using Server.Game.Actor.Domain.Region.Skill.Buff;
-using Server.Game.Contracts.Server;
+﻿using Server.Game.Contracts.Server;
+using Server.Game.World.Skill;
+using Server.Game.World.Skill.Buff;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,10 @@ namespace Server.Game.World
         void ApplyBuff(EntityRuntime target, BuffConfig config, EntityRuntime source = null);
         void RemoveBuff(string entityId, int buffId);
 
+        bool TryCastSkill(EntityRuntime caster, SkillCastData data, out string resone);
+
         void InterruptSkill(string casterId);
+        bool IsSkillRunning(string casterId);
 
         void EmitEvent(IWorldEvent worldEvent);
     }

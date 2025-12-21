@@ -4,7 +4,6 @@ using Server.Data;
 using Server.DataBase.Entities;
 using Server.Game.Actor.Core;
 using Server.Game.Actor.Domain.Player;
-using Server.Game.Actor.Domain.Region;
 using Server.Game.Actor.Network;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Network;

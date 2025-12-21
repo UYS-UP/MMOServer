@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.Game.Contracts.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,8 @@ namespace Server.Game.HFSM.HStates
         {
             ctx.LockMove = false;
             ctx.LockTurn = false;
+            ctx.Entity.Kinematics.State = EntityState.Idle;
+            Console.WriteLine("Enter Idle");
         }
 
         protected override HState GetTransition() => ctx.HasMoveInput ? Parent.AsTo<LocomotionState>()?.Move : null;

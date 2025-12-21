@@ -1,12 +1,11 @@
 ﻿using Server.Game.Actor.Core;
-using Server.Game.Actor.Domain.Region;
-using Server.Game.Actor.Domain.Region.AStar;
-using Server.Game.Actor.Domain.Region.Services;
-using Server.Game.Actor.Domain.Region.Skill;
-using Server.Game.Actor.Domain.Region.Skill.Buff;
 using Server.Game.Actor.Domain.Team;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Server;
+using Server.Game.World.AStar;
+using Server.Game.World.Services;
+using Server.Game.World.Skill;
+using Server.Game.World.Skill.Buff;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,7 +139,7 @@ namespace Server.Game.World
             };
             var buff = new BuffSystem();
             var areaBuff = new AreaBuffSystem();
-            var skill = new SkillSystem(buff);
+            var skill = new SkillSystem();
             var nav = new NavVolumeService(dungeonTemplate.NavMeshPath);
             var (min, max) = nav.GetMapBoundsXZ();
             var aoi = new AOIService(Vector2.Distance(min, max), 100, 100);
@@ -161,8 +160,7 @@ namespace Server.Game.World
                 Yaw = message.Yaw,
                 Direction = Vector3.Zero,
                 Speed = message.Speed,
-                MotionState = MotionStateType.Idle,
-                ActionState = ActionStateType.None,
+                State = EntityState.Idle,
             };
 
             var combat = new CombatComponent

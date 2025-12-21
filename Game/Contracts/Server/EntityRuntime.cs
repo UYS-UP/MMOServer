@@ -1,4 +1,4 @@
-﻿using Server.Game.Actor.Domain.Region.FSM;
+﻿using Server.Game.HFSM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace Server.Game.Contracts.Server
         public IdentityComponent Identity;
         public WorldRefComponent WorldRef;
         public CharacterProfileComponent Profile;
-        public LayeredStateCoordinator FSM;
+        public EntityHFSM HFSM;
 
         public string EntityId => Identity.EntityId;
 

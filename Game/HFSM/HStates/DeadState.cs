@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.Game.Contracts.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ namespace Server.Game.HFSM.HStates
         {
             ctx.LockMove = true;
             ctx.LockTurn = true;
+            ctx.Entity.Kinematics.State = EntityState.Dead;
         }
 
         protected override HState GetTransition() => null;

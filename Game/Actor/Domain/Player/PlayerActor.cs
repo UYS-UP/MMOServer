@@ -281,7 +281,7 @@ namespace Server.Game.Actor.Domain.Player
                 CurrentLevel = 1,
                 MaxLevel = 1,
                 GrowthFactor = 1,
-                Cooldown = 1f,
+                Cooldown = 2f,
                 CooldownRemaining = 0f,
                 ManaCost = 0,
                 Type = SkillType.AreaDamage
@@ -296,7 +296,7 @@ namespace Server.Game.Actor.Domain.Player
                 CurrentLevel = 1,
                 MaxLevel = 1,
                 GrowthFactor = 1,
-                Cooldown = 0.7f,
+                Cooldown = 1.5f,
                 CooldownRemaining = 0f,
                 ManaCost = 0,
                 Type = SkillType.AreaDamage
@@ -311,7 +311,7 @@ namespace Server.Game.Actor.Domain.Player
                 CurrentLevel = 1,
                 MaxLevel = 1,
                 GrowthFactor = 1,
-                Cooldown = 2.8f,
+                Cooldown = 2f,
                 CooldownRemaining = 0f,
                 ManaCost = 0,
                 Type = SkillType.AreaDamage

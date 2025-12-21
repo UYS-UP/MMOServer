@@ -1,4 +1,6 @@
 ﻿using Server.Game.Contracts.Server;
+using Server.Game.World;
+using Server.Game.World.Skill;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,22 +11,31 @@ namespace Server.Game.HFSM
 {
     public class EntityFsmContext
     {
-        public EntityRuntime Entity;
+        public readonly EntityRuntime Entity;
+        public readonly ICombatContext Combat;
         public bool LockMove;
         public bool LockTurn;
 
-        public bool HasMoveInput => Entity.Kinematics.Direction.LengthSquared() < 0.001f;
+        public bool HasMoveInput => Entity.Kinematics.Direction.LengthSquared() > 0.001f;
 
         public bool DeathRequested;
         public bool HitRequested;
 
 
-        public int CastSkillId;
-        public bool CastRequested;
+        public SkillCastData IncomingSkillRequest;
+        public SkillCastData ComboBuffer;
 
-        public EntityFsmContext(EntityRuntime entity)
+
+
+        public EntityFsmContext(EntityRuntime entity, ICombatContext combat)
         {
             Entity = entity;
+            Combat = combat;
+        }
+
+        public void OnReceiveSkillInput(SkillCastData input)
+        {
+            IncomingSkillRequest = input;
         }
 
 
@@ -32,7 +43,9 @@ namespace Server.Game.HFSM
         {
             HitRequested = false;
             DeathRequested = false;
-            CastRequested = false;
         }
+
+        public void ConsumeInput() => IncomingSkillRequest = null;
+        public void ConsumeCombo() => ComboBuffer = null;
     }
 }

@@ -1,16 +1,30 @@
-﻿using Server.Game.Actor.Domain.Region.AI;
-using Server.Game.Actor.Domain.Region.FSM;
-using Server.Game.Contracts.Actor;
+﻿using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
+using Server.Game.HFSM;
+using Server.Game.World.AI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Server.Game.World
 {
+    public struct BroadcastSnapshot
+    {
+        public EntityState State;
+        public Vector3 Position;
+        public float Yaw;
+        public Vector3 Dir;
+
+
+        public bool Equals(BroadcastSnapshot other) =>
+            State == other.State && Position == other.Position
+            && Yaw == other.Yaw && Dir == other.Dir;
+    }
+
     public class EntityContext
     {
         public int Tick;
@@ -28,27 +42,27 @@ namespace Server.Game.World
         private readonly Dictionary<string, string> entityToPlayer = new();
         private readonly HashSet<string> players = new();
 
-        private readonly Dictionary<string, (ActionStateType Action, MotionStateType Motion)> lastBroadcast = new();
+        private readonly Dictionary<string, BroadcastSnapshot> lastBroadcast = new();
 
-        public IReadOnlyDictionary<string, EntityRuntime> Entities => entities;
         public IReadOnlySet<string> Players => players;
+        public IReadOnlyDictionary<string, EntityRuntime> Entities => entities; 
 
         public IReadOnlyDictionary<string, AIAgent> AIAgents => aiAgents;
 
         public void AddEntity(EntityRuntime entity)
         {
-            entities[entity.Identity.EntityId] = entity;
-
+            entities[entity.EntityId] = entity;
             if (entity.Identity.Type == EntityType.Character)
             {
-                playerToEntity[entity.Profile.PlayerId] = entity.Identity.EntityId;
-                entityToPlayer[entity.Identity.EntityId] = entity.Profile.PlayerId;
+                playerToEntity[entity.Profile.PlayerId] = entity.EntityId;
+                entityToPlayer[entity.EntityId] = entity.Profile.PlayerId;
                 players.Add(entity.Profile.PlayerId);
             }
         }
 
         public bool TryGetEntity(string entityId, out EntityRuntime entity)
             => entities.TryGetValue(entityId, out entity);
+
 
         public bool TryGetEntityByPlayerId(string playerId, out EntityRuntime? entity)
         {
@@ -101,11 +115,18 @@ namespace Server.Game.World
 
         }
 
-        public (ActionStateType Action, MotionStateType Motion) GetEntityLastBroadcast(string entityId)
-            => lastBroadcast.TryGetValue(entityId, out var v) ? v : (ActionStateType.None, MotionStateType.Idle);
+        public BroadcastSnapshot? GetEntityLastBroadcast(string entityId)
+        {
+            if(lastBroadcast.TryGetValue(entityId, out var snap))
+            {
+                return snap;
+            }
+            return null;
+        }
 
-        public void UpdateEntityLastBroadcast(string entityId, ActionStateType a, MotionStateType m)
-            => lastBroadcast[entityId] = (a, m);
+
+        public void UpdateEntityLastBroadcast(string entityId, BroadcastSnapshot snap)
+            => lastBroadcast[entityId] = snap;
 
         public void ClearEntityLastBroadcast(string entityId)
             => lastBroadcast.Remove(entityId);
@@ -125,8 +146,6 @@ namespace Server.Game.World
                     RegionId = entity.WorldRef.RegionId,
                     DungeonId = entity.WorldRef.DungeonId,
                     EntityType = entity.Identity.Type,
-                    Action = entity.FSM.Action.CurrentStateType,
-                    Motion = entity.FSM.Motion.CurrentStateType,
                     Position = entity.Kinematics.Position,
                     Yaw = entity.Kinematics.Yaw,
                     Direction = entity.Kinematics.Direction,
@@ -150,8 +169,6 @@ namespace Server.Game.World
                     RegionId = entity.WorldRef.RegionId,
                     DungeonId = entity.WorldRef.DungeonId,
                     EntityType = entity.Identity.Type,
-                    Action = entity.FSM.Action.CurrentStateType,
-                    Motion = entity.FSM.Motion.CurrentStateType,
                     Position = entity.Kinematics.Position,
                     Yaw = entity.Kinematics.Yaw,
                     Direction = entity.Kinematics.Direction,
@@ -167,8 +184,6 @@ namespace Server.Game.World
                     RegionId = entity.WorldRef.RegionId,
                     DungeonId = entity.WorldRef.DungeonId,
                     EntityType = entity.Identity.Type,
-                    Action = entity.FSM.Action.CurrentStateType,
-                    Motion = entity.FSM.Motion.CurrentStateType,
                     Position = entity.Kinematics.Position,
                     Yaw = entity.Kinematics.Yaw,
                     Direction = entity.Kinematics.Direction,

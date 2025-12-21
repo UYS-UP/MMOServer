@@ -2,25 +2,44 @@
   {
     "Id": 0,
     "Name": "Attack01",
-    "Duration": 2,
-    "Events": [
-     
-    ]
+    "Duration": 1.767,
+    "ClientEvents": [
+      
+    ],
+    "ServerEvents": [],
+    "ClientPhases": [
+      
+    ],
+    "ServerPhases": []
   },
   {
     "Id": 1,
     "Name": "Attack02",
-    "Duration": 1.667,
-    "Events": [
-      
+    "Duration": 1.333,
+    "ClientEvents": [
+
+    ],
+    "ServerEvents": [
+
+    ],
+    "ClientPhases": [
+
+    ],
+    "ServerPhases": [
+
     ]
   },
   {
     "Id": 2,
-    "Name": "Attack02",
-    "Duration": 1.967,
-    "Events": [
+    "Name": "Attack03",
+    "Duration": 2.733,
+    "ClientEvents": [
+      
+    ],
+    "ServerEvents": [],
+    "ClientPhases": [
      
-    ]
+    ],
+    "ServerPhases": []
   }
 ]

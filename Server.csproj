@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Game\Json\" />
+    <Folder Include="Game\Actor\Domain\Region\" />
   </ItemGroup>
 
 </Project>
