@@ -39,14 +39,15 @@ namespace Server.Game.World.Skill
             this.Caster = caster;
             this.Data = data;
             this.onFinished = onFinished;
-
+      
             // 初始化 Runner
-            runner = new SkillTimelineRunner(config.Duration, config.ClientEvents, config.ClientPhases);
+            runner = new SkillTimelineRunner(config.Duration, config.ServerEvents, config.ServerPhases);
         }
 
         public void Start()
         {
             runner.Start(this);
+            Console.WriteLine("Start Skill");
         }
 
         public void Update(float dt)

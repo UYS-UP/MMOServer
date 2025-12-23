@@ -1,4 +1,5 @@
 ﻿using NPOI.SS.Formula.Functions;
+using Org.BouncyCastle.Asn1.X509;
 using Server.DataBase.Entities;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
@@ -10,66 +11,69 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static Mysqlx.Crud.Order.Types;
 
 namespace Server.Game.World.Skill
 {
 
-    public enum DamageShape
-    {
-        Circle,
-        Rectangle
-    }
 
+    [JsonTypeAlias(nameof(CircleDamageEvent))]
     public class CircleDamageEvent : SkillEvent
     {
-        public Vector3 CenterOffset { get; set; }
-        public DamageShape Shape { get; set; }
+
         public float Radius { get; set; }
+        public float Angle { get; set; }
+        public int Damage {  get; set; }
 
         public override void Execute(SkillInstance inst)
         {
-            //Console.WriteLine("触发CircleDamageEvent, Radius:" + Radius);
-            //var visibleEntities = inst.Combat.GetVisibleEntities(inst.Caster.EntityId);
-            //var deaths = new List<EntityDeath>();
-            //var wounds = new List<EntityWound>();
-          
-            //foreach(var entityId in  visibleEntities)
-            //{
-            //    var entity = inst.Combat.GetEntity(entityId);
-            //    var dist = Vector3.Distance(entity.Kinematics.Position, inst.Caster.Kinematics.Position);
-            //    if(dist <= Radius)
-            //    {
-            //        entity.Combat.ApplyDamage(inst.Caster.Combat.Attack);
-            //        if(entity.Combat.Hp <= 0)
-            //        {
-            //            deaths.Add(new EntityDeath
-            //            {
-            //                DroppedItems = new List<ItemData>(),
-            //                Target = entityId,
-            //                Wound = inst.Caster.Combat.Attack,
-            //            });
-            //            entity.HFSM.Action.RequestChange(ActionStateType.Death);
-            //        }
-            //        else
-            //        {
-            //            wounds.Add(new EntityWound
-            //            {
-            //                CurrentHp = entity.Combat.Hp,
-            //                Target = entityId,
-            //                Wound = inst.Caster.Combat.Attack,
-            //            });
-            //            entity.FSM.Action.RequestChange(ActionStateType.Death);
-            //        }
-            //    }
-            //}
-            //if (deaths.Count == 0 && wounds.Count == 0) return;
-            //inst.Combat.EmitEvent(
-            //    new DamageWorldEvent 
-            //{ 
-            //    Deaths = deaths, 
-            //    Wounds = wounds, 
-            //    Source = inst.Caster.EntityId 
-            //});
+            Console.WriteLine("触发CircleDamageEvent, Radius:" + Radius);
+            var visibleEntities = inst.Combat.GetVisibleEntities(inst.Caster.EntityId);
+            var deaths = new List<EntityDeath>();
+            var wounds = new List<EntityWound>();
+            var forward = HelperUtility.YawToForward(inst.Caster.Kinematics.Yaw);
+            foreach (var entityId in visibleEntities)
+            {
+                if(!inst.Combat.TryGetEntity(entityId, out var target)) {  continue; }
+                var delta = target.Kinematics.Position - inst.Caster.Kinematics.Position;
+                float distSquared = delta.X * delta.X + delta.Z * delta.Z;
+                if (distSquared > Radius * Radius) continue;
+                var direction = Vector3.Normalize(delta);
+                float dot = Vector3.Dot(forward, direction);
+                float angleCos = MathF.Cos(Angle * MathF.PI / 180f / 2f);
+                if (dot < angleCos) continue;
+                //    target.Combat.ApplyDamage(inst.Caster.Combat.Attack + Damage);
+                //    if (target.Combat.Hp <= 0)
+                //    {
+                //        deaths.Add(new EntityDeath
+                //        {
+                //            DroppedItems = new List<ItemData>(),
+                //            Target = entityId,
+                //            Wound = inst.Caster.Combat.Attack,
+                //        });
+                //        target.HFSM.Ctx.DeathRequested = true;
+                //    }
+                //    else
+                //    {
+                //        wounds.Add(new EntityWound
+                //        {
+                //            CurrentHp = target.Combat.Hp,
+                //            Target = entityId,
+                //            Wound = inst.Caster.Combat.Attack,
+                //        });
+                //        target.HFSM.Ctx.HitRequested = true;
+                //    }
+
+                //}
+                //if (deaths.Count == 0 && wounds.Count == 0) return;
+                //inst.Combat.EmitEvent(
+                //    new DamageWorldEvent
+                //    {
+                //        Deaths = deaths,
+                //        Wounds = wounds,
+                //        Source = inst.Caster.EntityId
+                //    });
+            }
 
         }
     }
@@ -77,7 +81,7 @@ namespace Server.Game.World.Skill
     public class RectangleDamageEvent: SkillEvent
     {
         public Vector3 CenterOffset { get; set; }
-        public DamageShape Shape { get; set; }
+        // public DamageShape Shape { get; set; }
         public Vector2 Size { get; set; }
         public float Rotation { get; set; }
 

@@ -316,16 +316,75 @@ namespace Server.Game.Actor.Domain.Player
                 ManaCost = 0,
                 Type = SkillType.AreaDamage
             });
-
             skills.Add(0, skill1);
             skills.Add(1, skill2);
             skills.Add(2, skill3);
+            var skill100 = new SkillRuntime();
+            skill100.AddComponent(new SkillMetaComponent
+            {
+                SkillId = 100,
+                Name = "RollF",
+                Description = "普通攻击",
+                CurrentLevel = 1,
+                MaxLevel = 1,
+                GrowthFactor = 1,
+                Cooldown = 2f,
+                CooldownRemaining = 0f,
+                ManaCost = 0,
+                Type = SkillType.AreaDamage
+            });
+            var skill101 = new SkillRuntime();
+            skill101.AddComponent(new SkillMetaComponent
+            {
+                SkillId = 101,
+                Name = "RollB",
+                Description = "普通攻击",
+                CurrentLevel = 1,
+                MaxLevel = 1,
+                GrowthFactor = 1,
+                Cooldown = 2f,
+                CooldownRemaining = 0f,
+                ManaCost = 0,
+                Type = SkillType.AreaDamage
+            });
+            var skill102 = new SkillRuntime();
+            skill102.AddComponent(new SkillMetaComponent
+            {
+                SkillId = 102,
+                Name = "RollL",
+                Description = "普通攻击",
+                CurrentLevel = 1,
+                MaxLevel = 1,
+                GrowthFactor = 1,
+                Cooldown = 2f,
+                CooldownRemaining = 0f,
+                ManaCost = 0,
+                Type = SkillType.AreaDamage
+            });
+            var skill103 = new SkillRuntime();
+            skill103.AddComponent(new SkillMetaComponent
+            {
+                SkillId = 103,
+                Name = "RollR",
+                Description = "普通攻击",
+                CurrentLevel = 1,
+                MaxLevel = 1,
+                GrowthFactor = 1,
+                Cooldown = 2f,
+                CooldownRemaining = 0f,
+                ManaCost = 0,
+                Type = SkillType.AreaDamage
+            });
+            skills.Add(100, skill100);
+            skills.Add(101, skill101);
+            skills.Add(102, skill102);
+            skills.Add(103, skill103);
             await TellGateway(new SendToPlayer(role.PlayerId, Protocol.FriendListSync, new ServerFriendListSync(networkGroups, networkFriendRequests, networkFriends)));
             await TellGateway(new SendToPlayer(role.PlayerId, Protocol.QuestListSync, new ServerQuestListSync(quest.GetActiveQuests())));
             await TellAsync($"RegionActor_{role.Entity.RegionId}", new CharacterSpawn(
                 role.Entity.EntityId, role.Entity.EntityType, "", role.CharacterName,
                 new Vector3(role.Entity.X, role.Entity.Y, role.Entity.Z), role.Entity.Yaw,
-                5, role.Level, role.HP, role.MaxHp, role.MP, role.MaxMp, role.EX, role.MaxEx, 5, 5,
+                4, role.Level, role.HP, role.MaxHp, role.MP, role.MaxMp, role.EX, role.MaxEx, 5, 5,
                 1.5f, skills, role.Entity.RegionId, string.Empty, role.Profession,
                 role.PlayerId, role.CharacterId));
 

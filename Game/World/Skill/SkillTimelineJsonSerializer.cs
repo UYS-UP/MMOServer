@@ -26,8 +26,9 @@ namespace Server.Game.World.Skill
             settings.Converters.Add(new Vector2Converter());
             settings.SerializationBinder = new AliasBinder(new[]
             {
-                typeof(CircleDamageEvent)
-            
+                typeof(CircleDamageEvent),
+                typeof(ServerMoveStepPhase)
+                
             });
             return settings;
         }

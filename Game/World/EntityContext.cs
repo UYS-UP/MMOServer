@@ -60,6 +60,11 @@ namespace Server.Game.World
             }
         }
 
+        public void AddAgent(AIAgent agent)
+        {
+            aiAgents[agent.Entity.EntityId] = agent;
+        }
+
         public bool TryGetEntity(string entityId, out EntityRuntime entity)
             => entities.TryGetValue(entityId, out entity);
 

@@ -32,6 +32,7 @@ namespace Server.Game.World
 
         void InterruptSkill(string casterId);
         bool IsSkillRunning(string casterId);
+        bool IsSkillCooldown(string casterId, int skillId);
 
         void EmitEvent(IWorldEvent worldEvent);
     }

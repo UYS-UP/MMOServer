@@ -18,7 +18,7 @@ namespace Server.Game.World.AI
         public void Tick(AIAgent agent, IReadOnlyDictionary<string, EntityRuntime> entities, IReadOnlyCollection<string> visibleEntities)
         {
             threatQueue.Clear();
-            if (agent.ReturningHome)
+            if (agent.AiFsm.Ctx.ReturningHome)
             {
                 float distFromHome = Vector3.Distance(agent.Entity.Kinematics.Position, agent.HomePos);
                 if (distFromHome > 100f)
@@ -49,7 +49,7 @@ namespace Server.Game.World.AI
         public void Tick(AIAgent agent, Dictionary<string, EntityRuntime> visibleEntities)
         {
             threatQueue.Clear();
-            if(agent.ReturningHome)
+            if(agent.AiFsm.Ctx.ReturningHome)
             {
                 float distFromHome = Vector3.Distance(agent.Entity.Kinematics.Position, agent.HomePos);
                 if (distFromHome > 100f)

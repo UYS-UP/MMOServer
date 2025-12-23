@@ -21,21 +21,18 @@ namespace Server.Game.HFSM
         public bool DeathRequested;
         public bool HitRequested;
 
+        public bool CastRequested;
+        public bool RollRequested;
+        public bool AttackRequested;
 
-        public SkillCastData IncomingSkillRequest;
-        public SkillCastData ComboBuffer;
 
+        public SkillCastData SkillRequestData;
 
 
         public EntityFsmContext(EntityRuntime entity, ICombatContext combat)
         {
             Entity = entity;
             Combat = combat;
-        }
-
-        public void OnReceiveSkillInput(SkillCastData input)
-        {
-            IncomingSkillRequest = input;
         }
 
 
@@ -45,7 +42,22 @@ namespace Server.Game.HFSM
             DeathRequested = false;
         }
 
-        public void ConsumeInput() => IncomingSkillRequest = null;
-        public void ConsumeCombo() => ComboBuffer = null;
+        public void OnRequestSkill(SkillCastData castData)
+        {
+            if(castData.SkillId <= 3)
+            {
+                AttackRequested = true;
+                SkillRequestData = castData;
+            }else if(castData.SkillId >= 100 && castData.SkillId <= 103)
+            {
+                SkillRequestData = castData;
+                RollRequested = true;
+            }
+            else
+            {
+                SkillRequestData = castData;
+                CastRequested = true;
+            }
+        }
     }
 }

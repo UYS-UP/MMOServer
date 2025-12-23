@@ -15,26 +15,28 @@ namespace Server.Game.World.AI
 {
     public class AIAgent
     {
+        // --- 基础组件 ---
         public EntityRuntime Entity { get; }
         public AStarPathfind AStarPathfind { get; }
         public PerceptionSystem Perception { get; }
         public AggroSystem Aggro { get; }
+
+        // --- 核心状态 (由外部系统如 Aggro 更新) ---
         public EntityRuntime Target { get; set; }
-        public List<Vector3> CurrentPath { get; set; }
-        public int WaypointIndex { get; set; }
-        public HashSet<string> LastVisibleEntities { get; set; }
-        public float PerceptionRange { get; set; }
-        public float FovAngle { get; set; }
-        public float RepathCdLeft { get; set; }
-        public Vector3 HomePos { get; set; }
-        public float PatrolRadius { get; set; }
-        public float LeashDistance { get; set; }
 
-        public bool ReturningHome { get; set; }
-        public Vector3? PatrolTarget { get; set; }
+        // --- 全局配置参数 (只读或初始化后不变) ---
+        public Vector3 HomePos { get; }
+        public float PerceptionRange { get; }
+        public float FovAngle { get; }
+        public float PatrolRadius { get; }
+        public float LeashDistance { get; }
 
-        public AIStateMachine StateMachine;    // 新增：状态机
+        // 战斗配置
+        public float AttackRange { get; set; } = 2.0f;
+        public float AttackCooldown { get; set; } = 2.0f;
 
+        // --- HFSM 入口 ---
+        public AIHFSM AiFsm { get; private set; }
 
         public AIAgent(
             EntityRuntime entity,
@@ -43,31 +45,24 @@ namespace Server.Game.World.AI
             AggroSystem aggro,
             float perceptionRange,
             float fovAngle,
-            float repathCdLeft,
             float patrolRadious,
             float leashDistance,
-            Vector3 homePos)
+            Vector3 homePos,
+            ICombatContext combat)
         {
             Entity = entity;
+            AStarPathfind = aStarPathfind;
             Perception = perception;
             Aggro = aggro;
-            AStarPathfind = aStarPathfind;
-            Target = null;
-            CurrentPath = new List<Vector3>();
-            WaypointIndex = 0;
-            LastVisibleEntities = new HashSet<string>();
 
-            ReturningHome = false;
-            PatrolTarget = null;
-
-            StateMachine = new AIStateMachine(this);
-            StateMachine.Init(AIStateType.Idle);
             PerceptionRange = perceptionRange;
             FovAngle = fovAngle;
-            RepathCdLeft = repathCdLeft;
-            HomePos = homePos;
             PatrolRadius = patrolRadious;
             LeashDistance = leashDistance;
+            HomePos = homePos;
+
+            // 初始化 HFSM
+            AiFsm = new AIHFSM(this, combat);
         }
     }
 

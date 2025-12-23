@@ -43,7 +43,7 @@ namespace Server.Game.World.Skill
         {
             FireDueEvents(skillInstance, 0f);
             StartDuePhases(skillInstance, 0f);
-            UpdateActivePhases(skillInstance, 0f); // 可选：让 Start 帧也跑一次 Update
+            // UpdateActivePhases(skillInstance, 0f);
             EndDuePhases(skillInstance, 0f);
         }
 
@@ -52,7 +52,6 @@ namespace Server.Game.World.Skill
             if (IsFinished) return;
 
             CurrentTime += dt;
-
             FireDueEvents(instance, CurrentTime);
 
             StartDuePhases(instance, CurrentTime);
@@ -72,6 +71,7 @@ namespace Server.Game.World.Skill
 
         private void FireDueEvents(SkillInstance instance, float time)
         {
+            // Console.WriteLine($"NextEventIndex:{nextEventIndex}");
             while (nextEventIndex < events.Count && events[nextEventIndex].Time <= time + EPS)
             {
                 events[nextEventIndex].Execute(instance);

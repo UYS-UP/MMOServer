@@ -17,7 +17,7 @@ namespace Server.Game.World.AI
         {
             var result = new HashSet<string>(capacity: visibleEntities.Count);
 
-            if (agent.ReturningHome)
+            if (agent.AiFsm.Ctx.ReturningHome)
             {
                 float distFromHome = Vector3.Distance(agent.Entity.Kinematics.Position, agent.HomePos);
                 if (distFromHome > 100f)
@@ -52,7 +52,7 @@ namespace Server.Game.World.AI
         {
             var result = new Dictionary<string, EntityRuntime>(capacity: visibleEntities.Count);
 
-            if(agent.ReturningHome)
+            if(agent.AiFsm.Ctx.ReturningHome)
             {
                 float distFromHome = Vector3.Distance(agent.Entity.Kinematics.Position, agent.HomePos);
                 if (distFromHome > 100f)

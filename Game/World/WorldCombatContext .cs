@@ -100,5 +100,9 @@ namespace Server.Game.World
             world.EmitEvent(worldEvent);
         }
 
+        public bool IsSkillCooldown(string casterId, int skillId)
+        {
+            return world.Skill.IsSkillCooldown(this, casterId, skillId);
+        }
     }
 }

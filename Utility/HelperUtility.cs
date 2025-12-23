@@ -10,7 +10,7 @@ namespace Server.Utility
 {
     public static class HelperUtility
     {
-
+        
         public static List<int> ShuffleRollPool()
         {
             var list = Enumerable.Range(1, 100).ToList();
@@ -74,6 +74,22 @@ namespace Server.Utility
             float x = MathF.Sin(rad);
             float z = MathF.Cos(rad);
             return new Vector3(x, 0f, z);
+        }
+
+
+        public static Vector3 RotateVector(Vector3 v, float yawDegrees)
+        {
+            // 将角度转弧度
+            float radians = yawDegrees * (MathF.PI / 180f);
+
+            float cos = MathF.Cos(radians);
+            float sin = MathF.Sin(radians);
+
+            // 绕 Y 轴旋转矩阵公式
+            float newX = v.X * cos + v.Z * sin;
+            float newZ = v.X * -sin + v.Z * cos;
+
+            return new Vector3(newX, v.Y, newZ);
         }
 
         /// <summary>

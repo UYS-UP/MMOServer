@@ -10,15 +10,15 @@ namespace Server.Game.HFSM.HStates
     public class AliveState : HState
     {
         private readonly EntityFsmContext ctx;
-        public LocomotionState Locomotion;
-        public CastSkillState CastSkill;
+        public readonly LocomotionState Locomotion;
+        public readonly ActionState Action;
         public StunnedState Hit;
 
         public AliveState(EntityFsmContext ctx, HStateMachine m, HState p) : base(m, p)
         {
             this.ctx = ctx;
             Locomotion = new LocomotionState(ctx, m, this);
-            CastSkill = new CastSkillState(ctx, m, this);
+            Action = new ActionState(ctx, m, this);
             Hit = new StunnedState(ctx, m, this);
         }
 
@@ -28,11 +28,20 @@ namespace Server.Game.HFSM.HStates
 
         protected override HState GetTransition()
         {
-            if(ctx.IncomingSkillRequest != null)
+            if (ctx.DeathRequested) return Parent.AsTo<RootState>()?.Dead;
+            if (ctx.HitRequested) return Hit;
+            if (ActiveChild == Locomotion)
+            {
+                if (ctx.AttackRequested || ctx.CastRequested || ctx.RollRequested)
+                {
+                    return Action;
+                }
+            }
+            else if (ActiveChild == Action)
             {
                 if (!ctx.Combat.IsSkillRunning(ctx.Entity.EntityId))
                 {
-                    return CastSkill;
+                    return Locomotion;
                 }
             }
 

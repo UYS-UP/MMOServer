@@ -1,4 +1,5 @@
-﻿using Server.Game.Contracts.Common;
+﻿using NPOI.OpenXmlFormats.Spreadsheet;
+using Server.Game.Contracts.Common;
 using Server.Game.Contracts.Server;
 using Server.Game.World;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ namespace Server.Game.World.Skill
 
                 activeSkills[caster.EntityId] = instance;
 
-                ctx.EmitEvent(new ExecuteSkillWorldEvent { Caster = caster, SkillId = data.SkillId });
+                // ctx.EmitEvent(new ExecuteSkillWorldEvent { Caster = caster, SkillId = data.SkillId });
 
                 instance.Start();
                 return true;
@@ -126,6 +127,17 @@ namespace Server.Game.World.Skill
 
             var cdKey = $"{caster.EntityId}_{data.SkillId}";
             cooldownTracker[cdKey] = ctx.Tick + (int)(meta.Cooldown * 1000f / GameField.TICK_INTERVAL_MS);
+        }
+
+        public bool IsSkillCooldown(ICombatContext ctx, string casterId, int skillId)
+        {
+            var cdKey = $"{casterId}_{skillId}";
+            
+            if(cooldownTracker.TryGetValue(cdKey, out var nextTick) && ctx.Tick < nextTick)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

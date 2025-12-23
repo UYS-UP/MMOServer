@@ -13,6 +13,7 @@ using Server.Game.World.AStar;
 using Server.Game.World.Services;
 using Server.Game.World.Skill;
 using Server.Game.World.Skill.Buff;
+using Server.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,79 @@ namespace Server.Game.World
 
         protected virtual void Initialize()
         {
+            var kinematics = new KinematicsComponent
+            {
+                Position = Vector3.Zero,
+                Yaw = 0,
+                Direction = Vector3.Zero,
+                Speed = 4,
+                State = EntityState.Idle
+            };
+
+            var combat = new CombatComponent
+            {
+                Attack = 50,
+                Level = 1,
+                Hp = 1000,
+                Maxhp = 1000,
+                Mp = 1000,
+                MaxMp = 1000,
+                Ex = 0,
+                MaxEx = 0,
+            };
+
+
+
+            var skillBook = new SkillBookComponent
+            {
+                Skills = new Dictionary<int, SkillRuntime>()
+            };
+
+            skillBook.Skills.Add(0, new SkillRuntime());
+            skillBook.Skills[0].AddComponent<SkillMetaComponent>(new SkillMetaComponent
+            {
+                SkillId = 0,
+                Name = "Attack01",
+                Description = "普通攻击",
+                CurrentLevel = 1,
+                MaxLevel = 1,
+                GrowthFactor = 1,
+                Cooldown = 2f,
+                CooldownRemaining = 0f,
+                ManaCost = 0,
+                Type = SkillType.AreaDamage
+            });
+
+            var identity = new IdentityComponent
+            {
+                EntityId = HelperUtility.GetKey(),
+                Type = EntityType.Monster,
+                TemplateId = "monster_001",
+                Name = "monster_001",
+            };
+
+            var worldRef = new WorldRefComponent
+            {
+                RegionId = Context.Id,
+                DungeonId = string.Empty,
+            };
+
+
+            var entity = new EntityRuntime
+            {
+                Kinematics = kinematics,
+                Combat = combat,
+                SkillBook = skillBook,
+                Identity = identity,
+                WorldRef = worldRef,
+                Profile = null,
+               
+            };
+            entity.HFSM = new EntityHFSM(entity, Combat);
+            Context.AddEntity(entity);
+
+            var ai = new AIAgent(entity, pathfinder, new PerceptionSystem(), new AggroSystem(), 20f, 90f, 10f, 40f, Vector3.Zero, Combat);
+            Context.AddAgent(ai);
 
         }
 
@@ -97,7 +171,7 @@ namespace Server.Game.World
                     }
                 case ExecuteSkillWorldEvent executeSkillWorldEvent:
                     {
-                        Console.WriteLine("ExecuteSkill:" + executeSkillWorldEvent.SkillId);
+                        // Console.WriteLine("ExecuteSkill:" + executeSkillWorldEvent.SkillId);
                         var payload = new ServerEntityReleaseSkill(Context.Tick, executeSkillWorldEvent.Caster.EntityId, executeSkillWorldEvent.SkillId,
                                 executeSkillWorldEvent.Caster.Kinematics.Position, executeSkillWorldEvent.Caster.Kinematics.Yaw, executeSkillWorldEvent.Caster.Kinematics.State);
                         BroadcastToVisible(executeSkillWorldEvent.Caster.EntityId, Protocol.EntityReleaseSkill, payload, false);
@@ -201,6 +275,7 @@ namespace Server.Game.World
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
             bool isValid = Nav.IsValidVector3(pos);
+            // Console.WriteLine($"Entity Pos: {pos}, Yaw: {yaw}, Dir: {dir}");
             if (isValid)
             {
                 entity.Kinematics.Position = pos;
@@ -222,11 +297,7 @@ namespace Server.Game.World
                 TargetDirection = targetDirection,
                 TargetEntityId = targetEntityId
             };
-            if(skillId == 1)
-            {
-                Console.WriteLine();
-            }
-            entity.HFSM.Ctx.OnReceiveSkillInput(castData);
+            entity.HFSM.Ctx.OnRequestSkill(castData);
         }
 
 
@@ -235,7 +306,7 @@ namespace Server.Game.World
             if (!Context.TryGetEntity(entityId, out var entity)) return;
             var castData = new SkillCastData(skillId);
 
-            entity.HFSM.Ctx.OnReceiveSkillInput(castData);
+            entity.HFSM.Ctx.OnRequestSkill(castData);
         }
 
         public virtual void OnTickUpdate(int tick, float deltaTime)
@@ -366,10 +437,8 @@ namespace Server.Game.World
 
                 var perceived = agent.Perception.Tick(agent, Context.Entities, AOI.GetVisibleSet(entityId));
                 agent.Aggro.Tick(agent, Context.Entities, perceived);
-
-                agent.StateMachine.Intents.Clear();
-                agent.StateMachine.Tick(deltaTime);
-                batchIntents.AddRange(agent.StateMachine.Intents);
+                agent.AiFsm.Update(deltaTime);
+                batchIntents.AddRange(agent.AiFsm.Ctx.Intents);
             }
 
             if (batchIntents.Count <= 0) return;
