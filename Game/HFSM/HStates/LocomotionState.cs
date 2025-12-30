@@ -20,5 +20,12 @@ namespace Server.Game.HFSM.HStates
         }
 
         protected override HState GetInitialState() => ctx.HasMoveInput ? Move : Idle;
+
+        protected override HState GetTransition()
+        {
+            if (ActiveChild == Idle && ctx.HasMoveInput) return Move;
+            if (ActiveChild == Move && !ctx.HasMoveInput) return Idle;
+            return null;
+        }
     }
 }

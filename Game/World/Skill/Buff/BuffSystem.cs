@@ -13,7 +13,7 @@ namespace Server.Game.World.Skill.Buff
 {
     public class BuffSystem
     {
-        private readonly Dictionary<string, List<BuffInstance>> buffsByEntity = new Dictionary<string, List<BuffInstance>>();
+        private readonly Dictionary<int, List<BuffInstance>> buffsByEntity = new Dictionary<int, List<BuffInstance>>();
     
         public void Update(float dt)
         {
@@ -33,7 +33,7 @@ namespace Server.Game.World.Skill.Buff
             }
         }
 
-        public void RemoveBuff(string target, int buffId)
+        public void RemoveBuff(int target, int buffId)
         {
             if (!buffsByEntity.TryGetValue(target, out var list))
                 return;
@@ -151,7 +151,7 @@ namespace Server.Game.World.Skill.Buff
         public EntityRuntime Caster;      // 谁放的技能（可为空）
 
         // 当前在圈里的实体Id集合（用于判断进入/离开）
-        private readonly HashSet<string> insideEntities = new HashSet<string>();
+        private readonly HashSet<int> insideEntities = new HashSet<int>();
 
         private readonly ICombatContext combatContext;  // 需要能访问 AOI 和 BuffSystem
 
@@ -192,14 +192,14 @@ namespace Server.Game.World.Skill.Buff
         private void UpdateEntitiesInArea()
         {
             var ids = combatContext.QueryCircle(Center, Radius);
-            var current = new List<string>();
+            var current = new List<int>();
 
             foreach(var id in ids)
             {
                 if (!combatContext.TryGetEntity(id, out var entity)) continue;
                 if(Caster.Identity.Type == EntityType.Monster && entity.Identity.Type == EntityType.Character)
                 {
-                    current.Add(entity.Identity.Name);
+                    current.Add(entity.EntityId);
                     if (insideEntities.Add(id))
                     {
                         combatContext.ApplyBuff(entity, BuffConfig);
@@ -208,7 +208,7 @@ namespace Server.Game.World.Skill.Buff
 
                 if(Caster.Identity.Type == EntityType.Character && entity.Identity.Type == EntityType.Monster)
                 {
-                    current.Add(entity.Identity.Name);
+                    current.Add(entity.EntityId);
                     if (insideEntities.Add(id))
                     {
                         combatContext.ApplyBuff(entity, BuffConfig);
@@ -217,7 +217,7 @@ namespace Server.Game.World.Skill.Buff
             }
 
 
-            var toLeave = new List<string>();
+            var toLeave = new List<int>();
             foreach (var id in insideEntities)
             {
                 if (!current.Contains(id))

@@ -1,6 +1,4 @@
 ﻿using Server.DataBase.Service;
-using Server.Game.Actor.Hosting;
-using Server.Game.Service;
 using Server.Network;
 using System;
 using System.Collections.Generic;
@@ -14,13 +12,11 @@ namespace Server.Utility
     {
         public static PlayerService PlayerService { get; private set; }
         public static CharacterService CharacterService { get; private set; }
-        public static FriendService FriendService { get; private set; }
 
-        public static void Initalize(PlayerService playerService, CharacterService characterService, FriendService friendService)
+        public static void Initalize(PlayerService playerService, CharacterService characterService)
         {
             PlayerService = playerService;
             CharacterService = characterService;
-            FriendService = friendService;
 
         }
 

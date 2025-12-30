@@ -26,7 +26,6 @@ namespace Server.Game.HFSM.HStates
             bool success = ctx.Combat.TryCastSkill(ctx.Entity, ctx.SkillRequestData, out _);
             if (success)
             {
-                Console.WriteLine("Roll:" + ctx.SkillRequestData.SkillId);
                 ctx.Combat.EmitEvent(new ExecuteSkillWorldEvent { Caster = ctx.Entity, SkillId = ctx.SkillRequestData.SkillId });
             }
             ctx.SkillRequestData = null;

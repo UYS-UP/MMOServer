@@ -13,9 +13,9 @@ namespace Server.Game.World.AI
 {
     public class PerceptionSystem
     {
-        public HashSet<string> Tick(AIAgent agent, IReadOnlyDictionary<string, EntityRuntime> entities, IReadOnlyCollection<string> visibleEntities)
+        public HashSet<int> Tick(AIAgent agent, IReadOnlyDictionary<int, EntityRuntime> entities, IReadOnlyCollection<int> visibleEntities)
         {
-            var result = new HashSet<string>(capacity: visibleEntities.Count);
+            var result = new HashSet<int>(capacity: visibleEntities.Count);
 
             if (agent.AiFsm.Ctx.ReturningHome)
             {
@@ -48,9 +48,9 @@ namespace Server.Game.World.AI
             return result;
         }
 
-        public Dictionary<string, EntityRuntime> Tick(AIAgent agent, Dictionary<string, EntityRuntime> visibleEntities)
+        public Dictionary<int, EntityRuntime> Tick(AIAgent agent, Dictionary<int, EntityRuntime> visibleEntities)
         {
-            var result = new Dictionary<string, EntityRuntime>(capacity: visibleEntities.Count);
+            var result = new Dictionary<int, EntityRuntime>(capacity: visibleEntities.Count);
 
             if(agent.AiFsm.Ctx.ReturningHome)
             {

@@ -14,25 +14,24 @@ namespace Server.Game.World
     {
         int Tick {  get; }
 
-        bool TryGetEntity(string entityId, out EntityRuntime entity);
-        IReadOnlySet<string> GetVisibleEntities(string entityId);
-        EntityRuntime GetEntity(string entityId);
+        bool TryGetEntity(int entityId, out EntityRuntime entity);
+        IReadOnlySet<int> GetVisibleEntities(int entityId);
+        EntityRuntime GetEntity(int entityId);
 
-        IReadOnlyCollection<string> QueryCircle(Vector3 center, float radius);
-        IReadOnlyCollection<string> QueryCone(Vector3 center, Vector3 forward, float angle, float radius);
-        IReadOnlyCollection<string> QueryRectangle(Vector3 center, Vector3 forward, float width, float length);
+        IReadOnlyCollection<int> QueryCircle(Vector3 center, float radius);
+        IReadOnlyCollection<int> QueryCone(Vector3 center, Vector3 forward, float angle, float radius);
+        IReadOnlyCollection<int> QueryRectangle(Vector3 center, Vector3 forward, float width, float length);
         
-        void ApplyDamage(EntityRuntime target, int amount, EntityRuntime source = null);
-        void ApplyHeal(EntityRuntime target, int amount, EntityRuntime? source = null);
+      
 
         void ApplyBuff(EntityRuntime target, BuffConfig config, EntityRuntime source = null);
-        void RemoveBuff(string entityId, int buffId);
+        void RemoveBuff(int entityId, int buffId);
 
         bool TryCastSkill(EntityRuntime caster, SkillCastData data, out string resone);
 
-        void InterruptSkill(string casterId);
-        bool IsSkillRunning(string casterId);
-        bool IsSkillCooldown(string casterId, int skillId);
+        void InterruptSkill(int casterId);
+        bool IsSkillRunning(int casterId);
+        bool IsSkillCooldown(int casterId, int skillId);
 
         void EmitEvent(IWorldEvent worldEvent);
     }

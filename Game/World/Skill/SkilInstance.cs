@@ -22,7 +22,7 @@ namespace Server.Game.World.Skill
         public int SkillId => Data.SkillId;
 
         private readonly SkillTimelineRunner runner;
-        private readonly Action<string> onFinished;
+        private readonly Action<int> onFinished;
 
         public float CurrentTime => runner.CurrentTime;
         public bool IsFinished => runner.IsFinished;
@@ -33,7 +33,7 @@ namespace Server.Game.World.Skill
            EntityRuntime caster,
            SkillCastData data,
            SkillTimelineConfig config,
-           Action<string> onFinished)
+           Action<int> onFinished)
         {
             this.Combat = combatContext;
             this.Caster = caster;
@@ -47,7 +47,6 @@ namespace Server.Game.World.Skill
         public void Start()
         {
             runner.Start(this);
-            Console.WriteLine("Start Skill");
         }
 
         public void Update(float dt)
@@ -56,7 +55,6 @@ namespace Server.Game.World.Skill
             runner.Tick(this, dt);
             if (runner.IsFinished)
             {
-                // Console.WriteLine("Finish");
                 onFinished?.Invoke(Caster.EntityId);
             }
         }
@@ -64,7 +62,6 @@ namespace Server.Game.World.Skill
         public void Interrupt()
         {
             if (runner.IsFinished) return;
-            // Console.WriteLine("Interrupt");
             runner.Interrupt(this);
             onFinished?.Invoke(Caster.EntityId);
         }

@@ -1,4 +1,5 @@
 ﻿using Server.Game.HFSM;
+using Server.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +10,28 @@ namespace Server.Game.Contracts.Server
 {
     public class EntityRuntime
     {
-        public KinematicsComponent Kinematics;
-        public CombatComponent Combat;
-        public SkillBookComponent SkillBook;
-        public IdentityComponent Identity;
-        public WorldRefComponent WorldRef;
-        public CharacterProfileComponent Profile;
-        public EntityHFSM HFSM;
+        public int EntityId => Get<IdentityComponent>().EntityId;
 
-        public string EntityId => Identity.EntityId;
+        private IdentityComponent identityCache;
+        public IdentityComponent Identity => identityCache ??= Get<IdentityComponent>();
+
+        private KinematicsComponent kinematicsCache;
+        public KinematicsComponent Kinematics => kinematicsCache ??= Get<KinematicsComponent>();
+
+        private StatsComponent statsCache; 
+        public StatsComponent Stats => statsCache ??= Get<StatsComponent>();
+
+        private SkillBookComponent skillBookCache;
+        public SkillBookComponent SkillBook => skillBookCache ??= Get<SkillBookComponent>();
+
+
+        private CharacterProfileComponent characterProfileCache;
+        public CharacterProfileComponent Profile => characterProfileCache ??= Get<CharacterProfileComponent>();
+
+        private WorldRefComponent worldRefCache;
+        public WorldRefComponent World => worldRefCache ??= Get<WorldRefComponent>();
+        
+        public EntityHFSM HFSM { get; set; }
 
 
         private readonly Dictionary<Type, IEntityComponent> extensions = new Dictionary<Type, IEntityComponent>();
@@ -50,23 +64,6 @@ namespace Server.Game.Contracts.Server
 
         public IEnumerable<T> GetAll<T>() where T : class, IEntityComponent
             => extensions.Values.OfType<T>();
-
-        public SkillRuntime GetSkill(int skillId)
-        {
-            return SkillBook?.Skills.GetValueOrDefault(skillId);
-        }
-
-        // 检查是否拥有技能
-        public bool HasSkill(int skillId)
-        {
-            return SkillBook?.Skills.ContainsKey(skillId) ?? false;
-        }
-
-        // 获取所有技能
-        public IEnumerable<SkillRuntime> GetAllSkills()
-        {
-            return SkillBook?.Skills.Values ?? Enumerable.Empty<SkillRuntime>();
-        }
 
     }
 

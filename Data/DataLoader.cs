@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Server.Data.Game.CharacterConfig;
+using Server.Data.Game.ExcelConfig;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +13,13 @@ namespace Server.Data
     public static class DataLoader
     {
         private const string path = "D:\\Project\\UnityDemo\\MMORPGServer\\Data\\Game\\";
-        public static Dictionary<string, RoleBaseValue> RoleBaseTable { get; private set; }
-        public static Dictionary<string, RoleGrowthValue> RoleGrowthTable { get; private set; }
+        public static Dictionary<string, CharacterBaseConfig> RoleBaseTable { get; private set; }
+        public static Dictionary<string, CharacterGrowthConfig> RoleGrowthTable { get; private set; }
 
         public static void LoadAllExcel()
         {
-            RoleBaseTable = ExcelDataReaderConverter.ConvertToDictionary<RoleBaseValue>(path);
-            RoleGrowthTable = ExcelDataReaderConverter.ConvertToDictionary<RoleGrowthValue>(path);
+            RoleBaseTable = ExcelDataReaderConverter.ConvertToDictionary<CharacterBaseConfig>(path);
+            RoleGrowthTable = ExcelDataReaderConverter.ConvertToDictionary<CharacterGrowthConfig>(path);
            
         }
 

@@ -4,64 +4,52 @@ namespace Server.Game.Contracts.Server
 {
 
     #region 实体组件
-    public interface IEntityComponent
+    public interface IEntityComponent {}
+
+    public class IdentityComponent : IEntityComponent
     {
+        public int EntityId;         // 运行时唯一ID (如 Runtime_GUID)
+        public EntityType Type;
+        public string TemplateId;       // 配置表ID (怪物、NPC、武器等)
+        public string Name;
     }
 
     public class KinematicsComponent : IEntityComponent
     {
         public Vector3 Position;
-        public float Yaw;
-        public Vector3 Direction;
-        public float Speed;
-        public EntityState State;
+        public float Yaw;               // 朝向 (Y轴旋转)
+        public Vector3 Direction;       // 移动方向向量
+        public float Speed;             // 基础移动速度
+        public EntityState State;       // 行为状态 (Idle, Move, Attack, Dead)
     }
 
-    public class CombatComponent : IEntityComponent
+    public class StatsComponent : IEntityComponent 
     {
         public int Level;
-        public int Hp;
-        public int Maxhp;
-        public int Mp;
-        public int MaxMp;
-        public int Ex;
-        public int MaxEx;
-        public int Attack;
-        public int Defence;
-        public float AttackRange;
+        public float CurrentHp;
+        public int CurrentStamina;
+        public float CurrentEx;
 
-        public string KillerEntityId;
-
-        public void ApplyDamage(int damage)
-        {
-            Hp = Math.Max(0, Hp - damage);
-        }
-       
+        // 基础属性和修饰属性应通过属性系统计算，这里只存它们的最终结果或用于计算的中间值
+        public Dictionary<AttributeType, float> BaseStats = new Dictionary<AttributeType, float>();
+        public Dictionary<AttributeType, float> ModifierStats = new Dictionary<AttributeType, float>();
     }
 
     public class SkillBookComponent : IEntityComponent
     {
-        public Dictionary<int, SkillRuntime> Skills;
+        public Dictionary<int, SkillRuntime> Skills = new Dictionary<int, SkillRuntime>();
         public int MaxSkillSlots = 6;
-    }
-
-    public class IdentityComponent : IEntityComponent
-    {
-        public string EntityId;
-        public EntityType Type;
-        public string TemplateId;
-        public string Name;
     }
 
     public class WorldRefComponent : IEntityComponent
     {
-        public string RegionId;
-        public string DungeonId;
+        public int MapId;
+        public int DungeonId;
+        public Vector3 SpawnPoint;
     }
 
     public class CharacterProfileComponent : IEntityComponent
     {
-        public ProfessionType Profession;
         public string PlayerId;
         public string CharacterId;
     }
@@ -70,6 +58,7 @@ namespace Server.Game.Contracts.Server
     {
         public MonsterRank Rank = MonsterRank.Normal;
         public int DropGroupId = 0;
+        public int ExperienceOnKill;
     }
 
     public enum MonsterRank
@@ -77,6 +66,20 @@ namespace Server.Game.Contracts.Server
         Normal,
         Elite,
         Boss
+    }
+
+    public enum AttributeType
+    {
+        None,
+        MaxHp,
+        MaxEx,
+        MaxStamina,
+        Attack,
+        Defence,
+        CritRate,
+        CritDamage,
+        MovementSpeed,
+        CooldownReduction
     }
 
     #endregion

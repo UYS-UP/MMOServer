@@ -109,6 +109,11 @@ namespace Server.Network
             handlers[protocolId] = handler;
         }
 
+        public void RegisterHandler(Protocol protocol, Func<GamePacket, ISession, Task> handler)
+        {
+            handlers[(ushort)protocol] = handler;
+        }
+
         public void BindSessionToAccount(Guid sessionId, string accountId)
         {
             sessionManager.BindSessionToAccount(sessionId, accountId);

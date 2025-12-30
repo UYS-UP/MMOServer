@@ -1,8 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using NPOI.SS.Formula.Functions;
 using Server.DataBase.Entities;
-using Server.Game.Actor.Domain.Chat;
-using Server.Game.Actor.Domain.Player;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Common;
 using Server.Game.Contracts.Network;
@@ -63,79 +61,6 @@ namespace Server.Game.World
 
         protected virtual void Initialize()
         {
-            var kinematics = new KinematicsComponent
-            {
-                Position = Vector3.Zero,
-                Yaw = 0,
-                Direction = Vector3.Zero,
-                Speed = 4,
-                State = EntityState.Idle
-            };
-
-            var combat = new CombatComponent
-            {
-                Attack = 50,
-                Level = 1,
-                Hp = 1000,
-                Maxhp = 1000,
-                Mp = 1000,
-                MaxMp = 1000,
-                Ex = 0,
-                MaxEx = 0,
-            };
-
-
-
-            var skillBook = new SkillBookComponent
-            {
-                Skills = new Dictionary<int, SkillRuntime>()
-            };
-
-            skillBook.Skills.Add(0, new SkillRuntime());
-            skillBook.Skills[0].AddComponent<SkillMetaComponent>(new SkillMetaComponent
-            {
-                SkillId = 0,
-                Name = "Attack01",
-                Description = "普通攻击",
-                CurrentLevel = 1,
-                MaxLevel = 1,
-                GrowthFactor = 1,
-                Cooldown = 2f,
-                CooldownRemaining = 0f,
-                ManaCost = 0,
-                Type = SkillType.AreaDamage
-            });
-
-            var identity = new IdentityComponent
-            {
-                EntityId = HelperUtility.GetKey(),
-                Type = EntityType.Monster,
-                TemplateId = "monster_001",
-                Name = "monster_001",
-            };
-
-            var worldRef = new WorldRefComponent
-            {
-                RegionId = Context.Id,
-                DungeonId = string.Empty,
-            };
-
-
-            var entity = new EntityRuntime
-            {
-                Kinematics = kinematics,
-                Combat = combat,
-                SkillBook = skillBook,
-                Identity = identity,
-                WorldRef = worldRef,
-                Profile = null,
-               
-            };
-            entity.HFSM = new EntityHFSM(entity, Combat);
-            Context.AddEntity(entity);
-
-            var ai = new AIAgent(entity, pathfinder, new PerceptionSystem(), new AggroSystem(), 20f, 90f, 10f, 40f, Vector3.Zero, Combat);
-            Context.AddAgent(ai);
 
         }
 
@@ -166,22 +91,22 @@ namespace Server.Game.World
                             Source = damageWorldEvent.Source,
                             Tick = Context.Tick,
                         };
-                        BroadcastToVisible(damageWorldEvent.Source, Protocol.EntityDamage, payload, true);
+                        BroadcastToVisible(damageWorldEvent.Source, Protocol.SC_EntityDamage, payload, true);
                         break;
                     }
                 case ExecuteSkillWorldEvent executeSkillWorldEvent:
                     {
                         // Console.WriteLine("ExecuteSkill:" + executeSkillWorldEvent.SkillId);
-                        var payload = new ServerEntityReleaseSkill(Context.Tick, executeSkillWorldEvent.Caster.EntityId, executeSkillWorldEvent.SkillId,
+                        var payload = new ServerEntityCastSkill(Context.Tick, executeSkillWorldEvent.Caster.EntityId, executeSkillWorldEvent.SkillId,
                                 executeSkillWorldEvent.Caster.Kinematics.Position, executeSkillWorldEvent.Caster.Kinematics.Yaw, executeSkillWorldEvent.Caster.Kinematics.State);
-                        BroadcastToVisible(executeSkillWorldEvent.Caster.EntityId, Protocol.EntityReleaseSkill, payload, false);
+                        BroadcastToVisible(executeSkillWorldEvent.Caster.EntityId, Protocol.SC_EntityCastSkill, payload, false);
                     }
                     break;
             }
         }
 
 
-        private void BroadcastToVisible(string entityId, Protocol protocol, object payload, bool isInclude = false)
+        private void BroadcastToVisible(int entityId, Protocol protocol, object payload, bool isInclude = false)
         {
             var wathcers = AOI.GetVisibleSet(entityId);
             if(isInclude) wathcers.Add(entityId);
@@ -194,47 +119,13 @@ namespace Server.Game.World
         }
 
 
-        public void HandleCharacterSpawn(EntityRuntime entity)
+        public virtual void HandleCharacterSpawn(EntityRuntime entity)
         {
-            Context.AddEntity(entity);
-            entity.HFSM = new EntityHFSM(entity, Combat);
-            AOI.Add(entity.Identity.EntityId, entity.Kinematics.Position);
-
-            Context.Actor.AddTell(GameField.GetActor<PlayerActor>(entity.Profile.PlayerId), new CharacterEntitySnapshot(
-                entity.Profile.PlayerId, entity.Profile.CharacterId,
-                entity.Identity.EntityId, entity.Identity.Name, entity.Identity.Type,
-                entity.Combat.Level, entity.Profile.Profession,
-                entity.WorldRef.RegionId, entity.WorldRef.DungeonId));
-                        Context.Actor.AddTell(GameField.GetActor<ChatActor>(),
-                            new CharacterEnterRegion(Context.Id, entity.Profile.PlayerId));
-
-            var spawnEntity = Context.GetNetworkEntityByEntityId(entity.Identity.EntityId);
-            var visibleEntities = AOI.GetVisibleSet(spawnEntity.EntityId);
-
-            var enterGamePayload = new ServerPlayerEnterGame(spawnEntity);
-            Context.Gateway.AddSend(
-                entity.Profile.PlayerId,
-                Protocol.EnterGame,
-                enterGamePayload
-            );
-
-            var (enterWatchers, _) = AOI.Update(entity.Identity.EntityId, entity.Kinematics.Position);
-            if (enterWatchers.Count > 0)
-            {
-                var players = Context.GetPlayerIdsByEntityIds(enterWatchers);
-                if (players.Count == 0) return;
-
-                var entitySpawnPayload = new ServerEntitySpawn(Context.Tick, spawnEntity);
-
-                Context.Gateway.AddSend(
-                    players,
-                    Protocol.EntitySpawn,
-                    entitySpawnPayload);
-            }
+            
         }
 
 
-        public void HandleCharacterDespawn(string entityId)
+        public void HandleCharacterDespawn(int entityId)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
 
@@ -245,13 +136,13 @@ namespace Server.Game.World
 
             var payload = new ServerEntityDespawn(
                 Context.Tick,
-                new HashSet<string> { entityId }
+                new HashSet<int> { entityId }
             );
-            BroadcastToVisible(entityId, Protocol.EntityDespawn, payload);
+            BroadcastToVisible(entityId, Protocol.SC_EntityDespawn, payload);
         }
 
 
-        public void HandleCharacterMove(int clientTick, string entityId, Vector3 pos, float yaw, Vector3 dir)
+        public void HandleCharacterMove(int clientTick, int entityId, Vector3 pos, float yaw, Vector3 dir)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
             bool isValid = Nav.IsValidVector3(pos);
@@ -268,10 +159,10 @@ namespace Server.Game.World
                entity.Kinematics.Direction, entity.Kinematics.Speed,
                isValid);
 
-            Context.Gateway.AddSend(entity.Profile.PlayerId, Protocol.PlayerMove, payload);
+            Context.Gateway.AddSend(entity.Profile.PlayerId, Protocol.SC_CharacterMove, payload);
         }
 
-        public void HandleEntityMove(string entityId, Vector3 pos, float yaw, Vector3 dir)
+        public void HandleEntityMove(int entityId, Vector3 pos, float yaw, Vector3 dir)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
             bool isValid = Nav.IsValidVector3(pos);
@@ -285,7 +176,7 @@ namespace Server.Game.World
         }
 
 
-        public void HandleCharacterCastSkill(int clientTick, int skillId, string entityId, SkillCastInputType skillCastInputType, Vector3 targetPosition, Vector3 targetDirection, string targetEntityId)
+        public void HandleCharacterCastSkill(int clientTick, int skillId, int entityId, SkillCastInputType skillCastInputType, Vector3 targetPosition, Vector3 targetDirection, string targetEntityId)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
 
@@ -301,7 +192,7 @@ namespace Server.Game.World
         }
 
 
-        public void HandleEntiyRelaseSkill(int skillId, string entityId)
+        public void HandleEntiyRelaseSkill(int skillId, int entityId)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
             var castData = new SkillCastData(skillId);
@@ -348,7 +239,7 @@ namespace Server.Game.World
 
                         Context.Gateway.AddSend(
                             players,
-                            Protocol.EntitySpawn,
+                            Protocol.SC_EntitySpawn,
                             payload
                         );
                     }
@@ -361,12 +252,12 @@ namespace Server.Game.World
                     {
                         var payload = new ServerEntityDespawn(
                             Context.Tick,
-                            new HashSet<string> { entity.EntityId }
+                            new HashSet<int> { entity.EntityId }
                         );
 
                         Context.Gateway.AddSend(
                             players,
-                            Protocol.EntityDespawn,
+                            Protocol.SC_EntityDespawn,
                             payload
                         );
                     }
@@ -397,7 +288,7 @@ namespace Server.Game.World
                         entity.Kinematics.Speed
                     );
                     Context.UpdateEntityLastBroadcast(entity.EntityId, snap);
-                    BroadcastToVisible(entity.EntityId, Protocol.EntityMove, payload);
+                    BroadcastToVisible(entity.EntityId, Protocol.SC_EntityMove, payload);
 
                 }
 
@@ -418,10 +309,10 @@ namespace Server.Game.World
         }
 
 
-        protected virtual void HandleEntityDeath(string entityId, EntityType entityType)
+        protected virtual void HandleEntityDeath(int entityId, EntityType entityType)
         {
-            var payload = new ServerEntityDespawn(Context.Tick, new HashSet<string> { entityId });
-            BroadcastToVisible(entityId, Protocol.EntityDespawn, payload);
+            var payload = new ServerEntityDespawn(Context.Tick, new HashSet<int> { entityId });
+            BroadcastToVisible(entityId, Protocol.SC_EntityDespawn, payload);
 
             AOI.Remove(entityId);
             Context.RemoveEntity(entityId);

@@ -9,12 +9,12 @@ namespace Server.Game.Actor.Core
     public interface IActorSystem
     {
         ActorBase GetActor(string actorId);
-        string CreateActor<T>(T actor) where T : ActorBase;
+        Task<string> CreateActor<T>(T actor) where T : ActorBase;
         bool IsActorAlive(string actorId);
 
-        void StopActor(string actorId);
+        Task StopActor(string actorId);
 
-        void StopAllActors();
+        Task StopAllActors();
 
     }
 }

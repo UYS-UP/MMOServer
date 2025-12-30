@@ -1,5 +1,5 @@
 ﻿using MessagePack;
-using Server.Game.Actor.Domain.Player;
+using Server.Game.Actor.Domain.ACharacter;
 using Server.Game.Contracts.Server;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace Server.Game.Contracts.Network
         [Key(0)] public string Username { get; set; }
         [Key(1)] public string Password { get; set; }
     }
-
+    
     [MessagePackObject]
     public class ClientPlayerRegister
     {
@@ -65,7 +65,7 @@ namespace Server.Game.Contracts.Network
     }
 
     [MessagePackObject]
-    public class ClientPlayerMove
+    public class ClientCharacterMove
     {
         [Key(0)] public int ClientTick;
         [Key(1)] public short[] Position;
@@ -74,7 +74,7 @@ namespace Server.Game.Contracts.Network
     }
 
     [MessagePackObject]
-    public class ClientPlayerReleaseSkill
+    public class ClientCharacterCastSkill
     {
         [Key(0)] public int ClientTick;
         [Key(1)] public int SkillId;
@@ -87,7 +87,7 @@ namespace Server.Game.Contracts.Network
 
 
     [MessagePackObject]
-    public class ClientPlayerQueryInventory
+    public class ClientQueryInventory
     {
         [Key(0)] public int StartSlot;
         [Key(1)] public int EndSlot;
@@ -134,10 +134,26 @@ namespace Server.Game.Contracts.Network
     }
 
     [MessagePackObject]
+    public class ClientEnterRegion
+    {
+        [Key(0)] public int MapId;
+    }
+
+    [MessagePackObject]
+    public class ClientStartDungeon
+    {
+        [Key(0)] public int TeamId;
+        [Key(1)] public int TemplateId;
+    }
+
+    [MessagePackObject]
     public class ClientExitGame { }
 
     [MessagePackObject]
-    public class ClientEnterDungeon { }
+    public class ClientEnterDungeon 
+    {
+        [Key(0)] public string DungeonTemplateId;
+    }
 
     [MessagePackObject]
     public class ClientExitDungeon { }

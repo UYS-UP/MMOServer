@@ -1,0 +1,156 @@
+[
+  {
+    "Id": 0,
+    "Name": "Attack01",
+    "Duration": 1.967,
+    "ClientEvents": [
+
+    ],
+    "ServerEvents": [
+      {
+        "$type": "CircleDamageEvent",
+        "Time": 0.45,
+        "Damage": 20,
+        "Radius": 2.5,
+        "Angle": 120
+      }
+    ],
+    "ClientPhases": [
+
+    ],
+    "ServerPhases": [
+      {
+        "$type": "ServerMoveStepPhase",
+        "Distance": 1.53821051,
+        "MoveDirection": {
+          "x": -0.122696273,
+          "y": 0.0,
+          "z": 0.9924443
+        },
+        "DistanceSamples": [
+          0.0,
+          0.0158216469,
+          0.0305373762,
+          0.04254981,
+          0.0561724678,
+          0.08051935,
+          0.160859719,
+          0.2532749,
+          0.413059652,
+          0.6078795,
+          0.7401928,
+          0.835860968,
+          0.849453,
+          0.8515426,
+          0.85409826,
+          0.8552322,
+          0.856309056,
+          0.8588254,
+          0.860805035,
+          0.8620408,
+          0.863342166,
+          0.864450753,
+          0.8652209,
+          0.865683138,
+          0.8660378,
+          0.866508842,
+          0.866868138,
+          0.867986858,
+          0.869862854,
+          0.873904765,
+          0.8799545,
+          0.8872837,
+          0.8948107,
+          0.9024707,
+          0.9113272,
+          0.920629,
+          0.9301074,
+          0.94121933,
+          0.953403,
+          0.9650702,
+          0.9753635,
+          0.984597,
+          0.9907214,
+          0.993694365,
+          0.995312154,
+          0.996228,
+          0.997830153,
+          0.998606563,
+          0.999018669,
+          0.999484837,
+          1.0
+        ],
+        "StartTime": 0.0166666675,
+        "EndTime": 1.91666663
+      }
+    ]
+  },
+  {
+    "Id": 1,
+    "Name": "Attack02",
+    "Duration": 2.5,
+    "ClientEvents": [
+
+    ],
+    "ServerEvents": [
+
+    ],
+    "ClientPhases": [
+
+    ],
+    "ServerPhases": [
+
+    ]
+  },
+  {
+    "Id": 2,
+    "Name": "Attack03",
+    "Duration": 2.733,
+    "ClientEvents": [
+
+    ],
+    "ServerEvents": [],
+    "ClientPhases": [
+
+    ],
+    "ServerPhases": []
+  },
+  {
+    "Id": 100,
+    "Name": "RollF",
+    "Duration": 1.333,
+    "ClientEvents": [],
+    "ServerEvents": [],
+    "ClientPhases": [
+ 
+    ],
+    "ServerPhases": []
+  },
+  {
+    "Id": 101,
+    "Name": "RollB",
+    "Duration": 1.667,
+    "ClientEvents": [],
+    "ServerEvents": [],
+    "ClientPhases": [],
+    "ServerPhases": []
+  },
+  {
+    "Id": 102,
+    "Name": "RollL",
+    "Duration": 1.0,
+    "ClientEvents": [],
+    "ServerEvents": [],
+    "ClientPhases": [],
+    "ServerPhases": []
+  },
+  {
+    "Id": 103,
+    "Name": "RollR",
+    "Duration": 1.0,
+    "ClientEvents": [],
+    "ServerEvents": [],
+    "ClientPhases": [],
+    "ServerPhases": []
+  }
+]

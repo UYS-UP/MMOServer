@@ -22,6 +22,5 @@ namespace Server.Game.HFSM.HStates
             ctx.Entity.Kinematics.State = EntityState.Dead;
         }
 
-        protected override HState GetTransition() => null;
     }
 }

@@ -23,10 +23,10 @@ namespace Server.Game.World.Services
         private readonly int neigh;
 
         // ===== 动态实体数据结构 =====
-        private readonly Dictionary<string, Vector3> pos = new Dictionary<string, Vector3>();   // entityId -> 世界坐标
-        private readonly Dictionary<string, Cell> cellOf = new Dictionary<string, Cell>();      // entityId -> AOI网格
-        private readonly Dictionary<Cell, HashSet<string>> grid = new Dictionary<Cell, HashSet<string>>();  // AOI网格 -> 实体集合
-        private readonly Dictionary<string, HashSet<string>> visibleCache = new Dictionary<string, HashSet<string>>();  // entityId -> 上次可见集合
+        private readonly Dictionary<int, Vector3> pos = new Dictionary<int, Vector3>();   // entityId -> 世界坐标
+        private readonly Dictionary<int, Cell> cellOf = new Dictionary<int, Cell>();      // entityId -> AOI网格
+        private readonly Dictionary<Cell, HashSet<int>> grid = new Dictionary<Cell, HashSet<int>>();  // AOI网格 -> 实体集合
+        private readonly Dictionary<int, HashSet<int>> visibleCache = new Dictionary<int, HashSet<int>>();  // entityId -> 上次可见集合
 
         public AOIService(float viewRange, float cellSize, float heightTolerance)
         {
@@ -37,7 +37,7 @@ namespace Server.Game.World.Services
         }
 
 
-        public void Add(string entityId, Vector3 position)
+        public void Add(int entityId, Vector3 position)
         {
             if (pos.ContainsKey(entityId)) return;
 
@@ -46,20 +46,20 @@ namespace Server.Game.World.Services
             cellOf[entityId] = cell;
             GetOrCreate(grid, cell).Add(entityId);
 
-            visibleCache[entityId] = new HashSet<string>();
+            visibleCache[entityId] = new HashSet<int>();
         }
 
-        public HashSet<string> GetVisibleSet(string entityId)
+        public HashSet<int> GetVisibleSet(int entityId)
         {
-            if (string.IsNullOrEmpty(entityId)) return new HashSet<string>();
-            if (!pos.TryGetValue(entityId, out var position)) return new HashSet<string>();
+            if (entityId == -1) return new HashSet<int>();
+            if (!pos.TryGetValue(entityId, out var position)) return new HashSet<int>();
             var set = CollectVisibleSet(position, entityId);
             return set;
         }
 
-        public void Remove(string entityId)
+        public void Remove(int entityId)
         {
-            if (string.IsNullOrEmpty(entityId)) return;
+            if (entityId == -1) return;
 
             if (cellOf.TryGetValue(entityId, out var c))
             {
@@ -74,7 +74,7 @@ namespace Server.Game.World.Services
             visibleCache.Remove(entityId);
         }
 
-        public (HashSet<string> enterWatchers, HashSet<string> leaveWatchers) Update(string entityId, Vector3 newPosition)
+        public (HashSet<int> enterWatchers, HashSet<int> leaveWatchers) Update(int entityId, Vector3 newPosition)
         {
             if (!pos.ContainsKey(entityId)) Add(entityId, newPosition);
 
@@ -96,11 +96,11 @@ namespace Server.Game.World.Services
             pos[entityId] = newPosition;
 
             var now = CollectVisibleSet(newPosition, entityId);
-            if (!visibleCache.TryGetValue(entityId, out var cache)) cache = new HashSet<string>();
+            if (!visibleCache.TryGetValue(entityId, out var cache)) cache = new HashSet<int>();
 
-            var enter = new HashSet<string>(now);
+            var enter = new HashSet<int>(now);
             enter.ExceptWith(cache);
-            var leave = new HashSet<string>(cache);
+            var leave = new HashSet<int>(cache);
             leave.ExceptWith(now);
 
             visibleCache[entityId] = now;
@@ -108,9 +108,9 @@ namespace Server.Game.World.Services
         }
 
 
-        public HashSet<string> QueryCircle(Vector3 centerPos, float radius)
+        public HashSet<int> QueryCircle(Vector3 centerPos, float radius)
         {
-            var res = new HashSet<string>();
+            var res = new HashSet<int>();
             var c = ToCell(centerPos);
 
             // 针对这个半径，计算需要遍历多少格子
@@ -135,7 +135,6 @@ namespace Server.Game.World.Services
                         if (dist2 > radius2)
                             continue;
 
-                        // 高度容忍（沿用你现有 AOI 的规则）
                         if (MathF.Abs(otherPos.Y - centerPos.Y) > heightTolerance)
                             continue;
 
@@ -166,9 +165,9 @@ namespace Server.Game.World.Services
             return set;
         }
 
-        private HashSet<string> CollectVisibleSet(in Vector3 centerPos, string selfId)
+        private HashSet<int> CollectVisibleSet(in Vector3 centerPos, int selfId)
         {
-            var res = new HashSet<string>();
+            var res = new HashSet<int>();
             var c = ToCell(centerPos);
 
             for (int dz = -neigh; dz <= neigh; dz++)

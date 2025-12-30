@@ -32,7 +32,7 @@ namespace Server.Game.World.AI
         public float LeashDistance { get; }
 
         // 战斗配置
-        public float AttackRange { get; set; } = 2.0f;
+        public float AttackRange { get; set; } = 3f;
         public float AttackCooldown { get; set; } = 2.0f;
 
         // --- HFSM 入口 ---
@@ -67,10 +67,10 @@ namespace Server.Game.World.AI
     }
 
 
-    public abstract record AIBaseIntent(string EntityId) : IActorMessage;
+    public abstract record AIBaseIntent(int EntityId) : IActorMessage;
     public sealed record AIBatchIntents(IReadOnlyList<AIBaseIntent> Intents) : IActorMessage;
     public sealed record AIMoveIntent(
-        string EntityId,
+        int EntityId,
         Vector3 TargetPos,
         float TargetYaw,
         Vector3 Direction,
@@ -79,13 +79,13 @@ namespace Server.Game.World.AI
 
 
     public sealed record AIRotateIntent(
-        string EntityId,
+        int EntityId,
         float Yaw
     ) : AIBaseIntent(EntityId);
 
     public sealed record AIAttackIntent(
-        string EntityId,
-        string TargetId,
+        int EntityId,
+        int TargetId,
         int SkillId
     ) : AIBaseIntent(EntityId);
 }

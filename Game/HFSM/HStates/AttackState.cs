@@ -22,6 +22,7 @@ namespace Server.Game.HFSM.HStates
         protected override void OnEnter()
         {
             ctx.Entity.Kinematics.State = EntityState.Attack;
+            
             CastCurrentSkill();
         }
 
@@ -35,16 +36,17 @@ namespace Server.Game.HFSM.HStates
 
         private void CastCurrentSkill()
         {
+      
             ctx.AttackRequested = false;
             if (ctx.Combat.IsSkillRunning(ctx.Entity.EntityId))
             {
                 ctx.Combat.InterruptSkill(ctx.Entity.EntityId);
             }
+            Console.WriteLine("触发Attack");
             bool success = ctx.Combat.TryCastSkill(ctx.Entity, ctx.SkillRequestData, out var _);
 
             if (success)
             {
-                Console.WriteLine("Attack:" + ctx.SkillRequestData.SkillId);
                 ctx.Combat.EmitEvent(new ExecuteSkillWorldEvent { Caster = ctx.Entity , SkillId = ctx.SkillRequestData.SkillId});
             }
             ctx.SkillRequestData = null;

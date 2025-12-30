@@ -11,57 +11,80 @@ namespace Server.Game.Contracts.Network
     public enum Protocol : ushort
     {
         Heart,
-        Login,
-        Register,
-        CreateCharacter,
+        SC_Login,
+        SC_Register,
+        SC_CreateCharacter,
+
+        SC_EnterRegion,
+        SC_LevelDungeon,
+        SC_EnterDungeon,
+
+        SC_EntitySpawn,
+        SC_EntityDespawn,
+        SC_CharacterMove,
+        SC_EntityMove,
+        SC_CharacterCastSkill,
+        SC_EntityCastSkill,
+        SC_EntityDeath,
+        SC_ApplyBuff,
+        SC_EntityDamage,
 
 
-        EnterGame,
-        EnterRegion,
-        LevelRegion,
+        SC_DungeonLootInfo,
+        SC_DungeonLootChoice,
+        SC_QuestListSync,
+        SC_QuestUpdated,
+        SC_QuestCompleted,
+        SC_QuestAccepted,
 
-        CreateDungeonTeam,
-        StartDungeon,
-        LoadDungeon,
-        EnterDungeon,
-        LevelDungeon,
-        DungeonLootChoice,
-        DungeonLootInfo,
+        SC_QueryInventory,
+        SC_AddInventoryItem,
+        SC_SwapStorageSlot,
 
-        EntitySpawn,
-        EntityDespawn,
-        EntityMove,
-        PlayerMove,
-        EntityReleaseSkill,
-        PlayerReleaseSkill,
-        ApplyBuff,
+        SC_FriendListSync,
 
-        MonsterDeath,
-        EntityDamage,
-
-        QueryInventory,
-        AddInventoryItem,
-        SwapStorageSlot,
-
-        QuestListSync,
-        QuestAccept,
-        QuestCompleted,
-        QuestUpdated,
+        SC_TeamCreated,
+        SC_StartDungeon,
+        SC_TeamQuited,
+        SC_EnterTeam,
 
 
+        CS_Login,
+        CS_Register,
+        CS_CreateCharacter,
 
-        InvitePlayer,
+        CS_EnterRegion,
+        CS_EnterGame,
+        CS_EnterDungeon,
+        CS_StartDungeon,
+        CS_LevelDungeon,
 
-        AcceptInvite,
-        EnterTeam,
-        ChatMessage,
-        SkillTimelineEvent,
 
-        AddFriend,
-        AddFriendRequest,
-        HandleFriendRequest,
-        AddFriendGroup,
-        FriendListSync,
+        CS_CharacterMove,
+        CS_CharacterCastSkill,
+        CS_DungeonLootChoice,
+
+
+        CS_QueryInventory,
+        CS_SwapStorageSlot,
+        CS_UseItem,
+
+        CS_CreateDungeonTeam,
+        CS_TeamInvite,
+        CS_AcceptInvite,
+
+        CS_AddFriend,
+        CS_DeleteFriend,
+        CS_FriendRequest,
+        CS_FriendChat,
+        CS_FriendRemark,
+        CS_MoveFriendToGroup,
+        CS_AlterFriendGroup,
+        CS_AddFriendGroup,
+
+        CS_AcceptQuest,
+        CS_SubmitQuest,
+        GM_AddItem,
     }
 
     public enum StateCode

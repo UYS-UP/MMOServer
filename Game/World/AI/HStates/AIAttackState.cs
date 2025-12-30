@@ -23,7 +23,6 @@ namespace Server.Game.World.AI.HStates
             var ai = ctx.Agent.Entity;
             if (target != null)
             {
-                Console.WriteLine("给你一刀");
                 var dir = Vector3.Normalize(target.Kinematics.Position - ai.Kinematics.Position);
                 float yaw = HelperUtility.GetYawFromDirection(dir);
                 ctx.AddIntent(new AIMoveIntent(ai.Identity.EntityId, ai.Kinematics.Position, yaw, Vector3.Zero, 0));

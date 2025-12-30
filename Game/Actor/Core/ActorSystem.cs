@@ -17,7 +17,7 @@ namespace Server.Game.Actor.Core
             return actor;  // 返回 ActorRef
         }
 
-        public string CreateActor<T>(T actor) where T : ActorBase
+        public async Task<string> CreateActor<T>(T actor) where T : ActorBase
         {
             if (actors.ContainsKey(actor.ActorId))
             {
@@ -30,8 +30,7 @@ namespace Server.Game.Actor.Core
                 {
                     throw new InvalidOperationException($"Actor {actor.ActorId} 添加失败");
                 }
-                actor.Initialize(this);
-                Console.WriteLine($"[ActorSystem] 创建 Actor: {actor.ActorId}");
+                await actor.Initialize(this);
                 return actor.ActorId;
             }
             catch (Exception ex)
@@ -41,20 +40,20 @@ namespace Server.Game.Actor.Core
             }
         }
 
-        public void StopActor(string actorId)
+        public async Task StopActor(string actorId)
         {
             if (actors.TryRemove(actorId, out var actor))
             {
-                actor.Stop();
+                await actor.Stop();
                 Console.WriteLine($"Actor {actorId} 已停止");
             }
         }
 
-        public void StopAllActors()
+        public async Task StopAllActors()
         {
             foreach (var actor in actors.Values)
             {
-                actor.Stop();
+                await actor.Stop();
             }
             actors.Clear();
             Console.WriteLine("所有 Actor 已停止");

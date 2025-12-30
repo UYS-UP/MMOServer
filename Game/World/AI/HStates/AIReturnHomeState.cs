@@ -14,5 +14,20 @@ namespace Server.Game.World.AI.HStates
         {
             Ctx = ctx;
         }
+
+        protected override void OnEnter()
+        {
+            Ctx.ReturningHome = true;
+            Ctx.EnsurePath(Ctx.Agent.HomePos);
+        }
+
+        protected override void OnUpdate(float deltaTime)
+        {
+            if(Ctx.ReturningHome)
+            {
+                Ctx.FollowPath(deltaTime);
+                if(Ctx.HasReachedTarget) Ctx.ReturningHome = false;
+            }
+        }
     }
 }

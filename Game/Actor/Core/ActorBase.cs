@@ -1,7 +1,6 @@
 ﻿using NPOI.SS.Formula.Functions;
 using Org.BouncyCastle.Asn1.Ocsp;
-using Server.Game.Actor.Domain.Time;
-using Server.Game.Actor.Network;
+using Server.Game.Actor.Domain.Gateway;
 using Server.Game.Contracts.Actor;
 using System;
 using System.Collections.Concurrent;
@@ -36,37 +35,46 @@ namespace Server.Game.Actor.Core
             messageChannel = Channel.CreateBounded<IActorMessage>(channelOptions);
         }
 
-        public virtual void Initialize(IActorSystem system)
+        public virtual async Task Initialize(IActorSystem system)
         {
             System = system;
-            IsRunning = true;
+      
             try
             {
-                Task.Run(MessageProcessingLoop, cts.Token);
-                OnStart();  // 关键！
+                await OnStart();
+                IsRunning = true;
+                _ = Task.Run(async () => { 
+                    try {
+                        await MessageProcessingLoop();
+                    }
+                    catch { throw; }
+                });
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[ActorBase] 初始化失败 ActorId={ActorId}: {ex}");
-                throw;  // 重新抛出，让 CreateActor 感知
+                throw;
             }
         }
 
         // 启动时的初始化
-        protected virtual void OnStart()
+        protected virtual Task OnStart()
         {
-
+            Console.WriteLine($"Start: {ActorId}");
+            return Task.CompletedTask;
         }
 
         // 停止时的清理
-        protected virtual void OnStop()
+        protected virtual Task OnStop()
         {
-
+            return Task.CompletedTask;
         }
 
-        protected virtual void OnError(Exception ex, object message)
+        protected virtual Task OnError(Exception ex, object message)
         {
             Console.WriteLine($"[Actor:{ActorId}] OnError: {ex}");
+            return Task.CompletedTask;
         }
 
 
@@ -91,16 +99,16 @@ namespace Server.Game.Actor.Core
 
         public async ValueTask TellGateway(IActorMessage message)
         {
-            await TellAsync(nameof(NetworkGatewayActor), message);
+            await TellAsync(nameof(GatewayActor), message);
         }
 
         // 子类实现消息处理逻辑
         protected abstract Task OnReceive(IActorMessage message);
 
-        public void Stop()
+        public async Task Stop()
         {
             cts.Cancel();
-            OnStop();
+            await OnStop();
         }
 
         public async Task StopAsync()
@@ -118,7 +126,7 @@ namespace Server.Game.Actor.Core
             }
             catch (OperationCanceledException) { }
 
-            OnStop();
+            await OnStop();
         }
 
         // 消息处理循环
@@ -132,11 +140,11 @@ namespace Server.Game.Actor.Core
                     if (!IsRunning) break;
                     try
                     {
-                        await OnReceive(message);
+                        await OnReceive(message).ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {
-                        OnError(ex, message);
+                        await OnError(ex, message);
                     }
                 }
             }

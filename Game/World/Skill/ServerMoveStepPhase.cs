@@ -51,7 +51,7 @@ namespace Server.Game.World.Skill
 
             instance.Caster.Kinematics.Position += displacement;
 
-            Console.WriteLine($"[ServerBakedMove] t:{t:F2} ratio:{currentRatio:F2} delta:{displacement}");
+            // Console.WriteLine($"[ServerBakedMove] t:{t:F2} ratio:{currentRatio:F2} delta:{displacement}");
         }
 
 

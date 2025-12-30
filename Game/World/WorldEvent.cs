@@ -26,6 +26,6 @@ namespace Server.Game.World
     {
         public List<EntityDeath> Deaths;
         public List<EntityWound> Wounds;
-        public string Source;
+        public int Source;
     }
 }

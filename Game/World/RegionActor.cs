@@ -1,8 +1,9 @@
 ﻿using Google.Protobuf;
 using Server.DataBase.Entities;
 using Server.Game.Actor.Core;
-using Server.Game.Actor.Domain.Team;
-using Server.Game.Contracts.Actor;
+using Server.Game.Actor.Domain.AAuth;
+using Server.Game.Actor.Domain.ATime;
+using Server.Game.Actor.Domain.Gateway;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
 using Server.Game.World.AStar;
@@ -17,25 +18,25 @@ namespace Server.Game.World
     public class RegionActor : ActorBase
     {
         private int tick;
-        private string regionId;
+        private int mapId;
         private RegionWorld regionWorld;
 
         private readonly ActorEventBus bus;
 
         private readonly BatchGatewaySend gatewaySend;
         private readonly BatchActorSend actorSend;
-        private readonly List<string> waitDestoryDungeon;
+        private readonly List<int> waitDestoryDungeon;
 
         private readonly Queue<IActorMessage> messageQueue;
 
 
-        public RegionActor(string actorId, string regionId, ActorEventBus bus) : base(actorId)
+        public RegionActor(string actorId, int mapId, ActorEventBus bus) : base(actorId)
         {
             this.bus = bus;
-            this.regionId = regionId;
+            this.mapId = mapId;
             gatewaySend = new BatchGatewaySend();
             actorSend = new BatchActorSend();
-            waitDestoryDungeon = new List<string>();
+            waitDestoryDungeon = new List<int>();
 
             messageQueue = new Queue<IActorMessage>();
 
@@ -43,14 +44,14 @@ namespace Server.Game.World
         }
 
 
-        protected override void OnStart()
+        protected override async Task OnStart()
         {
-            base.OnStart();
+            await base.OnStart();
             bus.Subscribe<TickUpdateEvent>(ActorId);
-            if(RegionTemplateConfig.TryGetRegionTemplateById(regionId, out var template)){
+            if(RegionTemplateConfig.TryGetRegionTemplateById(mapId, out var template)){
                 var context = new EntityContext
                 {
-                    Id = regionId,
+                    Id = mapId,
                     Actor = actorSend,
                     Gateway = gatewaySend,
                     WaitDestory = waitDestoryDungeon,
@@ -88,79 +89,19 @@ namespace Server.Game.World
 
         #region Message Handlers
 
-        private void HandleCharacterSpawn(CharacterSpawn message)
+        private void HandleCharacterSpawn(A_CharacterSpawn message)
         {
-            var kinematics = new KinematicsComponent
-            {
-                Position = message.Position,
-                Yaw = message.Yaw,
-                Direction = Vector3.Zero,
-                Speed = message.Speed,
-                State = EntityState.Idle 
-            };
-
-            var combat = new CombatComponent
-            {
-                Attack = 50,
-                Level = message.Level,
-                Hp = 1000,
-                Maxhp = 1000,
-                Mp = 1000,
-                MaxMp = 1000,
-                Ex = message.Ex,
-                MaxEx = message.MaxEx,
-            };
-
-
-
-            var skillBook = new SkillBookComponent
-            {
-                Skills = message.Skills
-            };
-
-            var identity = new IdentityComponent
-            {
-                EntityId = message.EntityId,
-                Type = message.Type,
-                TemplateId = message.TemplateId,
-                Name = message.Name,
-            };
-
-            var worldRef = new WorldRefComponent
-            {
-                RegionId = message.RegionId,
-                DungeonId = message.DungeonId
-            };
-
-            var characterProfile = new CharacterProfileComponent
-            {
-                Profession = message.Profession,
-                PlayerId = message.PlayerId,
-                CharacterId = message.CharacterId,
-            };
-
-
-            var entity = new EntityRuntime
-            {
-                Kinematics = kinematics,
-                Combat = combat,
-                SkillBook = skillBook,
-                Identity = identity,
-                WorldRef = worldRef,
-                Profile = characterProfile,
-            };
-
-            regionWorld.HandleCharacterSpawn(entity);
+            regionWorld.HandleCharacterSpawn(message.Runtime);
 
         }
 
-        private void HandleCharacterDespawn(CharacterDespawn message)
+        private void HandleCharacterDespawn(A_CharacterDespawn message)
         {
             regionWorld.HandleCharacterDespawn(message.EntityId);
             
         }
 
-        private void HandleCharacterMove(CharacterMove message)
+        private void HandleCharacterMove(A_CharacterMove message)
         {
 
             regionWorld.HandleCharacterMove(
@@ -173,7 +114,7 @@ namespace Server.Game.World
         }
 
 
-        private void HandleCharacterSkillRelease(CharacterSkillRelease message)
+        private void HandleCharacterSkillRelease(A_CharacterCastSkill message)
         {
 
             regionWorld.HandleCharacterCastSkill(message.ClientTick, message.SkillId, message.EntityId, message.InputType, message.TargetPosition, message.TargetDirection, message.TargetEntityId);
@@ -195,10 +136,10 @@ namespace Server.Game.World
             {
                 switch (message)
                 {
-                    case CharacterSpawn spawn: HandleCharacterSpawn(spawn); break;
-                    case CharacterDespawn despawn: HandleCharacterDespawn(despawn); break;
-                    case CharacterMove move: HandleCharacterMove(move); break;
-                    case CharacterSkillRelease skill: HandleCharacterSkillRelease(skill); break;
+                    case A_CharacterSpawn spawn: HandleCharacterSpawn(spawn); break;
+                    case A_CharacterDespawn despawn: HandleCharacterDespawn(despawn); break;
+                    case A_CharacterMove move: HandleCharacterMove(move); break;
+                    case A_CharacterCastSkill skill: HandleCharacterSkillRelease(skill); break;
    
                 }
             }

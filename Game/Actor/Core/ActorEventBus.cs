@@ -93,57 +93,16 @@ namespace Server.Game.Actor.Core
 
             if (!subs.TryGetValue(eventType, out var map) || map.IsEmpty)
                 return;
-            // Console.WriteLine($"[EventBus] 发布事件: {eventMessage.GetType().Name}, 订阅者数量: {map.Count}");
-            if (map.Count == 1)
-            {
-                await SendToSingleSubscriber(map.Values.First(), eventMessage);
-                return;
-            }
-
-            var tasks = new List<ValueTask>();
             foreach (var subscriber in map.Values)
             {
-                if (subscriber.Cts.IsCancellationRequested)
+                var actor = actorSystem.GetActor(subscriber.ActorId);
+                if (actor != null)
                 {
-                    // 清理无效订阅者
-                    map.TryRemove(subscriber.ActorId, out _);
-                    continue;
-                }
-
-             
-                tasks.Add(SendToSubscriber(subscriber, eventMessage));
-            }
-
-            // 并行发送，但不等待所有完成（fire-and-forget模式）
-            _ = Task.WhenAll(tasks.Select(t => t.AsTask()));
-        }
-
-        private async ValueTask SendToSubscriber(Subscriber subscriber, IActorMessage message)
-        {
-            try
-            {
-                if (await subscriber.Channel.Writer.WaitToWriteAsync(subscriber.Cts.Token))
-                {
-                    subscriber.Channel.Writer.TryWrite(message);
+                    await actor.TellAsync(subscriber.ActorId, eventMessage);
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"向订阅者 {subscriber.ActorId} 发送消息失败: {ex}");
-            }
         }
 
-        private async ValueTask SendToSingleSubscriber(Subscriber subscriber, IActorMessage message)
-        {
-            try
-            {
-                await subscriber.Channel.Writer.WriteAsync(message, subscriber.Cts.Token);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"向单个订阅者 {subscriber.ActorId} 发送消息失败: {ex}");
-            }
-        }
 
         public void CleanupInactiveSubscribers(TimeSpan inactivityThreshold)
         {
@@ -199,7 +158,7 @@ namespace Server.Game.Actor.Core
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"处理事件消息时发生错误 ActorId: {subscriber.ActorId}");
+                        Console.WriteLine($"处理事件消息时发生错误 ActorId: {subscriber.ActorId}, {ex}");
                     }
                 }
             }catch(Exception ex)

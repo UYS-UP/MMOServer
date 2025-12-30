@@ -13,20 +13,21 @@ namespace Server.Game.World.AI
     {
         private float maxThreatDist = 50f;
         private float baseThreat = 100;
-        private readonly PriorityQueue<string, float> threatQueue = new PriorityQueue<string, float>();
+        private readonly PriorityQueue<int, float> threatQueue = new PriorityQueue<int, float>();
 
-        public void Tick(AIAgent agent, IReadOnlyDictionary<string, EntityRuntime> entities, IReadOnlyCollection<string> visibleEntities)
+        public void Tick(AIAgent agent, IReadOnlyDictionary<int, EntityRuntime> entities, IReadOnlyCollection<int> visibleEntities)
         {
             threatQueue.Clear();
             if (agent.AiFsm.Ctx.ReturningHome)
             {
                 float distFromHome = Vector3.Distance(agent.Entity.Kinematics.Position, agent.HomePos);
-                if (distFromHome > 100f)
+                if (distFromHome > agent.LeashDistance)
                 {
                     threatQueue.Clear();
                     agent.Target = null;
                     return;
                 }
+                return;
             }
             foreach (var entityId in visibleEntities)
             {
@@ -46,18 +47,19 @@ namespace Server.Game.World.AI
             }
         }
 
-        public void Tick(AIAgent agent, Dictionary<string, EntityRuntime> visibleEntities)
+        public void Tick(AIAgent agent, Dictionary<int, EntityRuntime> visibleEntities)
         {
             threatQueue.Clear();
             if(agent.AiFsm.Ctx.ReturningHome)
             {
                 float distFromHome = Vector3.Distance(agent.Entity.Kinematics.Position, agent.HomePos);
-                if (distFromHome > 100f)
+                if (distFromHome > agent.LeashDistance)
                 {
                     threatQueue.Clear();
                     agent.Target = null;
                     return;
                 }
+                return;
             }
 
             foreach (var kv in visibleEntities)

@@ -20,5 +20,10 @@ namespace Server.Game.Contracts.Common
         {
             return $"{typeof(T).Name}_{suffix}";
         }
+
+        public static string GetActor<T>(int suffix)
+        {
+            return $"{typeof(T).Name}_{suffix}";
+        }
     }
 }

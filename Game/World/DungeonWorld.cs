@@ -1,4 +1,5 @@
 ﻿using Server.DataBase.Entities;
+using Server.Game.Actor.Domain.ACharacter;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
@@ -54,8 +55,9 @@ namespace Server.Game.World
         private readonly List<DungeonLootEntry> pendingLoot = new();
         private float LimitTime;
 
-        public DungeonWorld(EntityContext context, SkillSystem skill, BuffSystem buff, AreaBuffSystem areaBuff, AOIService aoi, NavVolumeService nav, AStarPathfind pathfinder) : base(context, skill, buff, areaBuff, aoi, nav, pathfinder)
+        public DungeonWorld(EntityContext context, SkillSystem skill, BuffSystem buff, AreaBuffSystem areaBuff, AOIService aoi, NavVolumeService nav, AStarPathfind pathfinder, float limitTime) : base(context, skill, buff, areaBuff, aoi, nav, pathfinder)
         {
+            LimitTime = limitTime;
         }
 
         public override void OnTickUpdate(int tick, float deltaTime)
@@ -64,7 +66,7 @@ namespace Server.Game.World
             UpdateDungeonLimitTime(deltaTime);
         }
 
-        protected override void HandleEntityDeath(string entityId, EntityType entityType)
+        protected override void HandleEntityDeath(int entityId, EntityType entityType)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
 
@@ -84,7 +86,7 @@ namespace Server.Game.World
                             // 添加给玩家的背包
                             //var completedPayload = new ServerDungeonCompleted();
                             //regionState.GatewaySend.AddSendToPlayers(allPlayerIds, Protocol.DungeonCompleted, completedPayload);
-                            Context.Actor.AddTell($"PlayerActor_{onlyPlayerId}", new ItemsAcquired(lootItems));
+                            Context.Actor.AddTell($"PlayerActor_{onlyPlayerId}", new A_ItemsAcquired(lootItems));
                             // 触发副本完成（注册销毁定时器）
                             HandleDungeonCompleted("副本通关了");
                         }
@@ -108,15 +110,15 @@ namespace Server.Game.World
 
                             pendingLoot.Clear();
                             pendingLoot.AddRange(entries);
-                            Context.Gateway.AddSend(allPlayerIds, Protocol.DungeonLootInfo, lootItems);
+                            Context.Gateway.AddSend(allPlayerIds, Protocol.SC_DungeonLootInfo, lootItems);
                         }
                     }
                 }
             }
 
             Context.RemoveEntity(entityId);
-            Context.Gateway.AddSend(allPlayerIds, Protocol.EntityDespawn,
-                new ServerEntityDespawn(Context.Tick, new HashSet<string> { entityId }));
+            Context.Gateway.AddSend(allPlayerIds, Protocol.SC_EntityDespawn,
+                new ServerEntityDespawn(Context.Tick, new HashSet<int> { entityId }));
         }
 
         public void HandleDungeonCompleted(string cause)
@@ -126,7 +128,7 @@ namespace Server.Game.World
             {
 
             }
-
+            Console.WriteLine("副本时间到了");
             Context.WaitDestory.Add(Context.Id);
         }
 
@@ -164,7 +166,7 @@ namespace Server.Game.World
         }
 
 
-        public void HandleLootChoice(string entityId, string itemId, bool isRoll)
+        public void HandleLootChoice(int entityId, string itemId, bool isRoll)
         {
             var entry = pendingLoot.FirstOrDefault(l => l.Item.ItemId == itemId);
             if (entry == null) return;
@@ -184,7 +186,7 @@ namespace Server.Game.World
 
             Context.Gateway.AddSend(
                 Context.Players,
-                Protocol.DungeonLootChoice,
+                Protocol.SC_DungeonLootChoice,
                 new ServerDungeonLootChoice
                 {
                     EntityName = entity.Identity.Name,
@@ -235,7 +237,7 @@ namespace Server.Game.World
 
             if (!string.IsNullOrEmpty(winner))
             {
-                Context.Actor.AddTell($"PlayerActor_{winner}", new ItemAcquired(entry.Item));
+                Context.Actor.AddTell($"PlayerActor_{winner}", new A_ItemAcquired(entry.Item));
             }
         }
 

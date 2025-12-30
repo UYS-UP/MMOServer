@@ -12,14 +12,14 @@ namespace Server.Game.HFSM.HStates
         private readonly EntityFsmContext ctx;
         public readonly LocomotionState Locomotion;
         public readonly ActionState Action;
-        public StunnedState Hit;
+        public HitState Hit;
 
         public AliveState(EntityFsmContext ctx, HStateMachine m, HState p) : base(m, p)
         {
             this.ctx = ctx;
             Locomotion = new LocomotionState(ctx, m, this);
             Action = new ActionState(ctx, m, this);
-            Hit = new StunnedState(ctx, m, this);
+            Hit = new HitState(ctx, m, this);
         }
 
  
@@ -28,8 +28,8 @@ namespace Server.Game.HFSM.HStates
 
         protected override HState GetTransition()
         {
-            if (ctx.DeathRequested) return Parent.AsTo<RootState>()?.Dead;
-            if (ctx.HitRequested) return Hit;
+            if (ActiveChild != Hit && ctx.HitRequested) return Hit;
+
             if (ActiveChild == Locomotion)
             {
                 if (ctx.AttackRequested || ctx.CastRequested || ctx.RollRequested)
@@ -39,18 +39,17 @@ namespace Server.Game.HFSM.HStates
             }
             else if (ActiveChild == Action)
             {
-                if (!ctx.Combat.IsSkillRunning(ctx.Entity.EntityId))
+                if (Action.IsFinished)
                 {
                     return Locomotion;
                 }
+            }else if(ActiveChild == Hit)
+            {
+                if (Hit.IsFinished)
+                    return Locomotion;
             }
 
-            return null;
-        }
-
-        protected override void OnUpdate(float deltaTime)
-        {
-            ctx.ConsumeOneFrameFlags();
+           return null;
         }
     }
 }

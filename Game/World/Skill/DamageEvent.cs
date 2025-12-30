@@ -1,22 +1,14 @@
-﻿using NPOI.SS.Formula.Functions;
-using Org.BouncyCastle.Asn1.X509;
+﻿
+using NPOI.SS.Formula.Functions;
 using Server.DataBase.Entities;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
-using Server.Game.World;
+using Server.Game.World.Skill;
 using Server.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static Mysqlx.Crud.Order.Types;
 
 namespace Server.Game.World.Skill
 {
-
-
     [JsonTypeAlias(nameof(CircleDamageEvent))]
     public class CircleDamageEvent : SkillEvent
     {
@@ -24,17 +16,22 @@ namespace Server.Game.World.Skill
         public float Radius { get; set; }
         public float Angle { get; set; }
         public int Damage {  get; set; }
+        private List<EntityDeath> deaths = new List<EntityDeath>();
+        private List<EntityWound> wounds = new List<EntityWound>();
 
         public override void Execute(SkillInstance inst)
         {
             Console.WriteLine("触发CircleDamageEvent, Radius:" + Radius);
             var visibleEntities = inst.Combat.GetVisibleEntities(inst.Caster.EntityId);
-            var deaths = new List<EntityDeath>();
-            var wounds = new List<EntityWound>();
+            deaths.Clear();
+            wounds.Clear();
             var forward = HelperUtility.YawToForward(inst.Caster.Kinematics.Yaw);
             foreach (var entityId in visibleEntities)
             {
-                if(!inst.Combat.TryGetEntity(entityId, out var target)) {  continue; }
+                if (!inst.Combat.TryGetEntity(entityId, out var target)) { continue; }
+                if (target.Identity.Type == inst.Caster.Identity.Type) { continue; }
+                if (target.Kinematics.State == EntityState.Roll || 
+                    target.Kinematics.State == EntityState.Dead) { continue; }
                 var delta = target.Kinematics.Position - inst.Caster.Kinematics.Position;
                 float distSquared = delta.X * delta.X + delta.Z * delta.Z;
                 if (distSquared > Radius * Radius) continue;
@@ -42,41 +39,41 @@ namespace Server.Game.World.Skill
                 float dot = Vector3.Dot(forward, direction);
                 float angleCos = MathF.Cos(Angle * MathF.PI / 180f / 2f);
                 if (dot < angleCos) continue;
-                //    target.Combat.ApplyDamage(inst.Caster.Combat.Attack + Damage);
-                //    if (target.Combat.Hp <= 0)
-                //    {
-                //        deaths.Add(new EntityDeath
-                //        {
-                //            DroppedItems = new List<ItemData>(),
-                //            Target = entityId,
-                //            Wound = inst.Caster.Combat.Attack,
-                //        });
-                //        target.HFSM.Ctx.DeathRequested = true;
-                //    }
-                //    else
-                //    {
-                //        wounds.Add(new EntityWound
-                //        {
-                //            CurrentHp = target.Combat.Hp,
-                //            Target = entityId,
-                //            Wound = inst.Caster.Combat.Attack,
-                //        });
-                //        target.HFSM.Ctx.HitRequested = true;
-                //    }
+                target.Stats.CurrentHp = Math.Max(target.Stats.CurrentHp - Damage, 0);
+             
+                if (target.Stats.CurrentHp <= 0)
+                {
+                    deaths.Add(new EntityDeath
+                    {
+                        DroppedItems = new List<ItemData>(),
+                        Target = entityId,
+                        Wound = Damage,
+                    });
+                    target.HFSM.Ctx.DeathRequested = true;
+                }
+                else
+                {
+                    wounds.Add(new EntityWound
+                    {
+                        CurrentHp = target.Stats.CurrentHp,
+                        Target = entityId,
+                        Wound = Damage,
+                    });
+                    target.HFSM.Ctx.HitRequested = true;
+                }
 
-                //}
-                //if (deaths.Count == 0 && wounds.Count == 0) return;
-                //inst.Combat.EmitEvent(
-                //    new DamageWorldEvent
-                //    {
-                //        Deaths = deaths,
-                //        Wounds = wounds,
-                //        Source = inst.Caster.EntityId
-                //    });
             }
-
+            if (deaths.Count == 0 && wounds.Count == 0) return;
+            inst.Combat.EmitEvent(
+                new DamageWorldEvent
+                {
+                    Deaths = deaths,
+                    Wounds = wounds,
+                    Source = inst.Caster.EntityId
+                });
+             }
         }
-    }
+    
 
     public class RectangleDamageEvent: SkillEvent
     {

@@ -13,6 +13,8 @@ namespace Server.Game.HFSM.HStates
         public readonly RollState Roll;
         public readonly CastSkillState CastSkill;
 
+        public bool IsFinished => !ctx.Combat.IsSkillRunning(ctx.Entity.EntityId);
+
         public ActionState(EntityFsmContext ctx, HStateMachine m, HState p) : base(m, p)
         {
             this.ctx = ctx;

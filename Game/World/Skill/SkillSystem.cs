@@ -9,7 +9,7 @@ namespace Server.Game.World.Skill
     public class SkillSystem
     {
         // 记录正在运行的技能实例
-        private readonly Dictionary<string, SkillInstance> activeSkills = new();
+        private readonly Dictionary<int, SkillInstance> activeSkills = new();
 
         // 冷却记录
         private readonly Dictionary<string, int> cooldownTracker = new();
@@ -19,10 +19,10 @@ namespace Server.Game.World.Skill
         public SkillSystem() { }
 
 
-        public bool IsCasting(string entityId) => activeSkills.ContainsKey(entityId);
+        public bool IsCasting(int entityId) => activeSkills.ContainsKey(entityId);
 
 
-        public int GetCurrentSkillId(string entityId)
+        public int GetCurrentSkillId(int entityId)
             => activeSkills.TryGetValue(entityId, out var inst) ? inst.SkillId : 0;
 
         public bool TryCastSkill(
@@ -63,11 +63,12 @@ namespace Server.Game.World.Skill
             return false;
         }
 
-        public void ForceInterrupt(string entityId)
+        public void ForceInterrupt(int entityId)
         {
             if (activeSkills.TryGetValue(entityId, out var skill))
             {
                 skill.Interrupt();
+                Console.WriteLine("打断");
             }
         }
 
@@ -80,7 +81,7 @@ namespace Server.Game.World.Skill
         }
 
         // 内部回调：技能自然结束或被打断时调用
-        private void OnSkillFinished(string entityId)
+        private void OnSkillFinished(int entityId)
         {
             if (activeSkills.ContainsKey(entityId))
             {
@@ -106,15 +107,7 @@ namespace Server.Game.World.Skill
                 reason = "冷却中";
                 return false;
             }
-
-            // MP 检查
-            var meta = skill.GetComponent<SkillMetaComponent>();
-            if (caster.Combat.Mp < meta.ManaCost)
-            {
-                reason = "MP不足";
-                return false;
-            }
-
+        
             return true;
         }
 
@@ -123,13 +116,11 @@ namespace Server.Game.World.Skill
             var skill = caster.SkillBook.Skills[data.SkillId];
             var meta = skill.GetComponent<SkillMetaComponent>();
 
-            caster.Combat.Mp -= meta.ManaCost;
-
             var cdKey = $"{caster.EntityId}_{data.SkillId}";
             cooldownTracker[cdKey] = ctx.Tick + (int)(meta.Cooldown * 1000f / GameField.TICK_INTERVAL_MS);
         }
 
-        public bool IsSkillCooldown(ICombatContext ctx, string casterId, int skillId)
+        public bool IsSkillCooldown(ICombatContext ctx, int casterId, int skillId)
         {
             var cdKey = $"{casterId}_{skillId}";
             

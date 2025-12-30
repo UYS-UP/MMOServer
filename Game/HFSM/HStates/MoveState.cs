@@ -20,10 +20,8 @@ namespace Server.Game.HFSM.HStates
             ctx.LockMove = false;
             ctx.LockTurn = false;
             ctx.Entity.Kinematics.State = EntityState.Move;
-            Console.WriteLine("Enter Move");
         }
 
-        protected override HState GetTransition()
-            => !ctx.HasMoveInput ? Parent.AsTo<LocomotionState>().Idle : null;
+      
     }
 }
