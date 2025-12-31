@@ -51,16 +51,16 @@ namespace Server.Game.Contracts.Network
     public class ClientCreateCharacter
     {
         [Key(0)] public string CharacterName { get; set; }
-        [Key(1)] public ProfessionType Profession { get; set; }
+        [Key(1)] public int ServerId { get; set; }
 
         public ClientCreateCharacter()
         {
         }
 
-        public ClientCreateCharacter(string characterName, ProfessionType profession)
+        public ClientCreateCharacter(string characterName, int serverId)
         {
             CharacterName = characterName;
-            Profession = profession;
+            ServerId = serverId;
         }
     }
 

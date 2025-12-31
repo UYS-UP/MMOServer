@@ -61,6 +61,8 @@ namespace Server.DataBase
             return await dbSet.CountAsync(predicate);
         }
 
+        public virtual IQueryable<T> Query() => dbSet;
+
 
         #endregion
 

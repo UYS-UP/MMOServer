@@ -18,18 +18,13 @@ namespace Server.DataBase.Service
         /// <summary>
         /// 创建角色 (简化版)
         /// </summary>
-        public async Task<CreateCharacterDto> CreateCharacterAsync(string playerId, string name, int initialMapId)
+        public async Task<CreateCharacterDto> CreateCharacterAsync(string playerId, string name, int initialMapId, int serverId)
         {
             try
             {
                 if (await unitOfWork.Characters.AnyAsync(c => c.Name == name))
                 {
-                    return new CreateCharacterDto
-                    {
-                        character = null,
-                        Sucess = false,
-                        Message = "该昵称已被使用"
-                    };
+                    return new CreateCharacterDto { Sucess = false, Message = "该昵称已被使用" };
                 }
 
                 var newChar = new Character
@@ -38,40 +33,37 @@ namespace Server.DataBase.Service
                     PlayerId = playerId,
                     Name = name,
                     Level = 1,
-                    Hp = 100,
+                    Exp = 0,
                     Gold = 0,
                     MapId = initialMapId,
-                    X = 0,
-                    Y = 0,
-                    Z = 0,
+                    ServerId = serverId,
+                    Attributes = new Dictionary<AttributeType, float>
+                {
+                    { AttributeType.MaxHp, 100 },
+                    { AttributeType.MaxEx, 100 }
+                },
                     CreateTime = DateTime.UtcNow,
-                    LastLoginTime = DateTime.UtcNow,
-                    ServerId = 0
+                    LastLoginTime = DateTime.UtcNow
                 };
 
                 await unitOfWork.Characters.AddAsync(newChar);
 
-                // var starterWeapon = new WeaponItem { ... };
-                // await unitOfWork.WeaponItems.AddAsync(starterWeapon);
+                // 初始化基础武器熟练度 (可选)
+                await unitOfWork.WeaponMasteries.AddAsync(new WeaponMastery
+                {
+                    CharacterId = newChar.CharacterId,
+                    WeaponType = WeaponType.Katana,
+                    Level = 1
+                });
 
                 await unitOfWork.SaveChangesAsync();
 
-                return new CreateCharacterDto
-                {
-                    character = newChar,
-                    Sucess = true,
-                    Message = "创建成功"
-                };
+                return new CreateCharacterDto { character = newChar, Sucess = true, Message = "创建成功" };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"创建角色失败: {ex}");
-                return new CreateCharacterDto
-                {
-                    character = null,
-                    Sucess = false,
-                    Message = "创建角色失败"
-                };
+                return new CreateCharacterDto { Sucess = false, Message = "系统错误" };
             }
         }
 
@@ -80,33 +72,22 @@ namespace Server.DataBase.Service
         /// </summary>
         public async Task<Character> GetCharacterFullAsync(string characterId)
         {
-            return await unitOfWork.Characters.GetByIdAsync(characterId);
-
-            // context.Characters.Include(c => c.WeaponItems).FirstOrDefault...
+            return await unitOfWork.Characters.Query()
+                .Include(c => c.InventoryItems)
+                .Include(c => c.WeaponMasteries)
+                .FirstOrDefaultAsync(c => c.CharacterId == characterId);
         }
 
-        public async Task SaveCharacterStateAsync(string characterId, int hp, long exp, int mapId, System.Numerics.Vector3 pos, float yaw)
+        public async Task SaveCharacterStateAsync(Character character, int hp, long exp, int mapId, System.Numerics.Vector3 pos, float yaw)
         {
-            var character = await unitOfWork.Characters.GetByIdAsync(characterId);
-            if (character != null)
-            {
-                character.Hp = hp;
-                character.Exp = exp;
-                character.MapId = mapId;
-                character.X = pos.X;
-                character.Y = pos.Y;
-                character.Z = pos.Z;
-                character.Yaw = yaw;
-                character.LastLoginTime = DateTime.UtcNow;
-
-                await unitOfWork.SaveChangesAsync();
-            }
+            character.LastLoginTime = DateTime.UtcNow;
+            unitOfWork.Characters.Update(character);
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task<List<Character>> GetPlayerCharactersRawAsync(string playerId)
         {
-            var result = await unitOfWork.Characters.FindAsync(c => c.PlayerId == playerId);
-            return result.ToList();
+            return (await unitOfWork.Characters.FindAsync(c => c.PlayerId == playerId)).ToList();
         }
 
         // 删除角色

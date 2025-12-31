@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Server.Data;
+using Server.Data.Game.Json.ItemJson;
 using Server.DataBase;
 using Server.DataBase.Service;
 using Server.Game.Actor.Core;
@@ -22,6 +23,7 @@ public class Program
 {
     private static async Task Main(string[] args)
     {
+        ItemJsonSerializer.Deserializer("D:\\Project\\UnityDemo\\MMORPGServer\\Data\\Game\\Json\\ItemJson\\ItemConfigs.json");
         SkillTimelineJsonSerializer.Deserializer("D:\\Project\\UnityDemo\\MMORPGServer\\Data\\Game\\Json\\SkillJson\\SkillTimelineConfig.json");
         // Console.WriteLine($"{ExcelValue.RoleBaseTable[((int)RoleType.Warrior).ToString()].Attack}");
         // 创建服务器端点

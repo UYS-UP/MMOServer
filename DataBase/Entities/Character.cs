@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Server.Game.Contracts.Server;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,6 +26,10 @@ namespace Server.DataBase.Entities
         [MaxLength(64)]
         public string PlayerId { get; set; }
 
+        [Column("serverId")]
+        [Required]
+        public int ServerId { get; set; }
+
         [Column("name")]
         [Required]
         [MaxLength(50)]
@@ -37,11 +43,10 @@ namespace Server.DataBase.Entities
         [Column("exp")]
         public long Exp { get; set; }
 
-        // 金币/代币 (可以单独拆分表，也可以放这里)
         [Column("gold")]
         public long Gold { get; set; }
 
-        [Column("mapId")] // 所在的地图/场景配置ID
+        [Column("mapId")]
         public int MapId { get; set; }
 
         [Column("x")]
@@ -56,8 +61,7 @@ namespace Server.DataBase.Entities
         [Column("yaw")] // 朝向
         public float Yaw { get; set; }
 
-        [Column("hp")]
-        public int Hp { get; set; }     
+        public Dictionary<AttributeType, float> Attributes { get; set; } = new Dictionary<AttributeType, float>();
 
         [Column("lastLoginTime")]
         public DateTime LastLoginTime { get; set; }
@@ -65,14 +69,14 @@ namespace Server.DataBase.Entities
         [Column("createTime")]
         public DateTime CreateTime { get; set; }
 
-        [Column("serverId")]
-        public int ServerId { get; set; }
+
 
         [ForeignKey("PlayerId")]
         public virtual Player Player { get; set; }
 
-        // 级联加载背包和武器
+        // 级联加载背包和武器熟练度
         public virtual ICollection<InventoryItem> InventoryItems { get; set; }
-        public virtual ICollection<WeaponItem> WeaponItems { get; set; }
+        public virtual ICollection<WeaponMastery> WeaponMasteries { get; set; }
+
     }
 }

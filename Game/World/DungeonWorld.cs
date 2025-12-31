@@ -145,21 +145,14 @@ namespace Server.Game.World
         {
             var item = new EquipData
             {
-                ItemId = HelperUtility.GetKey(),
-                ItemTemplateId = "0001",
+                TemplateId = "0001",
                 ItemName = "长剑",
                 ItemType = ItemType.Equip,
-                QuantityType = QuantityType.Common,
+                QuantityType = QualityType.Common,
                 Description = "这是一把长剑",
-                Gold = 100,
+                Price = 100,
                 IsStack = false,
                 ItemCount = 1,
-                Health = 0,
-                Mana = 0,
-                AttackPower = 10,
-                DefencePower = 0,
-                SpellPower = 0,
-                Level = 1,
                 EquipType = EquipType.Weapon
             };
             return new List<ItemData> { item };
@@ -168,7 +161,7 @@ namespace Server.Game.World
 
         public void HandleLootChoice(int entityId, string itemId, bool isRoll)
         {
-            var entry = pendingLoot.FirstOrDefault(l => l.Item.ItemId == itemId);
+            var entry = pendingLoot.FirstOrDefault(l => l.Item.TemplateId == itemId);
             if (entry == null) return;
             if (!Context.TryGetEntity(entityId, out var entity)) return;
             if (!entry.PlayerChoices.TryGetValue(entity.Profile.PlayerId, out var choice)) return;

@@ -12,7 +12,7 @@ namespace Server.Game.Actor.Domain.AAuth
 
     public record class CS_PlayerRegister(string Username, string Password, string RePassword, Guid SessionId) : IActorMessage;
 
-    public record class CS_CreateCharacter(Guid SessionId, string PlayerId, string CharacterName) : IActorMessage;
+    public record class CS_CreateCharacter(Guid SessionId, string PlayerId, string CharacterName, int ServerId) : IActorMessage;
 
     public record class PlayerDisconnectionEvent(string PlayerId) : IActorMessage;
 }

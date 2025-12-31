@@ -16,13 +16,17 @@ namespace Server.Game.Actor.Domain.ACharacter
 
         private async Task HandleMonsterKiller(A_MonsterKiller message)
         {
-            Dictionary<SlotKey, ItemData> itmes = new Dictionary<SlotKey, ItemData>();
+            Dictionary<SlotKey, ItemData> items = new Dictionary<SlotKey, ItemData>();
             foreach (var droppedItem in message.DroppedItems)
             {
-                if (!storage.AddItem(droppedItem, out var slot)) continue;
-                itmes[slot] = droppedItem;
+                if (storage.AddItem(droppedItem, out var chantedSlots) != 0) continue;
+                foreach (var changedSlot in chantedSlots)
+                {
+                    if (!storage.TryGetItem(changedSlot, out var value)) return;
+                    items[changedSlot] = value;
+                }
             }
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerAddItem { Items = itmes, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) }));
+            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerAddItem { Items = items, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) }));
 
             var progress = quest.OnEvent(message);
             if (progress.Count == 0) return;
@@ -34,16 +38,20 @@ namespace Server.Game.Actor.Domain.ACharacter
 
         private async Task HandlItemsAcquired(A_ItemsAcquired message)
         {
-            Dictionary<SlotKey, ItemData> itmes = new Dictionary<SlotKey, ItemData>();
+            Dictionary<SlotKey, ItemData> items = new Dictionary<SlotKey, ItemData>();
             foreach (var item in message.Items)
             {
-                if (!storage.AddItem(item, out var slot)) continue;
-                itmes[slot] = item;
+                if (storage.AddItem(item, out var chantedSlots) != 0) continue;
+                foreach(var changedSlot in chantedSlots)
+                {
+                    if (!storage.TryGetItem(changedSlot, out var value)) return;
+                    items[changedSlot] = value;
+                }
             }
 
-            if (itmes.Count > 0)
+            if (items.Count > 0)
             {
-                await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerAddItem { Items = itmes, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) }));
+                await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerAddItem { Items = items, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) }));
             }
 
             var progress = quest.OnEvent(message);
@@ -55,14 +63,17 @@ namespace Server.Game.Actor.Domain.ACharacter
 
         private async Task HandleItemAcquired(A_ItemAcquired message)
         {
-            if (!storage.AddItem(message.Item, out var slot)) return;
-            Dictionary<SlotKey, ItemData> itmes = new Dictionary<SlotKey, ItemData>
+            if (storage.AddItem(message.Item, out var chantedSlots) != 0) return;
+            Dictionary<SlotKey, ItemData> items = new Dictionary<SlotKey, ItemData>();
+
+            foreach (var changedSlot in chantedSlots)
             {
-                { slot, message.Item }
-            };
-            if (itmes.Count > 0)
+                if (!storage.TryGetItem(changedSlot, out var value)) return;
+                items[changedSlot] = value;
+            }
+            if (items.Count > 0)
             {
-                await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerAddItem { Items = itmes, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) }));
+                await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerAddItem { Items = items, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) }));
             }
 
             var progress = quest.OnEvent(message);

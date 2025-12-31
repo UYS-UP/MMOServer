@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Server.Game.Actor.Domain.ACharacter
 {
-    public record class GM_AddItem(string ItemTemplateId): IActorMessage;
+    public record class GM_AddItem(string ItemTemplateId, int Count): IActorMessage;
 }

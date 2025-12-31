@@ -110,7 +110,7 @@ namespace Server.Game.Actor.Domain.ASession
                 case Protocol.CS_CreateCharacter:
                     {
                         var data = packet.DeSerializePayload<ClientCreateCharacter>();
-                        message = new CS_CreateCharacter(sessionId, accountId, data.CharacterName);
+                        message = new CS_CreateCharacter(sessionId, accountId, data.CharacterName, data.ServerId);
                         receiver = GameField.GetActor<AuthActor>();
                     }
                     break;
@@ -232,7 +232,7 @@ namespace Server.Game.Actor.Domain.ASession
                 case Protocol.GM_AddItem:
                     {
                         var data = packet.DeSerializePayload<GMAddItem>();
-                        message = new GM_AddItem(data.ItemTemplateId);
+                        message = new GM_AddItem(data.TemplateId, data.Count);
                         receiver = GameField.GetActor<CharacterActor>(accountId);
                     }
                     break;

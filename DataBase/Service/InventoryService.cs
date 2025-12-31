@@ -1,4 +1,6 @@
 ﻿using Server.DataBase.Entities;
+using Server.Game.Actor.Domain.ACharacter;
+using Server.Game.Contracts.Server;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,29 +26,43 @@ namespace Server.DataBase.Service
         }
 
         /// <summary>
-        /// 获取角色所有武器
+        /// 添加物品 (通用)
         /// </summary>
-        public async Task<List<WeaponItem>> GetWeaponsAsync(string characterId)
+        public async Task AddItemAsync(string characterId, SlotKey slot, ItemData data)
         {
-            var weapons = await unitOfWork.WeaponItems.FindAsync(w => w.CharacterId == characterId);
-            return new List<WeaponItem>(weapons);
+            var newItem = new InventoryItem
+            {
+                CharacterId = characterId,
+                TemplateId = data.TemplateId,
+                InstanceId = data.InstanceId,
+                ItemType = data.ItemType,
+                Count = data.ItemCount,
+                SlotContainer = slot.Container,
+                SlotIndex = slot.Index, // 需要查找空位
+                ForgeLevel = 0,
+                // 初始化动态数据
+                DynamicData = new EquipDynamicData()
+            };
+
+            await unitOfWork.InventoryItems.AddAsync(newItem);
+            await unitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
-        /// 保存背包变动 (通常在下线或定时保存时调用)
+        /// 保存背包变动
         /// </summary>
         public async Task SaveInventoryChangesAsync(IEnumerable<InventoryItem> modifiedItems, IEnumerable<long> deletedItemDbIds)
         {
             await unitOfWork.BeginTransactionAsync();
             try
             {
-                // 处理删除
+                // 删除
                 foreach (var id in deletedItemDbIds)
                 {
                     await unitOfWork.InventoryItems.DeleteByIdAsync(id);
                 }
 
-                // 处理更新或新增 (EF Core Update/Add 智能识别)
+                // 更新或新增
                 foreach (var item in modifiedItems)
                 {
                     if (item.DbId == 0)
@@ -62,26 +78,6 @@ namespace Server.DataBase.Service
                 await unitOfWork.RollbackAsync();
                 throw;
             }
-        }
-
-        /// <summary>
-        /// 添加新武器
-        /// </summary>
-        public async Task AddWeaponAsync(string characterId, int templateId)
-        {
-            var weapon = new WeaponItem
-            {
-                WeaponDbId = Guid.NewGuid().ToString(),
-                CharacterId = characterId,
-                TemplateId = templateId,
-                Level = 1,
-                Exp = 0,
-                StarLevel = 0,
-                IsLocked = false
-            };
-
-            await unitOfWork.WeaponItems.AddAsync(weapon);
-            await unitOfWork.SaveChangesAsync();
         }
     }
 }

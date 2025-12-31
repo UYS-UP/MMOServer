@@ -27,12 +27,10 @@ namespace Server.Game.Contracts.Server
     {
         public int Level;
         public float CurrentHp;
-        public int CurrentStamina;
         public float CurrentEx;
 
-        // 基础属性和修饰属性应通过属性系统计算，这里只存它们的最终结果或用于计算的中间值
         public Dictionary<AttributeType, float> BaseStats = new Dictionary<AttributeType, float>();
-        public Dictionary<AttributeType, float> ModifierStats = new Dictionary<AttributeType, float>();
+        public Dictionary<AttributeType, float> ExtraAttributes = new Dictionary<AttributeType, float>();
     }
 
     public class SkillBookComponent : IEntityComponent

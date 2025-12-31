@@ -13,7 +13,7 @@ namespace Server.Game.Actor.Domain.ACharacter
         public bool Match(QuestObjective obj) => obj.Type switch
         {
             ObjectiveType.KillMonster => obj.TargetId == MonsterTemplateId,
-            ObjectiveType.CollectItem => DroppedItems.Any(i => i.ItemTemplateId == obj.TargetId),
+            ObjectiveType.CollectItem => DroppedItems.Any(i => i.TemplateId == obj.TargetId),
             _ => false
         };
     }
@@ -22,7 +22,7 @@ namespace Server.Game.Actor.Domain.ACharacter
     {
         public bool Match(QuestObjective obj) => obj.Type switch
         {
-            ObjectiveType.CollectItem => obj.TargetId == Item.ItemTemplateId,
+            ObjectiveType.CollectItem => obj.TargetId == Item.TemplateId,
             _ => false
         };
     }
@@ -31,7 +31,7 @@ namespace Server.Game.Actor.Domain.ACharacter
     {
         public bool Match(QuestObjective obj) => obj.Type switch
         {
-            ObjectiveType.CollectItem => Items.Any(i => i.ItemTemplateId == obj.TargetId),
+            ObjectiveType.CollectItem => Items.Any(i => i.TemplateId == obj.TargetId),
             _ => false
         };
     }

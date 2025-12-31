@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Server.DataBase.Entities;
+using Server.Game.Contracts.Server;
 using System;
 
 namespace Server.DataBase
@@ -20,86 +22,108 @@ namespace Server.DataBase
         public DbSet<Player> Players { get; set; }
         public DbSet<Character> Characters { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
-        public DbSet<WeaponItem> WeaponItems { get; set; }
+        public DbSet<WeaponMastery> WeaponMasteries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+
 
             base.OnModelCreating(modelBuilder);
-            OnModelCraetingPlayer(modelBuilder);
-            OnModelCreatingCharacter(modelBuilder);
-            OnModelCreatingItems(modelBuilder);
 
+            // --- Player 配置 ---
+            modelBuilder.Entity<Player>(entity =>
+            {
+                entity.HasKey(e => e.PlayerId);
+                entity.HasIndex(e => e.Username).IsUnique();
+                entity.Property(e => e.CreatedTime).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
 
-
-        }
-
-        private void OnModelCreatingCharacter(ModelBuilder modelBuilder)
-        {
+            // --- Character 配置 ---
             modelBuilder.Entity<Character>(entity =>
             {
                 entity.HasKey(e => e.CharacterId);
-
-                // 索引优化
-                entity.HasIndex(e => e.PlayerId).HasDatabaseName("idx_playerId");
-                entity.HasIndex(e => e.Name).IsUnique().HasDatabaseName("idx_characterName");
+                entity.HasIndex(e => e.PlayerId);
+                entity.HasIndex(e => e.Name).IsUnique();
 
                 // 默认值
                 entity.Property(e => e.Level).HasDefaultValue(1);
                 entity.Property(e => e.Gold).HasDefaultValue(0);
-                entity.Property(e => e.CreateTime).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.HasOne<Character>()
-                    .WithMany()  // 如果Player有Characters集合，用 .WithMany(p => p.Characters)
+                // *** JSON 映射核心 ***
+                // 数据库中是 "attributesJson" (string/text)
+                // 实体中是 "Attributes" (Dictionary)
+                entity.Property(e => e.Attributes)
+                    .HasColumnName("attributesJson")
+                    .HasColumnType("TEXT") // 或 varchar(4000)
+                    .HasConversion(
+                        v => JsonConvert.SerializeObject(v), // 写入: 对象 -> JSON字符串
+                        v => JsonConvert.DeserializeObject<Dictionary<AttributeType, float>>(v) ?? new Dictionary<AttributeType, float>() // 读取: JSON字符串 -> 对象
+                    );
+
+                // 级联删除
+                entity.HasOne(e => e.Player)
+                    .WithMany()
                     .HasForeignKey(e => e.PlayerId)
-                    .HasConstraintName("fk_chars_player")
-                    .OnDelete(DeleteBehavior.Cascade);  // 这里匹配你的SQL约束
+                    .OnDelete(DeleteBehavior.Cascade);
             });
-        }
 
-
-        private void OnModelCreatingItems(ModelBuilder modelBuilder)
-        {
+            // --- InventoryItem 配置 ---
             modelBuilder.Entity<InventoryItem>(entity =>
             {
                 entity.HasKey(e => e.DbId);
-                entity.HasIndex(e => e.CharacterId).HasDatabaseName("idx_inv_charId");
+                entity.HasIndex(e => e.CharacterId);
+                entity.Property(e => e.ForgeLevel).HasDefaultValue(0);
+
+                // *** JSON 映射核心 ***
+                entity.Property(e => e.DynamicData)
+                    .HasColumnName("dynamicDataJson")
+                    .HasColumnType("TEXT")
+                    .HasConversion(
+                        v => JsonConvert.SerializeObject(v),
+                        v => JsonConvert.DeserializeObject<EquipDynamicData>(v) ?? new EquipDynamicData()
+                    );
 
                 entity.HasOne(e => e.Character)
-                      .WithMany(c => c.InventoryItems)
-                      .HasForeignKey(e => e.CharacterId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                    .WithMany(c => c.InventoryItems)
+                    .HasForeignKey(e => e.CharacterId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<WeaponItem>(entity =>
+            // --- WeaponMastery 配置 ---
+            modelBuilder.Entity<WeaponMastery>(entity =>
             {
-                entity.HasKey(e => e.WeaponDbId);
-                entity.HasIndex(e => e.CharacterId).HasDatabaseName("idx_wpn_charId");
+                // 联合主键：角色ID + 武器类型
+                entity.HasKey(e => new { e.CharacterId, e.WeaponType });
+
+
+                // 1. 已解锁节点 List<int>
+                entity.Property(e => e.UnlockedNodes)
+                    .HasColumnName("unlockedNodesJson")
+                    .HasColumnType("TEXT")
+                    .HasConversion(
+                        v => JsonConvert.SerializeObject(v),
+                        v => JsonConvert.DeserializeObject<List<int>>(v) ?? new List<int>()
+                    );
+
+                // 2. 已装备技能 int[]
+                entity.Property(e => e.EquippedSkills)
+                    .HasColumnName("equippedSkillsJson")
+                    .HasColumnType("TEXT")
+                    .HasConversion(
+                        v => JsonConvert.SerializeObject(v),
+                        v => JsonConvert.DeserializeObject<int[]>(v) ?? new int[3]
+                    );
 
                 entity.HasOne(e => e.Character)
-                      .WithMany(c => c.WeaponItems)
-                      .HasForeignKey(e => e.CharacterId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                    .WithMany(c => c.WeaponMasteries)
+                    .HasForeignKey(e => e.CharacterId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
+
+
+
         }
 
-        private void OnModelCraetingPlayer(ModelBuilder modelBuilder)
-        {
-
-            modelBuilder.Entity<Player>(entity =>
-            {
-                entity.HasKey(e => e.PlayerId);
-                entity.HasIndex(e => e.Username)
-                    .IsUnique()
-                    .HasDatabaseName("idx_username");
-                entity.Property(e => e.CreatedTime)
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            });
-        }
-
-
-      
         /// <summary>
         /// 保存更改前的处理
         /// </summary>

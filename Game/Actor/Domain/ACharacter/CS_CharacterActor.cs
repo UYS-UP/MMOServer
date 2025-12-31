@@ -125,9 +125,10 @@ namespace Server.Game.Actor.Domain.ACharacter
 
         private async Task CS_HandleQueryInventory(CS_QueryInventory message)
         {
+            
             var payload = new ServerQueryInventory(
-                storage.MaxInventorySize,
-                storage.GetRangeSlotItems(SlotContainerType.Inventory, message.StartSlot, message.EndSlot),
+                storage.GetMaxContainerSize(SlotContainerType.Inventory),
+                storage.GetItemsInRange(SlotContainerType.Inventory, message.StartSlot, message.EndSlot),
                 storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory)
                 );
             await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_QueryInventory, payload));
@@ -135,7 +136,7 @@ namespace Server.Game.Actor.Domain.ACharacter
 
         private async Task CS_HandleSwapStorageSlot(CS_SwapStorageSlot message)
         {
-            var result = storage.SwapItems(message.Slot1, message.Slot2);
+            var result = storage.SwapItem(message.Slot1, message.Slot2, out var _);
             ItemData item1 = null;
             ItemData item2 = null;
             if (!result)

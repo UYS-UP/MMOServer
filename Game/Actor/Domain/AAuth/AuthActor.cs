@@ -160,7 +160,7 @@ namespace Server.Game.Actor.Domain.AAuth
                     }));
                 return;
             }
-            var result = await DatabaseService.CharacterService.CreateCharacterAsync(message.PlayerId, message.CharacterName, 0);
+            var result = await DatabaseService.CharacterService.CreateCharacterAsync(message.PlayerId, message.CharacterName, 0, message.ServerId);
             
             await TellGateway(new SendToPlayer(message.PlayerId, Protocol.SC_CreateCharacter, new ServerCreateCharacter
             {

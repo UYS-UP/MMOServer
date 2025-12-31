@@ -23,6 +23,7 @@ namespace Server.Game.Actor.Domain.ACharacter
 
         private readonly StorageManager storage;
         private readonly QuestManager quest;
+        private readonly AttributeManager attribute;
 
         private class PlayerActorState
         {
@@ -34,11 +35,13 @@ namespace Server.Game.Actor.Domain.ACharacter
 
             public Vector3 Position { get; set; }
             public float Yaw { get; set; }
+            public float Exp { get; set; }
 
             public string Name { get; set; }
             public int Level { get; set; }
-            public int Hp {  get; set; }
-            public int MaxHp { get; set; }
+
+            public Dictionary<AttributeType, float> BaseAttributes { get; set; }
+            public Dictionary<AttributeType, float> ExtraAttributes { get; set; }
 
             public PlayerActorState(Character dbChar)
             {
@@ -46,8 +49,8 @@ namespace Server.Game.Actor.Domain.ACharacter
                 CharacterId = dbChar.CharacterId;
                 Name = dbChar.Name;
                 Level = dbChar.Level;
-                Hp = dbChar.Hp;
-
+                Exp = dbChar.Exp;
+                BaseAttributes = dbChar.Attributes;
                 EntityId = Counter.NextId();
                 MapId = dbChar.MapId;
                 Position = new Vector3(dbChar.X, dbChar.Y, dbChar.Z);
@@ -61,9 +64,10 @@ namespace Server.Game.Actor.Domain.ACharacter
         {
             this.bus = bus;
             state = new PlayerActorState(character);
-
+            state.ExtraAttributes = attribute.CalculateCharacterAttributes(character);
             storage = new StorageManager();
             quest = new QuestManager();
+            attribute = new AttributeManager();
             var questNodes = new Dictionary<string, QuestNode>();
             questNodes.Add("001_01", new QuestNode
             {
@@ -232,23 +236,15 @@ namespace Server.Game.Actor.Domain.ACharacter
                 State = EntityState.Idle
             };
 
+            
+
             var stats = new StatsComponent
             {
                 Level = state.Level,
-                CurrentHp = state.Hp,
-                CurrentStamina = 100,
-                BaseStats =
-                {
-                    {
-                        AttributeType.MaxHp, 1000
-                    },
-                    {
-                        AttributeType.MaxStamina, 100
-                    },
-                    {
-                        AttributeType.MaxEx, 2000
-                    }
-                }
+                CurrentEx = state.Exp,
+                
+                BaseStats = new Dictionary<AttributeType, float>(state.BaseAttributes),
+                ExtraAttributes = new Dictionary<AttributeType, float>(state.ExtraAttributes)
             };
 
             var skillBook = new SkillBookComponent();

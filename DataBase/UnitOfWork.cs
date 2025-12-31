@@ -13,7 +13,7 @@ namespace Server.DataBase
         private Repository<Player> players;
         private Repository<Character> characters;
         private Repository<InventoryItem> inventoryItems;
-        private Repository<WeaponItem> weaponItems;
+        private Repository<WeaponMastery> weaponMasteries;
 
         public UnitOfWork(GameDbContext context)
         {
@@ -23,7 +23,7 @@ namespace Server.DataBase
         public Repository<Player> Players => players ??= new Repository<Player>(context);
         public Repository<Character> Characters => characters ??= new Repository<Character>(context);
         public Repository<InventoryItem> InventoryItems => inventoryItems ??= new Repository<InventoryItem>(context);
-        public Repository<WeaponItem> WeaponItems => weaponItems ??= new Repository<WeaponItem>(context);
+        public Repository<WeaponMastery> WeaponMasteries => weaponMasteries ??= new Repository<WeaponMastery>(context);
 
         public async Task<int> SaveChangesAsync() => await context.SaveChangesAsync();
 

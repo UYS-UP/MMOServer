@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "0001",
+    "Name": "破旧的太刀-普通",
+    "Description": "这是一把勉强能够使用的破旧太刀",
+    "Type": "Equip",
+    "Quantity": "Common",
+    "Price": 50,
+    "EquipConfig": {
+      "EquipType": "Weapon",
+      "ReqLevel": 1,
+      "WeaponType": "Katana",
+      "BaseAttributes": {
+        "Attack": 10
+      }
+    }
+  }
+]
