@@ -114,48 +114,17 @@ namespace Server.Network
             handlers[(ushort)protocol] = handler;
         }
 
-        public void BindSessionToAccount(Guid sessionId, string accountId)
-        {
-            sessionManager.BindSessionToAccount(sessionId, accountId);
-        }
 
         #endregion
 
         #region 发送 API（给 NetworkGatewayActor 调用）
 
-        public async Task SendToSession(Guid sessionId, Protocol protocolId, object payload)
+        public async Task SendTo(Guid sessionId, Protocol protocolId, byte[] bytes)
         {
             if (sessionManager.TryGetSession(sessionId, out var ses))
             {
-                var packet = CreateGamePacket(protocolId, payload);
+                var packet = CreateGamePacket(protocolId, bytes);
                 await ses.SendAsync(packet.SerializePacket());
-            }
-        }
-
-        public async Task SendToPlayer(string playerId, Protocol protocolId, object payload)
-        {
-        
-            if (sessionManager.TryGetSessionByAccount(playerId, out var ses))
-            {
-                var packet = CreateGamePacket(protocolId, payload);
-                await ses.SendAsync(packet.SerializePacket());
-            }
-        }
-
-        public async Task SendToPlayers(IReadOnlyCollection<string> playerIds, Protocol protocolId, object payload)
-        {
-            var packet = CreateGamePacket(protocolId, payload);
-            var p = packet.SerializePacket();
-            //if(packet.ProtocolId == (ushort)Protocol.EntitySpawn)
-            //{
-            //    Console.WriteLine(ToHex(packet.Payload));
-            //}
-            foreach (var playerId in playerIds)
-            {
-                if (sessionManager.TryGetSessionByAccount(playerId, out var ses))
-                {
-                    await ses.SendAsync(p);
-                }
             }
         }
 
@@ -171,17 +140,11 @@ namespace Server.Network
             return sb.ToString();
         }
 
-        public async Task Broadcast(Protocol protocolId, object payload)
-        {
-            var packet = CreateGamePacket(protocolId, payload);
-            foreach (var ses in sessionManager.GetAllSessions())
-                await ses.SendAsync(packet.SerializePacket());
-        }
 
 
-        private GamePacket CreateGamePacket(Protocol protocol, object data)
+        private GamePacket CreateGamePacket(Protocol protocol, byte[] bytes)
         {
-            return new GamePacket((ushort)protocol, MessagePackSerializer.Serialize(data));
+            return new GamePacket((ushort)protocol, bytes);
         }
 
         #endregion

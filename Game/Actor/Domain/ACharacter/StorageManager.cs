@@ -23,17 +23,18 @@ namespace Server.Game.Actor.Domain.ACharacter
             { SlotContainerType.QuickBar, 3 }
         };
 
-        private readonly Dictionary<int, EquipType> equipSlotMapping = new()
+        private readonly Dictionary<EquipType, SlotKey> equipSlotMapping = new()
         {
-            { 0, EquipType.Weapon },
-            { 1, EquipType.Helmet },
-            { 2, EquipType.Clothes },
-            { 3, EquipType.Pants },
-            { 4, EquipType.Shoes },
-            { 5, EquipType.Necklace },
+            { EquipType.Weapon,  new SlotKey(SlotContainerType.Equipment, 0)},
+            { EquipType.Helmet ,  new SlotKey(SlotContainerType.Equipment, 1) },
+            { EquipType.Clothes ,  new SlotKey(SlotContainerType.Equipment, 2) },
+            { EquipType.Pants ,  new SlotKey(SlotContainerType.Equipment, 3) },
+            { EquipType.Shoes ,  new SlotKey(SlotContainerType.Equipment, 4) },
+            { EquipType.Necklace ,  new SlotKey(SlotContainerType.Equipment, 5) },
         };
 
         public bool TryGetItem(SlotKey key, out ItemData item) => storage.TryGetValue(key, out item);
+        public bool TryGetEquipSlotIndex(EquipType equipType, out SlotKey slot) => equipSlotMapping.TryGetValue(equipType, out slot);
         public Dictionary<SlotKey, ItemData> GetAllItems() => new Dictionary<SlotKey, ItemData>(storage);
         public int GetMaxContainerSize(SlotContainerType container) => containerSizes[container];
         public int GetMaxOccupiedSlotIndex(SlotContainerType container)
@@ -198,9 +199,9 @@ namespace Server.Game.Actor.Domain.ACharacter
             if(targetSlot.Container == SlotContainerType.Equipment)
             {
                 if (item is not EquipData equip) return false;
-                if(equipSlotMapping.TryGetValue(targetSlot.Index, out var requiredType))
+                if(equipSlotMapping.TryGetValue(equip.EquipType, out var requiredSlot))
                 {
-                    return requiredType == equip.EquipType;
+                    return targetSlot == requiredSlot;
                 }
                 return false;
             }
@@ -233,295 +234,6 @@ namespace Server.Game.Actor.Domain.ACharacter
             return MessagePackSerializer.Deserialize<ItemData>(bytes);
         }
 
-
-
-        //    private SlotKey currentLastItemSlot;
-        //    private int maxInventorySize = 2400;
-        //    private int maxQuickBarSize = 5;
-        //    private int maxEquipmentSize = 6;
-
-        //    public StorageManager()
-        //    {
-        //        currentLastItemSlot = new SlotKey(SlotContainerType.Inventory, 0);
-        //    }
-
-        //    public int MaxInventorySize => maxInventorySize;
-
-        //    #region 获取物品相关方法
-
-        //    public Dictionary<SlotKey, ItemData> GetAllItems()
-        //    {
-        //        return new Dictionary<SlotKey, ItemData>(storage);
-        //    }
-
-        //    public Dictionary<SlotKey, ItemData> GetAllItems(SlotContainerType containerType)
-        //    {
-        //        return storage.Where(x => x.Key.Container == containerType)
-        //                     .ToDictionary(x => x.Key, x => x.Value);
-        //    }
-
-        //    public Dictionary<SlotKey, ItemData> GetRangeSlotItems(SlotContainerType containerType, int minSlot, int maxSlot)
-        //    {
-        //        return storage.Where(x => x.Key.Container == containerType &&
-        //                                 x.Key.Index >= minSlot && x.Key.Index <= maxSlot)
-        //                     .ToDictionary(x => x.Key, x => x.Value);
-        //    }
-
-        //    public bool TryGetItem(SlotKey slot, out ItemData item)
-        //    {
-        //        return storage.TryGetValue(slot, out item);
-        //    }
-
-        //    public int GetMaxOccupiedSlotIndex(SlotContainerType containerType)
-        //    {
-        //        return storage.Where(x => x.Key.Container == containerType)
-        //                     .Select(x => x.Key.Index)
-        //                     .DefaultIfEmpty(-1)
-        //                     .Max();
-        //    }
-
-        //    public int GetContainerSize(SlotContainerType containerType)
-        //    {
-        //        return containerType switch
-        //        {
-        //            SlotContainerType.Inventory => maxInventorySize,
-        //            SlotContainerType.QuickBar => maxQuickBarSize,
-        //            SlotContainerType.Equipment => maxEquipmentSize,
-        //            _ => 0
-        //        };
-        //    }
-
-        //    #endregion
-
-
-        //    #region 添加物品相关方法
-
-        //    public bool AddItem(SlotKey slot, ItemData itemData)
-        //    {
-        //        if (!IsSlotValid(slot))
-        //            return false;
-
-        //        if (storage.TryGetValue(slot, out var existingItem))
-        //        {
-        //            if (CanStack(existingItem, itemData))
-        //            {
-        //                existingItem.ItemCount += itemData.ItemCount;
-        //                return true;
-        //            }
-        //            return false; // 槽位被占用且不能堆叠
-        //        }
-
-        //        storage.Add(slot, itemData);
-        //        UpdateLastItemSlot(slot);
-        //        return true;
-        //    }
-
-        //    public bool AddItem(ItemData itemData, out SlotKey occupiedSlot)
-        //    {
-        //        // 首先尝试堆叠到现有物品
-        //        var stackableSlot = FindStackableSlot(itemData);
-        //        if (stackableSlot != SlotKey.Default)
-        //        {
-        //            storage[stackableSlot].ItemCount += itemData.ItemCount;
-        //            occupiedSlot = stackableSlot;
-        //            return true;
-        //        }
-
-        //        // 寻找空槽位
-        //        var emptySlot = FindEmptySlot(SlotContainerType.Inventory);
-        //        if (emptySlot != SlotKey.Default)
-        //        {
-        //            storage.Add(emptySlot, itemData);
-        //            UpdateLastItemSlot(emptySlot);
-        //            occupiedSlot = emptySlot;
-        //            return true;
-        //        }
-
-        //        occupiedSlot = SlotKey.Default;
-        //        return false;
-        //    }
-
-        //    private SlotKey FindStackableSlot(ItemData itemData)
-        //    {
-        //        if (!itemData.IsStack) return SlotKey.Default;
-
-        //        return storage.FirstOrDefault(x =>
-        //            x.Value.ItemTemplateId == itemData.ItemTemplateId &&
-        //            x.Key.Container == SlotContainerType.Inventory)
-        //            .Key;
-        //    }
-
-        //    private SlotKey FindEmptySlot(SlotContainerType containerType)
-        //    {
-        //        var maxSize = GetContainerSize(containerType);
-
-        //        for (int i = 0; i < maxSize; i++)
-        //        {
-        //            var slot = new SlotKey(containerType, i);
-        //            if (!storage.ContainsKey(slot))
-        //                return slot;
-        //        }
-        //        return SlotKey.Default;
-        //    }
-
-        //    #endregion
-
-
-        //    #region 交换物品相关方法
-
-        //    public bool SwapItems(SlotKey slot1, SlotKey slot2)
-        //    {
-        //        if (!IsSlotValid(slot1) || !IsSlotValid(slot2))
-        //            return false;
-
-        //        // 同容器内交换
-        //        if (slot1.Container == slot2.Container)
-        //        {
-        //            return SwapWithinSameContainer(slot1, slot2);
-        //        }
-
-        //        // 跨容器交换
-        //        return SwapBetweenContainers(slot1, slot2);
-        //    }
-
-        //    private bool SwapWithinSameContainer(SlotKey slot1, SlotKey slot2)
-        //    {
-        //        var hasItem1 = storage.TryGetValue(slot1, out var item1);
-        //        var hasItem2 = storage.TryGetValue(slot2, out var item2);
-
-        //        if (hasItem1 && hasItem2)
-        //        {
-        //            storage[slot1] = item2;
-        //            storage[slot2] = item1;
-        //        }
-        //        else if (hasItem1 && !hasItem2)
-        //        {
-        //            storage.Remove(slot1);
-        //            storage.Add(slot2, item1);
-        //        }
-        //        else if (!hasItem1 && hasItem2)
-        //        {
-        //            storage.Remove(slot2);
-        //            storage.Add(slot1, item2);
-        //        }
-
-        //        UpdateLastItemSlot();
-        //        return true;
-        //    }
-
-        //    private bool SwapBetweenContainers(SlotKey slot1, SlotKey slot2)
-        //    {
-        //        // 检查装备限制等逻辑
-        //        if (!CanItemMoveToContainer(slot1, slot2.Container) ||
-        //            !CanItemMoveToContainer(slot2, slot1.Container))
-        //            return false;
-
-        //        var hasItem1 = storage.TryGetValue(slot1, out var item1);
-        //        var hasItem2 = storage.TryGetValue(slot2, out var item2);
-
-        //        if (hasItem1) storage.Remove(slot1);
-        //        if (hasItem2) storage.Remove(slot2);
-
-        //        if (hasItem1) storage.Add(slot2, item1);
-        //        if (hasItem2) storage.Add(slot1, item2);
-
-        //        UpdateLastItemSlot();
-        //        return true;
-        //    }
-
-        //    private bool CanItemMoveToContainer(SlotKey sourceSlot, SlotContainerType targetContainer)
-        //    {
-        //        if (!storage.TryGetValue(sourceSlot, out var item))
-        //            return true; // 空槽位可以移动
-
-        //        // 添加装备类型检查等逻辑
-        //        // 例如：检查物品是否可以装备到目标容器
-        //        return true;
-        //    }
-
-        //    #endregion
-
-
-        //    #region 删除物品相关方法
-
-        //    public bool RemoveItem(SlotKey slot)
-        //    {
-        //        if (storage.Remove(slot))
-        //        {
-        //            UpdateLastItemSlot();
-        //            return true;
-        //        }
-        //        return false;
-        //    }
-
-        //    public bool RemoveItem(SlotKey slot, int count)
-        //    {
-        //        if (count <= 0 || !storage.TryGetValue(slot, out var item))
-        //            return false;
-
-        //        if (item.ItemCount <= count)
-        //        {
-        //            return RemoveItem(slot);
-        //        }
-        //        else
-        //        {
-        //            item.ItemCount -= count;
-        //            return true;
-        //        }
-        //    }
-
-        //    #endregion
-
-
-        //    #region 辅助方法
-
-        //    private bool IsSlotValid(SlotKey slot)
-        //    {
-        //        var maxSize = GetContainerSize(slot.Container);
-        //        return slot.Index >= 0 && slot.Index < maxSize;
-        //    }
-
-        //    private bool CanStack(ItemData existing, ItemData newItem)
-        //    {
-        //        return existing.ItemTemplateId == newItem.ItemTemplateId &&
-        //               existing.IsStack &&
-        //               newItem.IsStack;
-        //    }
-
-        //    private void UpdateLastItemSlot(SlotKey? newSlot = null)
-        //    {
-        //        if (newSlot.HasValue && newSlot.Value.Container == SlotContainerType.Inventory)
-        //        {
-        //            if (newSlot.Value.Index >= currentLastItemSlot.Index)
-        //            {
-        //                currentLastItemSlot = FindNextAvailableSlot();
-        //            }
-        //        }
-        //        else
-        //        {
-        //            currentLastItemSlot = FindNextAvailableSlot();
-        //        }
-        //    }
-
-        //    private SlotKey FindNextAvailableSlot()
-        //    {
-        //        for (int i = 0; i < maxInventorySize; i++)
-        //        {
-        //            var slot = new SlotKey(SlotContainerType.Inventory, i);
-        //            if (!storage.ContainsKey(slot))
-        //                return slot;
-        //        }
-        //        return new SlotKey(SlotContainerType.Inventory, maxInventorySize);
-        //    }
-
-
-        //    public bool HasEmptySlot(SlotContainerType containerType)
-        //    {
-        //        var maxSize = GetContainerSize(containerType);
-        //        return storage.Count(x => x.Key.Container == containerType) < maxSize;
-        //    }
-
-        //    #endregion
     }
 
 

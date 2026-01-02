@@ -40,14 +40,59 @@ namespace Server.Game.Actor.Domain.ASession
         }
     }
 
-    public class BindAccount : IActorMessage
+    public class SendTo : IActorMessage
     {
-        public Guid SessionId { get; }
-        public string PlayerId { get; }
-        public BindAccount(Guid sessionId, string accountId)
+        public byte[] Bytes { get; }
+        public Protocol Protocol { get; }
+
+        public SendTo(Protocol protocol, byte[] bytes)
         {
-            SessionId = sessionId;
-            PlayerId = accountId;
+            Bytes = bytes;
+            Protocol = protocol;
+        }
+    }
+
+    public class BindPlayerId : IActorMessage
+    {
+        public string PlayerId { get; }
+
+        public BindPlayerId(string playerId)
+        {
+            PlayerId = playerId;
+        }
+    }
+
+    public class BindCharacterIdAndEntityId : IActorMessage
+    {
+        public string CharacterId { get; }
+        public int EntityId { get; }
+
+        public BindCharacterIdAndEntityId(string characterId, int entityId)
+        {
+            CharacterId = characterId;
+            EntityId = entityId;
+        }
+    }
+
+    public class BindEntityId : IActorMessage
+    {
+        public int EntityId { get; }
+
+        public BindEntityId(int entityId)
+        {
+            EntityId = entityId;
+        }
+    }
+
+    public class CharacterWorldSync : IActorMessage
+    {
+        public int MapId { get; }
+        public int DungeonId { get; }
+
+        public CharacterWorldSync(int regionId, int dungeonId)
+        {
+            MapId = regionId;
+            DungeonId = dungeonId;
         }
     }
 

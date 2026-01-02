@@ -1,12 +1,12 @@
 ﻿using MessagePack;
 using NPOI.Util;
 using Org.BouncyCastle.Ocsp;
+using Org.BouncyCastle.Utilities;
 using Server.Data;
 using Server.DataBase.Entities;
 using Server.Game.Actor.Core;
 using Server.Game.Actor.Domain.ACharacter;
 using Server.Game.Actor.Domain.ASession;
-using Server.Game.Actor.Domain.Gateway;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Common;
 using Server.Game.Contracts.Network;
@@ -25,24 +25,23 @@ namespace Server.Game.Actor.Domain.AAuth
     public class AuthActor : ActorBase
     {
         private readonly Dictionary<string, NetworkPlayer> onlinePlayers = new Dictionary<string, NetworkPlayer>();
-        private readonly Dictionary<string, Guid> playerSessions = new Dictionary<string, Guid>();
 
-        private ActorEventBus eventBus;
+        private ActorEventBus EventBus => System.EventBus;
 
-        public AuthActor(string actorId, ActorEventBus eventBus) : base(actorId)
+        public AuthActor(string actorId) : base(actorId)
         {
-            this.eventBus = eventBus;
+ 
         }
 
         protected override async Task OnStart()
         {
             await base.OnStart();
-            eventBus.Subscribe<PlayerDisconnectionEvent>(ActorId);
+            EventBus.Subscribe<PlayerDisconnectionEvent>(ActorId);
         }
 
         protected override async Task OnStop()
         {
-            eventBus.Unsubscribe<PlayerDisconnectionEvent>(ActorId);
+            EventBus.Unsubscribe<PlayerDisconnectionEvent>(ActorId);
             await base.OnStop();
         
         }
@@ -76,42 +75,50 @@ namespace Server.Game.Actor.Domain.AAuth
         private async Task CS_HandlePlayerRegister(CS_PlayerRegister playerRegister)
         {
             var resp = await DatabaseService.PlayerService.RegisterAsync(playerRegister.Username, playerRegister.Password, "123");
-            await TellGateway(new SendToSession(playerRegister.SessionId, Protocol.SC_Register, resp));
+            var bytes = MessagePackSerializer.Serialize(resp);
+            await TellAsync(
+                GameField.GetActor<SessionActor>(playerRegister.SessionId.ToString()),
+                new SendTo(Protocol.SC_Register, bytes));
         }
 
         private async Task CS_HandlePlayerLogin(CS_PlayerLogin playerLogin)
         {
-
+            var sessionActor = GameField.GetActor<SessionActor>(playerLogin.SessionId.ToString());
             var result = await DatabaseService.PlayerService.LoginAsync(playerLogin.Username, playerLogin.Password);
+            byte[] bytes;
             if(!result.Succes)
             {
-                await TellGateway(new SendToSession(playerLogin.SessionId, Protocol.SC_Login,
-                    new ServerPlayerLogin
-                    {
-                        Sucess = false,
-                        Message = result.Message,
-                        Player = null,
-                        Previews = null,
-                    }));
+                bytes = MessagePackSerializer.Serialize(new ServerPlayerLogin
+                {
+                    Sucess = false,
+                    Message = result.Message,
+                    Player = null,
+                    Previews = null,
+                });
+                await TellAsync(
+                    sessionActor,
+                    new SendTo(Protocol.SC_Login, bytes));
+                return;
             }
             
-            Console.WriteLine("登录成功:" + result.Player.Username);
             var playerId = result.Player.PlayerId;
 
-            if(onlinePlayers.ContainsKey(playerId) && playerSessions.ContainsKey(playerId))
+            if(onlinePlayers.ContainsKey(playerId))
             {
-
-                await TellGateway(new SendToSession(playerLogin.SessionId, Protocol.SC_Login,
-                    new ServerPlayerLogin
-                    {
-                        Sucess = false,
-                        Message = "账号已经登录，请勿重新登录",
-                        Player = null,
-                        Previews = null,
-                    }));
+                bytes = MessagePackSerializer.Serialize(new ServerPlayerLogin
+                {
+                    Sucess = false,
+                    Message = "账号已经登录，请勿重新登录",
+                    Player = null,
+                    Previews = null,
+                });
+                await TellAsync(
+                    sessionActor,
+                    new SendTo(Protocol.SC_Login, bytes));
+                return;
             }
 
-            await TellAsync($"SessionActor_{playerLogin.SessionId}", new BindAccount(playerLogin.SessionId, playerId));
+            await TellAsync(sessionActor, new BindPlayerId(playerId));
 
             var player = new NetworkPlayer
             {
@@ -121,7 +128,6 @@ namespace Server.Game.Actor.Domain.AAuth
             };
 
             onlinePlayers[playerId] = player;
-            playerSessions[playerId] = playerLogin.SessionId;
 
             List<NetworkCharacterPreview> previews = new List<NetworkCharacterPreview>();
             foreach(var characer in result.Characters)
@@ -136,15 +142,16 @@ namespace Server.Game.Actor.Domain.AAuth
                     LastLoginTime = characer.LastLoginTime,
                 });
             }
-
-            await TellGateway(new SendToSession(playerLogin.SessionId, Protocol.SC_Login, 
-                new ServerPlayerLogin
+            bytes = MessagePackSerializer.Serialize(new ServerPlayerLogin
             {
                 Sucess = true,
                 Message = result.Message,
                 Player = player,
                 Previews = previews,
-            }));
+            });
+            await TellAsync(
+                sessionActor,
+                new SendTo(Protocol.SC_Login, bytes));
             
         }
 
@@ -152,22 +159,22 @@ namespace Server.Game.Actor.Domain.AAuth
         {
             if (!onlinePlayers.ContainsKey(message.PlayerId))
             {
-                await TellGateway(new SendToSession(message.SessionId, Protocol.SC_CreateCharacter,
+                await TellGateway(message.PlayerId, Protocol.SC_CreateCharacter,
                     new ServerCreateCharacter
                     {
                         Message = "非法操作",
                         Success = false
-                    }));
+                    });
                 return;
             }
             var result = await DatabaseService.CharacterService.CreateCharacterAsync(message.PlayerId, message.CharacterName, 0, message.ServerId);
             
-            await TellGateway(new SendToPlayer(message.PlayerId, Protocol.SC_CreateCharacter, new ServerCreateCharacter
+            await TellGateway(message.PlayerId, Protocol.SC_CreateCharacter, new ServerCreateCharacter
             {
                 Message = result.Message,
                 Success = result.Sucess,
                 CharacterId = result.character.CharacterId
-            }));
+            });
 
 
         }
@@ -175,32 +182,13 @@ namespace Server.Game.Actor.Domain.AAuth
         private async Task CS_HandlePlayerEnterGame(CS_PlayerEnterGame message)
         {
             var character = await DatabaseService.CharacterService.GetCharacterFullAsync(message.CharacterId);
-            await System.CreateActor(new CharacterActor(GameField.GetActor<CharacterActor>(character.PlayerId),
-                character, eventBus));
-        }
-
-        
-
-
-
-        private Task RemovePlayerSession(string playerId)
-        {
-            if (playerSessions.TryGetValue(playerId, out var session))
-            {
-                playerSessions.Remove(playerId);
-            }
-            onlinePlayers.Remove(playerId);
-            return Task.CompletedTask;
+            await System.CreateActor(new CharacterActor(GameField.GetActor<CharacterActor>(character.CharacterId),
+                character));
         }
 
         private Task OnPlayerDisconnection(PlayerDisconnectionEvent args)
         {
-            if (System.GetActor($"PlayerActor_{args.PlayerId}") != null)
-            {
-                System.StopActor($"PlayerActor_{args.PlayerId}");
-            }
-            RemovePlayerSession(args.PlayerId);
-            Console.WriteLine($"[AuthActor] 玩家下线：{args.PlayerId}");
+            onlinePlayers.Remove(args.PlayerId);
             return Task.CompletedTask;
         }
 

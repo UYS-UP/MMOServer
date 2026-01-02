@@ -1,5 +1,4 @@
 ﻿using Server.Game.Actor.Core;
-using Server.Game.Actor.Domain.Gateway;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
 using Server.Game.HFSM;
@@ -27,47 +26,23 @@ namespace Server.Game.World
     }
 
 
-    public class BatchActorSend
-    {
-        public List<(string TargetActorId, IActorMessage Message)> Commnads { get; }
-
-        public BatchActorSend()
-        {
-            Commnads = new List<(string TargetActorId, IActorMessage Message)>();
-        }
-
-        public void AddTell(string targetActorId, IActorMessage msg)
-        {
-            Commnads.Add((targetActorId, msg));
-        }
-
-        public void ClearSend()
-        {
-            Commnads.Clear();
-        }
-    }
-
-
     public class EntityContext
     {
         public int Tick;
         public int Id;
-
-        public BatchGatewaySend Gateway;
-        public BatchActorSend Actor;
         public List<int> WaitDestory;
 
         // 实体管理
         private readonly Dictionary<int, EntityRuntime> entities = new();
         private readonly Dictionary<int, AIAgent> aiAgents = new();
 
-        private readonly Dictionary<string, int> playerToEntity = new();
-        private readonly Dictionary<int, string> entityToPlayer = new();
-        private readonly HashSet<string> players = new();
+        private readonly Dictionary<string, int> characterToEntity = new();
+        private readonly Dictionary<int, string> entityToCharacter = new();
+        private readonly HashSet<string> characters = new();
 
         private readonly Dictionary<int, BroadcastSnapshot> lastBroadcast = new();
 
-        public IReadOnlySet<string> Players => players;
+        public IReadOnlySet<string> Characters => characters;
         public IReadOnlyDictionary<int, EntityRuntime> Entities => entities; 
 
         public IReadOnlyDictionary<int, AIAgent> AIAgents => aiAgents;
@@ -77,9 +52,9 @@ namespace Server.Game.World
             entities[entity.EntityId] = entity;
             if (entity.Identity.Type == EntityType.Character)
             {
-                playerToEntity[entity.Profile.PlayerId] = entity.EntityId;
-                entityToPlayer[entity.EntityId] = entity.Profile.PlayerId;
-                players.Add(entity.Profile.PlayerId);
+                characterToEntity[entity.Identity.CharacterId] = entity.EntityId;
+                entityToCharacter[entity.EntityId] = entity.Identity.CharacterId;
+                characters.Add(entity.Identity.CharacterId);
             }
         }
 
@@ -92,10 +67,10 @@ namespace Server.Game.World
             => entities.TryGetValue(entityId, out entity);
 
 
-        public bool TryGetEntityByPlayerId(string playerId, out EntityRuntime? entity)
+        public bool TryGetEntityByCharacterId(string characterId, out EntityRuntime? entity)
         {
             entity = null;
-            if (playerToEntity.TryGetValue(playerId, out var entityId) &&
+            if (characterToEntity.TryGetValue(characterId, out var entityId) &&
                 entities.TryGetValue(entityId, out entity))
             {
                 return true;
@@ -103,17 +78,17 @@ namespace Server.Game.World
             return false;
         }
 
-        public string GetPlayerIdByEntityId(int entityId)
-            => entityToPlayer.TryGetValue(entityId, out var pid) ? pid : "";
+        public string GetCharacterIdByEntityId(int entityId)
+            => entityToCharacter.TryGetValue(entityId, out var pid) ? pid : "";
 
-        public int GetEntityIdByPlayerId(string playerId)
-            => playerToEntity.TryGetValue(playerId, out var eid) ? eid : -1;
+        public int GetEntityIdByCharacterId(string characterId)
+            => characterToEntity.TryGetValue(characterId, out var eid) ? eid : -1;
 
-        public List<string> GetPlayerIdsByEntityIds(IEnumerable<int> entityIds)
+        public List<string> GetCharacterIdsByEntityIds(IEnumerable<int> entityIds)
         {
             var set = new List<string>(capacity: entityIds.Count());
             foreach (var eid in entityIds)
-                if (entityToPlayer.TryGetValue(eid, out var pid))
+                if (entityToCharacter.TryGetValue(eid, out var pid))
                     set.Add(pid);
             return set;
         }
@@ -136,9 +111,9 @@ namespace Server.Game.World
 
             if (entity.Identity.Type == EntityType.Character)
             {
-                playerToEntity.Remove(entity.Profile.PlayerId);
-                entityToPlayer.Remove(entityId);
-                players.Remove(entity.Profile.PlayerId);
+                characterToEntity.Remove(entity.Identity.CharacterId);
+                entityToCharacter.Remove(entityId);
+                characters.Remove(entity.Identity.CharacterId);
             }
 
         }
@@ -178,12 +153,11 @@ namespace Server.Game.World
                     Yaw = entity.Kinematics.Yaw,
                     Direction = entity.Kinematics.Direction,
                     Speed = entity.Kinematics.Speed,
-                    PlayerId = entity.Profile.PlayerId,
-                    CharacterId = entity.Profile.CharacterId,
+                    CharacterId = entity.Identity.CharacterId,
                     Name = entity.Identity.Name,
                     Level = entity.Stats.Level,
                     MaxHp = entity.Stats.BaseStats[AttributeType.MaxHp],
-                    MaxEx = entity.Stats.BaseStats[AttributeType.MaxEx],
+                    MaxEx = entity.Stats.BaseStats[AttributeType.MaxExp],
                     Hp = entity.Stats.CurrentHp,
                     Ex = entity.Stats.CurrentEx,
                     Gold = 0

@@ -30,6 +30,7 @@ public class Program
         var endPoint = new IPEndPoint(IPAddress.Any, 8888);
         ITransport transport = new TcpTransport(endPoint);
         SessionManager sessionManager = new SessionManager();
+   
 
         var services = new ServiceCollection();
         var connectionString = "Server=localhost;Port=3306;Database=mmorpg;Uid=root;Pwd=123456;";
@@ -41,7 +42,6 @@ public class Program
         var unitOfWork = serviceProvider.GetRequiredService<UnitOfWork>();
 
         DatabaseService.Initalize(playerService, characterService);
-
         IActorSystem system = new ActorSystem();
         await system.CreateActor(
             new GameServerActor(GameField.GetActor<GameServerActor>(), 

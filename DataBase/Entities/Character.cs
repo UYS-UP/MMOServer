@@ -35,13 +35,12 @@ namespace Server.DataBase.Entities
         [MaxLength(50)]
         public string Name { get; set; }
 
-        // --- 基础成长数据 ---
-
         [Column("level")]
         public int Level { get; set; }
 
         [Column("exp")]
         public long Exp { get; set; }
+
 
         [Column("gold")]
         public long Gold { get; set; }
@@ -58,8 +57,11 @@ namespace Server.DataBase.Entities
         [Column("z")]
         public float Z { get; set; }
 
-        [Column("yaw")] // 朝向
+        [Column("yaw")]
         public float Yaw { get; set; }
+
+        [Column("hp")]
+        public float Hp { get; set; }
 
         public Dictionary<AttributeType, float> Attributes { get; set; } = new Dictionary<AttributeType, float>();
 

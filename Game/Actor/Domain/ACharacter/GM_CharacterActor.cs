@@ -1,5 +1,5 @@
-﻿using Server.Data.Game.Json.ItemJson;
-using Server.Game.Actor.Domain.Gateway;
+﻿using MessagePack;
+using Server.Data.Game.Json.ItemJson;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
 using Server.Utility;
@@ -85,14 +85,12 @@ namespace Server.Game.Actor.Domain.ACharacter
 
             if(items.Count > 0)
             {
-                await TellGateway(new SendToPlayer(
-                    state.PlayerId,
-                    Protocol.SC_AddInventoryItem,
-                    new ServerAddItem
-                    {
-                        Items = items,
-                        MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory)
-                    }));
+                var bytes = MessagePackSerializer.Serialize(new ServerSlotUpdated
+                {
+                    Items = items,
+                    MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory)
+                });
+                await TellGateway(state.CharacterId, Protocol.SC_AddInventoryItem, bytes);
             }
 
         }

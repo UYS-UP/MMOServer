@@ -20,7 +20,7 @@ namespace Server.Data.Game.Json.ItemJson
             {
                 itemConfigs[cfg.Id] = cfg;
             }
-            Console.WriteLine();
+    
         }
 
         

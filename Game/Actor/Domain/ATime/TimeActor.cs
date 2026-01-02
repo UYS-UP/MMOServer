@@ -29,11 +29,11 @@ namespace Server.Game.Actor.Domain.ATime
         private long lastTickTime;
 
         private CancellationTokenSource loopCts;
-        private readonly ActorEventBus eventBus;
+        private ActorEventBus EventBus => System.EventBus;
 
-        public TimeActor(string actorId, ActorEventBus eventBus) : base(actorId)
+        public TimeActor(string actorId) : base(actorId)
         {
-            this.eventBus = eventBus;
+       
         }
 
 
@@ -84,7 +84,8 @@ namespace Server.Game.Actor.Domain.ATime
         {
             long serverUtcMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var pong = new ServerHeartPong(serverUtcMs, cursorTick, ping.ClientUtcMs);
-            await TellGateway(new SendToSession(ping.SessionId, Protocol.Heart, pong));
+            var sessionActor = GameField.GetActor<SessionActor>(ping.SessionId.ToString());
+            await TellAsync(sessionActor, new SendTo(Protocol.Heart, MessagePackSerializer.Serialize(pong)));
         }
 
         private async Task HandleAdvanceTicks()
@@ -99,7 +100,7 @@ namespace Server.Game.Actor.Domain.ATime
                 long tickInterval = currentTickTime - lastTickTime;
                 lastTickTime = currentTickTime;
                 await Step(cursorTick);
-                await eventBus.PublishAsync(new TickUpdateEvent(cursorTick, currentTickTime, tickInterval / 1000f));
+                await EventBus.PublishAsync(new TickUpdateEvent(cursorTick, currentTickTime, tickInterval / 1000f));
             }
             lastMs = now - elapsed;
         }
@@ -140,7 +141,7 @@ namespace Server.Game.Actor.Domain.ATime
                     list[i] = task;
                     continue;
                 };
-                await TellGateway(new TimerFired(task.Key, task.Message, tick));
+                await TellAsync(ActorId, new TimerFired(task.Key, task.Message, tick));
                 list.RemoveAt(i);
 
                 if (task.Repeat)

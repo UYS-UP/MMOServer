@@ -7,24 +7,22 @@ namespace Server.Game.Contracts.Server
     public class TeamData
     {
         [Key(0)] public int TeamId;
-        [Key(1)] public string TeamName;
-        [Key(2)] public string LeaderPlayerId; // 队长ID
-        [Key(3)] public int MaxPlayers;
+        [Key(1)] public string LeaderCharacter; // 队长ID
+        [Key(2)] public int MaxPlayers;
 
-        // 成员列表 (Key: PlayerId)
+        // 成员列表 (Key: CharacterId)
         [Key(4)] public Dictionary<string, TeamMember> Members = new Dictionary<string, TeamMember>();
 
         public TeamData() { }
-        public TeamData(int id, string teamName, TeamMember leader, int maxPlayers)
+        public TeamData(int id, TeamMember leader, int maxPlayers)
         {
             TeamId = id;
-            TeamName = teamName;
-            LeaderPlayerId = leader.PlayerId;
-            Members[leader.PlayerId] = leader;
+            LeaderCharacter = leader.CharacterId;
+            Members[leader.CharacterId] = leader;
             MaxPlayers = maxPlayers;
         }
 
-        public bool IsLeader(string playerId) => LeaderPlayerId == playerId;
+        public bool IsLeader(string characterId) => LeaderCharacter == characterId;
         public List<string> GetMemberPlayerIds() => new List<string>(Members.Keys);
 
     }
@@ -32,9 +30,8 @@ namespace Server.Game.Contracts.Server
     [MessagePackObject]
     public class TeamMember
     {
-        [Key(0)] public string PlayerId;
-        [Key(1)] public string CharacterId;
-        [Key(2)] public string Name;
-        [Key(3)] public int Level;
+        [Key(0)] public string CharacterId;
+        [Key(1)] public string Name;
+        [Key(2)] public int Level;
     }
 }

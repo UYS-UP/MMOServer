@@ -1,18 +1,14 @@
-﻿using NPOI.SS.Formula.Functions;
+﻿using MessagePack;
 using Server.Game.Actor.Core;
 using Server.Game.Actor.Domain.AAuth;
 using Server.Game.Actor.Domain.ACharacter;
 using Server.Game.Actor.Domain.ATime;
-using Server.Game.Actor.Domain.Gateway;
+using Server.Game.Actor.Domain.Team;
 using Server.Game.Contracts.Common;
 using Server.Game.Contracts.Network;
+using Server.Game.World;
 using Server.Network;
 using Server.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Server.Game.Actor.Domain.ASession
 {
@@ -20,15 +16,18 @@ namespace Server.Game.Actor.Domain.ASession
     {
         private readonly Guid sessionId;
         private ISession session;
-        private string accountId;
+        private string playerId;
+        private string characterId;
+        private int entityId;
+        private int mapId;
+        private int dungeonId;
         private readonly GameServer gameServer;
-        private readonly ActorEventBus bus;
+        private ActorEventBus EventBus => System.EventBus;
 
-        public SessionActor(string actorId, Guid sessionId, GameServer gameServer, ActorEventBus bus) : base(actorId)
+        public SessionActor(string actorId, Guid sessionId, GameServer gameServer) : base(actorId)
         {
             this.sessionId = sessionId;
             this.gameServer = gameServer;
-            this.bus = bus;
         }
 
 
@@ -40,18 +39,28 @@ namespace Server.Game.Actor.Domain.ASession
                 case ConnectionOpened opened:
                     await ConnectionOpened(opened);
                     break;
-
+                case ConnectionClosed closed when closed.SessionId == sessionId:
+                    await ConnctionClosed(closed);
+                    break;
                 case RawPacketReceived incoming:
                     await RouteIncoming(incoming.Packet);
                     break;
 
-                case BindAccount bind:
-                    await BindAccount(bind);
+
+                case SendTo sendTo:
+                    await SendTo(sendTo);
                     break;
 
-                case ConnectionClosed closed when closed.SessionId == sessionId:
-                    await ConnctionClosed(closed);
+                case BindPlayerId bindPlayerId:
+                    await BindPlayerId(bindPlayerId);
                     break;
+                case BindCharacterIdAndEntityId bindCharacterIdAndEntityId:
+                    await BindCharacterIdAndEntityId(bindCharacterIdAndEntityId);
+                    break;
+                case CharacterWorldSync bindWorldPos:
+                    await CharacterWorldSync(bindWorldPos);
+                    break;
+
             }
         }
 
@@ -59,15 +68,44 @@ namespace Server.Game.Actor.Domain.ASession
         {
             if(closed.SessionId == sessionId)
             {
+                if (!string.IsNullOrEmpty(playerId))
+                {
+                    System.SessionRouter.UnregisterAccount(playerId);
+        
+                }
+                if (!string.IsNullOrEmpty(characterId))
+                {
+                    System.SessionRouter.UnregisterCharacter(characterId);
+                }
                 await Stop();
             }
         }
 
-        private Task BindAccount(BindAccount bind)
+        private async Task SendTo(SendTo sendTo)
         {
-            if(bind.SessionId != sessionId) return Task.CompletedTask;
-            accountId = bind.PlayerId;
-            gameServer.BindSessionToAccount(bind.SessionId, accountId);
+            await gameServer.SendTo(sessionId, sendTo.Protocol, sendTo.Bytes);
+        }
+
+        private Task BindPlayerId(BindPlayerId bind)
+        {
+            playerId = bind.PlayerId;
+            System.SessionRouter.RegisterAccount(playerId, ActorId);
+            return Task.CompletedTask;
+        }
+
+        private Task BindCharacterIdAndEntityId(BindCharacterIdAndEntityId bindCharacterId)
+        {
+            Console.WriteLine("BindCharacterIdAndEntityId");
+            characterId = bindCharacterId.CharacterId;
+            entityId = bindCharacterId.EntityId;
+            System.SessionRouter.RegisterCharacter(characterId, ActorId);
+            return Task.CompletedTask;
+        }
+
+        private Task CharacterWorldSync(CharacterWorldSync characterWorldSync)
+        {
+            mapId = characterWorldSync.MapId;
+            dungeonId = characterWorldSync.DungeonId;
             return Task.CompletedTask;
         }
 
@@ -110,14 +148,10 @@ namespace Server.Game.Actor.Domain.ASession
                 case Protocol.CS_CreateCharacter:
                     {
                         var data = packet.DeSerializePayload<ClientCreateCharacter>();
-                        message = new CS_CreateCharacter(sessionId, accountId, data.CharacterName, data.ServerId);
+                        message = new CS_CreateCharacter(playerId, data.CharacterName, data.ServerId);
                         receiver = GameField.GetActor<AuthActor>();
                     }
                     break;
-
-
-
-
 
 
                 case Protocol.CS_EnterGame:
@@ -131,14 +165,14 @@ namespace Server.Game.Actor.Domain.ASession
                     {
                         var data = packet.DeSerializePayload<ClientEnterRegion>();
                         message = new CS_CharacterEnterRegion(data.MapId);
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        receiver = GameField.GetActor<CharacterActor>(characterId);
                         break;
                     }
                 case Protocol.CS_StartDungeon:
                     {
                         var data = packet.DeSerializePayload<ClientStartDungeon>();
-                        message = new CS_StartDungeon(data.TeamId, data.TemplateId);
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        message = new CS_StartDungeon(data.TeamId, data.TemplateId, playerId);
+                        receiver = GameField.GetActor<TeamActor>();
                         break;
                     }
       
@@ -146,16 +180,32 @@ namespace Server.Game.Actor.Domain.ASession
                     {
                         var data = packet.DeSerializePayload<ClientEnterDungeon>();
                         message = new CS_CharacterEnterDungeon(data.DungeonTemplateId);
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        receiver = GameField.GetActor<CharacterActor>(characterId);
                         break;
                     }
                 case Protocol.CS_LevelDungeon:
                     {
                         message = new CS_CharacterLevelDungeon();
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        receiver = GameField.GetActor<CharacterActor>(characterId);
+                        break;
                     }
-                    break;
-
+                case Protocol.CS_CreateTeam:
+                    {
+                        var data = packet.DeSerializePayload<ClientCreateTeam>();
+                        message = new CS_CreateTeam(characterId, data.CharacterName, data.CharacterLevel);
+                        receiver = GameField.GetActor<TeamActor>();
+                        break;
+                    }
+                case Protocol.CS_QuitTeam:
+                    {
+                        var data = packet.DeSerializePayload<ClientQuitTeam>();
+                        message = new CS_QuitTeam(data.TeamId, characterId);
+                        break;
+                    }
+                case Protocol.CS_TeamInvite:
+                    {
+                        break;
+                    }
 
 
                 case Protocol.CS_CharacterMove:
@@ -163,11 +213,15 @@ namespace Server.Game.Actor.Domain.ASession
                         var data = packet.DeSerializePayload<ClientCharacterMove>();
                         message = new CS_CharacterMove(
                             data.ClientTick,
+                            entityId,
                             HelperUtility.ShortArrayToVector3(data.Position),
                             HelperUtility.ShortToYaw(data.Yaw),
-                            HelperUtility.SbyteArrayToVector3(data.Direction)
+                            HelperUtility.SbyteArrayToVector3(data.Direction),
+                            mapId,
+                            dungeonId
                             );
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        if (dungeonId == -1) receiver = GameField.GetActor<RegionActor>(mapId);
+                        else receiver = GameField.GetActor<DungeonActor>();
                         break;
                     }
                 case Protocol.CS_CharacterCastSkill:
@@ -176,20 +230,24 @@ namespace Server.Game.Actor.Domain.ASession
                         message = new CS_CharacterCastSkill(
                             data.ClientTick,
                             data.SkillId,
+                            entityId,
                             data.InputType,
                             data.TargetPosition,
                             data.TargetDirection,
-                            data.TargetEntityId
+                            data.TargetEntityId,
+                            mapId,
+                            dungeonId
                             );
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        if (dungeonId == -1) receiver = GameField.GetActor<RegionActor>(mapId);
+                        else receiver = GameField.GetActor<DungeonActor>();
                         break;
                     }
         
                 case Protocol.CS_DungeonLootChoice:
                     {
                         var data = packet.DeSerializePayload<ClientDungeonLootChoice>();
-                        message = new CS_DungeonLootChoice(data.ItemId, data.IsRoll);
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        message = new CS_DungeonLootChoice(dungeonId, characterId, data.ItemId, data.IsRoll);
+                        receiver = GameField.GetActor<DungeonActor>();
                         break;
                     }
                    
@@ -198,7 +256,7 @@ namespace Server.Game.Actor.Domain.ASession
                     {
                         var data = packet.DeSerializePayload<ClientQueryInventory>();
                         message = new CS_QueryInventory(data.StartSlot, data.EndSlot);
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        receiver = GameField.GetActor<CharacterActor>(characterId);
                         break;
                     }
 
@@ -206,7 +264,7 @@ namespace Server.Game.Actor.Domain.ASession
                     {
                         var swapStorageSlot = packet.DeSerializePayload<ClientSwapStorageSlot>();
                         message = new CS_SwapStorageSlot(swapStorageSlot.ReqId, swapStorageSlot.Slot1, swapStorageSlot.Slot2);
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        receiver = GameField.GetActor<CharacterActor>(characterId);
                         break;
                     }
 
@@ -216,10 +274,7 @@ namespace Server.Game.Actor.Domain.ASession
                 case Protocol.CS_AcceptQuest:
                     var questAccept = packet.DeSerializePayload<ClientQuestAccept>();
                     break;
-                case Protocol.CS_CreateDungeonTeam:
-                    break;
-                case Protocol.CS_TeamInvite:
-                    break;
+
                 case Protocol.CS_AcceptInvite:
                     break;
                 case Protocol.CS_AddFriend:
@@ -233,7 +288,7 @@ namespace Server.Game.Actor.Domain.ASession
                     {
                         var data = packet.DeSerializePayload<GMAddItem>();
                         message = new GM_AddItem(data.TemplateId, data.Count);
-                        receiver = GameField.GetActor<CharacterActor>(accountId);
+                        receiver = GameField.GetActor<CharacterActor>(characterId);
                     }
                     break;
 
@@ -245,7 +300,7 @@ namespace Server.Game.Actor.Domain.ASession
 
             if (!System.IsActorAlive(receiver))
             {
-                Console.WriteLine($"[SessionActor {sessionId}] 目标Actor不存在 Prot={packet.ProtocolId}");
+                Console.WriteLine($"[SessionActor {sessionId}] 目标Actor不存在 Receiver={receiver}");
                 return;
             }
             await TellAsync(receiver, message);

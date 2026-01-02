@@ -24,10 +24,6 @@ namespace Server.Game.Contracts.Server
         private SkillBookComponent skillBookCache;
         public SkillBookComponent SkillBook => skillBookCache ??= Get<SkillBookComponent>();
 
-
-        private CharacterProfileComponent characterProfileCache;
-        public CharacterProfileComponent Profile => characterProfileCache ??= Get<CharacterProfileComponent>();
-
         private WorldRefComponent worldRefCache;
         public WorldRefComponent World => worldRefCache ??= Get<WorldRefComponent>();
         

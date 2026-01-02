@@ -4,7 +4,6 @@ using Server.Game.Actor.Domain.AAuth;
 using Server.Game.Actor.Domain.ACharacter;
 using Server.Game.Actor.Domain.ASession;
 using Server.Game.Actor.Domain.ATime;
-using Server.Game.Actor.Domain.Gateway;
 using Server.Game.Actor.Domain.Team;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Common;
@@ -17,16 +16,12 @@ namespace Server.Game.Actor.Domain
     public class GameServerActor : ActorBase
     {
         private readonly GameServer gameServer;
-        private readonly ActorEventBus actorEventBus;
         private readonly IActorSystem actorSystem;
 
         public GameServerActor(string actorId, GameServer gameServer, IActorSystem actorSystem) :base(actorId)
         {
             this.gameServer = gameServer; ;
             this.actorSystem = actorSystem;
-            actorEventBus = new ActorEventBus(actorSystem);
-            
- 
             RegisterForwardingHandlers();
 
             gameServer.OnSessionOpened += async session =>
@@ -66,7 +61,7 @@ namespace Server.Game.Actor.Domain
             gameServer.RegisterHandler(Protocol.CS_QueryInventory, Forward);
             gameServer.RegisterHandler(Protocol.CS_SwapStorageSlot, Forward);
             gameServer.RegisterHandler(Protocol.CS_UseItem, Forward);
-            gameServer.RegisterHandler(Protocol.CS_CreateDungeonTeam, Forward);
+            gameServer.RegisterHandler(Protocol.CS_CreateTeam, Forward);
             gameServer.RegisterHandler(Protocol.CS_TeamInvite, Forward);
             gameServer.RegisterHandler(Protocol.CS_AcceptInvite, Forward);
             gameServer.RegisterHandler(Protocol.CS_AddFriend, Forward);
@@ -92,7 +87,7 @@ namespace Server.Game.Actor.Domain
             {
                 return id;
             }
-            id = await actorSystem.CreateActor(new SessionActor(id, sessionId, gameServer, actorEventBus));
+            id = await actorSystem.CreateActor(new SessionActor(id, sessionId, gameServer));
             return id;
         }
 
@@ -110,12 +105,11 @@ namespace Server.Game.Actor.Domain
         {
             await base.OnStart();
             await gameServer.StartAsync();
-            await actorSystem.CreateActor(new GatewayActor(nameof(GatewayActor), gameServer));
-            await actorSystem.CreateActor(new TimeActor(nameof(TimeActor), actorEventBus));
-            await actorSystem.CreateActor(new AuthActor(nameof(AuthActor), actorEventBus));
-            await actorSystem.CreateActor(new TeamActor(nameof(TeamActor)));
-            await actorSystem.CreateActor(new RegionActor(GameField.GetActor<RegionActor>(0), 0, actorEventBus));
-            await actorSystem.CreateActor(new DungeonActor(nameof(DungeonActor), actorEventBus));
+            await actorSystem.CreateActor(new TimeActor(GameField.GetActor<TimeActor>()));
+            await actorSystem.CreateActor(new AuthActor(GameField.GetActor<AuthActor>()));
+            await actorSystem.CreateActor(new TeamActor(GameField.GetActor<TeamActor>()));
+            await actorSystem.CreateActor(new RegionActor(GameField.GetActor<RegionActor>(0), 0));
+            await actorSystem.CreateActor(new DungeonActor(GameField.GetActor<DungeonActor>()));
 
         }
 
@@ -123,7 +117,6 @@ namespace Server.Game.Actor.Domain
         {
             await base.OnStop();
             await actorSystem.StopAllActors();
-            Console.WriteLine("ActorGameServer 已停止");
             gameServer.Dispose();
         }
 

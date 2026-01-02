@@ -1,7 +1,8 @@
-﻿using Server.Game.Actor.Core;
+﻿using MessagePack;
+using Server.Game.Actor.Core;
 using Server.Game.Actor.Domain.AAuth;
+using Server.Game.Actor.Domain.ACharacter;
 using Server.Game.Actor.Domain.ATime;
-using Server.Game.Actor.Domain.Gateway;
 using Server.Game.Actor.Domain.Team;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
@@ -26,10 +27,8 @@ namespace Server.Game.World
         private int tick;
         private readonly Dictionary<int, DungeonWorld> dungons;
 
-        private readonly ActorEventBus bus;
+        private ActorEventBus EventBus => System.EventBus;
 
-        private readonly BatchGatewaySend gatewaySend;
-        private readonly BatchActorSend actorSend;
         private readonly List<int> waitDestoryDungeon;
 
         private readonly Queue<IActorMessage> messageQueue;
@@ -37,12 +36,9 @@ namespace Server.Game.World
 
         private int nextId = 0;
 
-        public DungeonActor(string actorId, ActorEventBus bus) : base(actorId)
+        public DungeonActor(string actorId) : base(actorId)
         {
-            this.bus = bus;
             dungons = new Dictionary<int, DungeonWorld>();
-            gatewaySend = new BatchGatewaySend();
-            actorSend = new BatchActorSend();
             waitDestoryDungeon = new List<int>();
 
             messageQueue = new Queue<IActorMessage>();
@@ -51,7 +47,7 @@ namespace Server.Game.World
         protected override async Task OnStart()
         {
             await base.OnStart();
-            bus.Subscribe<TickUpdateEvent>(ActorId);
+            EventBus.Subscribe<TickUpdateEvent>(ActorId);
         }
 
 
@@ -77,8 +73,6 @@ namespace Server.Game.World
         private async Task OnTickUpdateEvent(TickUpdateEvent args)
         {
             tick = args.Tick;
-            gatewaySend.ClearSend();
-            actorSend.ClearSend();
             waitDestoryDungeon.Clear();
 
             // 处理队列中的所有消息
@@ -87,14 +81,13 @@ namespace Server.Game.World
                 switch (message)
                 {
                         case A_CreateDungeon create: await HandleCreateDungeonInstance(create); break;
-
                         case A_CharacterSpawn spawn: await HandleCharacterSpawn(spawn); break;
                         case A_CharacterDespawn despawn: await HandleCharacterDespawn(despawn); break;
-                        case A_CharacterMove move: await HandleCharacterMove(move); break;
+                        case CS_CharacterMove move: await CS_HandleCharacterMove(move); break;
 
-                        case A_CharacterCastSkill skill: await HandleCharacterCastSkill(skill); break;
+                        case CS_CharacterCastSkill skill: await CS_HandleCharacterCastSkill(skill); break;
                         case A_DungeonDesotryTimer destroy: dungons.Remove(destroy.DungeonId); break;
-                        case A_DungeonLootChoice loot: await HandleDungeonLootChoice(loot); break;
+                        case CS_DungeonLootChoice loot: await CS_HandleDungeonLootChoice(loot); break;
                         case PlayerDisconnectionEvent disconnection:
                             await OnPlayerDisconnectionEvent(disconnection);
                             break;
@@ -103,7 +96,7 @@ namespace Server.Game.World
 
             foreach (var kv in dungons)
             {
-                kv.Value.OnTickUpdate(args.Tick, args.DeltaTime);
+                await kv.Value.OnTickUpdate(args.Tick, args.DeltaTime);
             }
               
             foreach (var dungeonId in waitDestoryDungeon)
@@ -111,16 +104,6 @@ namespace Server.Game.World
                 dungons.Remove(dungeonId);
             }
 
-
-
-            // 统一发送网关消息
-            await TellGateway(gatewaySend.DeepCopy());
-
-            // 统一发送Actor消息
-            foreach (var (targetActorId, msg) in actorSend.Commnads)
-            {
-                await TellAsync(targetActorId, msg);
-            }
                 
         }
 
@@ -134,14 +117,12 @@ namespace Server.Game.World
         }
 
 
-        private Task HandleCreateDungeonInstance(A_CreateDungeon message)
+        private async Task HandleCreateDungeonInstance(A_CreateDungeon message)
         {
-            if (!RegionTemplateConfig.TryGetDungeonTemplateById(message.TemplateId, out var template)) return Task.CompletedTask;
+            if (!RegionTemplateConfig.TryGetDungeonTemplateById(message.TemplateId, out var template)) return;
             var context = new EntityContext 
             { 
                 Id = nextId,
-                Actor = actorSend,
-                Gateway = gatewaySend,
                 WaitDestory = waitDestoryDungeon,
             };
             nextId++;
@@ -153,15 +134,19 @@ namespace Server.Game.World
             var aoi = new AOIService(Vector2.Distance(min, max), 100, 100);
 
             var pathfinder = new AStarPathfind(nav);
-            var dungeonInstance = new DungeonWorld(context, skill, buff, areaBuff, aoi, nav, pathfinder, template.LimitTime);
+            var dungeonInstance = new DungeonWorld(this, context, skill, buff, areaBuff, aoi, nav, pathfinder, template.LimitTime);
             dungons[context.Id] = dungeonInstance;
-            gatewaySend.AddSend(message.Members, Protocol.SC_EnterDungeon,
-                new ServerEnterDungeon
-                {
-                    DungeonTemplateId = template.Id,
-                    LimitTime = template.LimitTime,
-                });
-            return Task.CompletedTask;
+            var payload = new ServerEnterDungeon
+            {
+                DungeonTemplateId = template.Id,
+                LimitTime = template.LimitTime,
+            };
+            var bytes = MessagePackSerializer.Serialize(payload);
+            foreach (var playerId in message.Members)
+            {
+                await TellGateway(playerId, Protocol.SC_EnterDungeon, bytes);
+            }
+   
         }
 
         private Task HandleCharacterSpawn(A_CharacterSpawn message)
@@ -173,29 +158,26 @@ namespace Server.Game.World
             return Task.CompletedTask;
         }
 
-        private Task HandleCharacterDespawn(A_CharacterDespawn message)
+        private async Task HandleCharacterDespawn(A_CharacterDespawn message)
         {
             if (dungons.TryGetValue(message.DungeonId, out var dungeon))
-                dungeon.HandleCharacterDespawn(message.EntityId);
-            return Task.CompletedTask;
+                await dungeon.HandleCharacterDespawn(message.EntityId);
         }
 
-        private Task HandleCharacterMove(A_CharacterMove message)
+        private async Task CS_HandleCharacterMove(CS_CharacterMove message)
         {
             if (dungons.TryGetValue(message.DungeonId, out var dungeon))
             {
-                dungeon.HandleCharacterMove(
+                await dungeon.HandleCharacterMove(
                     message.ClientTick,
                     message.EntityId,
                     message.Position,
                     message.Yaw,
                     message.Direction);
             }
-
-            return Task.CompletedTask;
         }
 
-        private Task HandleCharacterCastSkill(A_CharacterCastSkill message)
+        private Task CS_HandleCharacterCastSkill(CS_CharacterCastSkill message)
         {
             if (dungons.TryGetValue(message.DungeonId, out var dungeon))
             {
@@ -204,13 +186,12 @@ namespace Server.Game.World
             return Task.CompletedTask;
         }
 
-        private Task HandleDungeonLootChoice(A_DungeonLootChoice message)
+        private async Task CS_HandleDungeonLootChoice(CS_DungeonLootChoice message)
         {
             if (dungons.TryGetValue(message.DungeonId, out var dungeon))
             {
-                dungeon.HandleLootChoice(message.EntityId, message.ItemId, message.IsRoll);
+                await dungeon.HandleLootChoice(message.CharacterId, message.ItemId, message.IsRoll);
             }
-            return Task.CompletedTask;
         }
     }
 }

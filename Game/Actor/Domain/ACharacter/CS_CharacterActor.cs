@@ -1,5 +1,6 @@
-﻿using Server.DataBase.Entities;
-using Server.Game.Actor.Domain.Gateway;
+﻿using MessagePack;
+using Server.DataBase.Entities;
+using Server.Game.Actor.Domain.ASession;
 using Server.Game.Actor.Domain.Team;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Common;
@@ -20,8 +21,10 @@ namespace Server.Game.Actor.Domain.ACharacter
 
         private async Task CS_HandleCharacterEnterRegion(CS_CharacterEnterRegion message)
         {
-            var actor = GameField.GetActor<RegionActor>(state.MapId);
-            await TellAsync(actor, new A_CharacterSpawn(CreateRuntimeFromState()));
+            var regionActor = GameField.GetActor<RegionActor>(state.MapId);
+            var entity = await CreateRuntimeFromState();
+            await TellAsync(regionActor, new A_CharacterSpawn(entity));
+       
         }
 
         private async Task CS_HandleCharacterChangeRegion(CS_CharacterChangeRegion message)
@@ -29,95 +32,31 @@ namespace Server.Game.Actor.Domain.ACharacter
             var actor = GameField.GetActor<RegionActor>(state.MapId);
             await TellAsync(actor, new A_CharacterDespawn(state.EntityId));
             state.MapId = message.MapId;
-            await TellGateway(
-                new SendToPlayer(
-                    state.PlayerId, 
-                    Protocol.SC_EnterRegion, 
-                    new ServerEnterRegion { MapId = state.MapId }
-                )
-            );
+           
+         
+            var sessionActor = System.SessionRouter.GetByPlayerId(state.PlayerId);
+            var bytes = MessagePackSerializer.Serialize(new ServerEnterRegion { MapId = state.MapId });
+            await TellAsync(sessionActor, new CharacterWorldSync(state.MapId, state.DungeonId));
+            await TellAsync(sessionActor, new SendTo(Protocol.SC_EnterRegion, bytes));
         }
 
         private async Task CS_HandleCharacterEnterDungeon(CS_CharacterEnterDungeon message)
         {
             var actor = GameField.GetActor<DungeonActor>();
-            await TellAsync(actor, new A_CharacterSpawn(CreateRuntimeFromState()));
+            var entity = await CreateRuntimeFromState();
+            await TellAsync(actor, new A_CharacterSpawn(entity));
         }
 
         private async Task CS_HandleCharacterLevelDungeon(CS_CharacterLevelDungeon message)
         {
-            var actor = GameField.GetActor<DungeonActor>();
-            await TellAsync(actor, new A_CharacterDespawn(state.EntityId, state.DungeonId));
-        }
-
-        private async Task CS_HandleCharacterMove(CS_CharacterMove message)
-        {
-            var actor = GameField.GetActor<RegionActor>(state.MapId);
-            if(state.DungeonId == -1)
-            {
-                actor = GameField.GetActor<DungeonActor>();
-            }
-            await TellAsync(actor, new A_CharacterMove(
-                message.ClientTick, state.EntityId,
-                message.Position, message.Yaw, message.Direction,
-                state.MapId, state.DungeonId));
-        }
-
-        private async Task CS_HandleCharacterCastSkill(CS_CharacterCastSkill message)
-        {
-            var actor = GameField.GetActor<RegionActor>(state.MapId);
-            if (state.DungeonId == -1)
-            {
-                actor = GameField.GetActor<DungeonActor>();
-            }
-            await TellAsync(actor, new A_CharacterCastSkill(message.ClientTick,
-                message.SkillId, state.EntityId, state.DungeonId,
-                message.InputType, message.TargetPosition, message.TargetDirection,
-                message.TargetEntityId));
+            var dungeonActor = GameField.GetActor<DungeonActor>();
+            state.DungeonId = -1;
+            var sessionActor = System.SessionRouter.GetByPlayerId(state.PlayerId);
+            await TellAsync(sessionActor, new CharacterWorldSync(state.MapId, state.DungeonId));
+            await TellAsync(dungeonActor, new A_CharacterDespawn(state.EntityId, state.DungeonId));
         }
 
 
-        #endregion
-
-
-        #region 副本相关
-
-        private async Task CS_HandleStartDungeon(CS_StartDungeon message)
-        {
-            await TellAsync(nameof(TeamActor), new A_StartDungeon(message.TeamId, message.TemplateId, state.PlayerId));
-        }
-
-        private async Task CS_DungeonLootChoice(CS_DungeonLootChoice message)
-        {
-            var actor = GameField.GetActor<DungeonActor>();
-            await TellAsync(
-                actor,
-                new A_DungeonLootChoice(
-                    state.DungeonId,
-                    state.EntityId,
-                    message.ItemId,
-                    message.IsRoll)
-                );
-        }
-
-
-        #endregion
-
-        #region 队伍相关
-        private async Task CS_HandleCreateTeam(CS_CreateTeam message)
-        {
-            await TellAsync(nameof(TeamActor), new A_CreateTeam(
-                state.PlayerId,
-                state.CharacterId,
-                state.Name,
-                state.Level,
-                message.TeamName));
-        }
-
-        private Task CS_HandleTeamInvite(CS_TeamInvite message)
-        {
-            return Task.CompletedTask;
-        }
         #endregion
 
 
@@ -131,7 +70,7 @@ namespace Server.Game.Actor.Domain.ACharacter
                 storage.GetItemsInRange(SlotContainerType.Inventory, message.StartSlot, message.EndSlot),
                 storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory)
                 );
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_QueryInventory, payload));
+            await TellGateway(state.PlayerId, Protocol.SC_QueryInventory, payload);
         }
 
         private async Task CS_HandleSwapStorageSlot(CS_SwapStorageSlot message)
@@ -145,14 +84,77 @@ namespace Server.Game.Actor.Domain.ACharacter
                 storage.TryGetItem(message.Slot2, out item2);
             }
             var payload = new ServerSwapStorageSlotResponse(message.ReqId, result, item1, item2);
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_SwapStorageSlot, payload));
+            await TellGateway(state.PlayerId, Protocol.SC_SwapStorageSlot, payload);
         }
 
-        private async Task CS_HandleUseItem()
+        private async Task CS_HandleUseItem(CS_UseItem message)
         {
-
+            if (!storage.TryGetItem(message.Slot, out var item) && item.InstanceId == message.InstanceId) return;
+            switch (item)
+            {
+                case EquipData equip:
+                    await HandleEquipItem(message.Slot, equip);
+                    break;
+            }
         }
 
+        private async Task HandleEquipItem(SlotKey sourceSlot, EquipData equip)
+        {
+            if(!storage.TryGetEquipSlotIndex(equip.EquipType, out var targetSlot)) return;
+            if(storage.SwapItem(sourceSlot, targetSlot, out var changedSlots))
+            {
+                var changes = new Dictionary<SlotKey, ItemData>();
+
+                if (storage.TryGetItem(sourceSlot, out var oldItem)) changes[sourceSlot] = oldItem;
+                else changes[sourceSlot] = null;
+
+                if (storage.TryGetItem(targetSlot, out var newItem)) changes[targetSlot] = newItem;
+                var payload = new ServerSlotUpdated
+                {
+                    Items = changes,
+                    MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory)
+                };
+
+                await TellGateway(state.PlayerId, Protocol.SC_UseItem, payload);
+                var attributeChanges = attribute.CalculateAttributeChange((EquipData)newItem, (EquipData)oldItem);
+
+                ApplyAttributesToCharacter(attributeChanges);
+
+                //await TellGateway(
+                //    state.PlayerId, 
+                //    Protocol.SC_EntityStatsUpdate, 
+                //    new ServerEntityStatsUpdate
+                //{
+                //    EntityId = state.EntityId,
+                //    Attributes = attributeChanges
+                //});
+            }
+        }
+
+        private void ApplyAttributesToCharacter(Dictionary<AttributeType, float> changes)
+        {
+            foreach (var kvp in changes)
+            {
+                if (state.ExtraAttributes.ContainsKey(kvp.Key))
+                {
+                    state.ExtraAttributes[kvp.Key] += kvp.Value;
+                }
+                else
+                {
+                    state.ExtraAttributes[kvp.Key] = kvp.Value;
+                }
+            }
+
+            // 特殊处理：如果涉及到 MaxHp / MaxMp 的变化，可能需要调整 CurrentHp
+            // 比如脱下加血装备，当前血量不能超过新的上限
+            if (changes.ContainsKey(AttributeType.MaxHp))
+            {
+                float newMaxHp = state.BaseAttributes.GetValueOrDefault(AttributeType.MaxHp, 0)
+                                 + state.ExtraAttributes.GetValueOrDefault(AttributeType.MaxHp, 0);
+                
+                if (state.Hp > newMaxHp) state.Hp = newMaxHp;
+            }
+        }
 
         #endregion
 

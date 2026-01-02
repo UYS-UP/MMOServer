@@ -1,6 +1,9 @@
-﻿using Server.DataBase.Entities;
+﻿using MessagePack;
+using Server.DataBase.Entities;
+using Server.Game.Actor.Core;
 using Server.Game.Actor.Domain.ACharacter;
 using Server.Game.Contracts.Actor;
+using Server.Game.Contracts.Common;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
 using Server.Game.World.AStar;
@@ -33,21 +36,21 @@ namespace Server.Game.World
     {
         public ItemData Item { get; set; }
 
-        // 玩家ID -> 该玩家对这件物品的选择
-        public Dictionary<string, LootChoice> PlayerChoices { get; } = new();
+        // CharacterId -> 该玩家对这件物品的选择
+        public Dictionary<string, LootChoice> CharacterChoices { get; } = new();
 
         public List<int> RollPool { get; set; } = new(); // 预生成的无重复点数池
         private int nextIndex = 0;
 
         public int GetNextRoll() => RollPool[nextIndex++];
 
-        public string WinnerPlayerId { get; set; }
+        public string WinnerCharacter { get; set; }
 
         public bool AllPlayersDecided =>
-            PlayerChoices.Values.All(c => c.ChoiceType != LootChoiceType.Pending);
+            CharacterChoices.Values.All(c => c.ChoiceType != LootChoiceType.Pending);
 
         public bool HasAnyRoll =>
-            PlayerChoices.Values.Any(c => c.ChoiceType == LootChoiceType.Rolled);
+            CharacterChoices.Values.Any(c => c.ChoiceType == LootChoiceType.Rolled);
     }
 
     public class DungeonWorld : EntityWorld
@@ -55,22 +58,33 @@ namespace Server.Game.World
         private readonly List<DungeonLootEntry> pendingLoot = new();
         private float LimitTime;
 
-        public DungeonWorld(EntityContext context, SkillSystem skill, BuffSystem buff, AreaBuffSystem areaBuff, AOIService aoi, NavVolumeService nav, AStarPathfind pathfinder, float limitTime) : base(context, skill, buff, areaBuff, aoi, nav, pathfinder)
+        public DungeonWorld(
+            ActorBase actor, 
+            EntityContext context, 
+            SkillSystem skill, 
+            BuffSystem buff, 
+            AreaBuffSystem areaBuff, 
+            AOIService aoi, 
+            NavVolumeService nav, 
+            AStarPathfind pathfinder, 
+            float limitTime) : 
+            base(actor, context, skill, buff, areaBuff, aoi, nav, pathfinder)
         {
             LimitTime = limitTime;
         }
 
-        public override void OnTickUpdate(int tick, float deltaTime)
+        public override async Task OnTickUpdate(int tick, float deltaTime)
         {
-            base.OnTickUpdate(tick, deltaTime);
-            UpdateDungeonLimitTime(deltaTime);
+            await base.OnTickUpdate(tick, deltaTime);
+            await UpdateDungeonLimitTime(deltaTime);
         }
 
-        protected override void HandleEntityDeath(int entityId, EntityType entityType)
+        protected override async Task HandleEntityDeath(int entityId, EntityType entityType)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
-
-            var allPlayerIds = Context.Players;
+            var despawnPayload = new ServerEntityDespawn(Context.Tick, new HashSet<int> { entityId });
+            var despawnBytes = MessagePackSerializer.Serialize(despawnPayload);
+            var allCharacters = Context.Characters;
             if (entity.Identity.Type == EntityType.Monster)
             {
                 if (entity.TryGet<MonsterComponent>(out var monsterComp))
@@ -79,18 +93,15 @@ namespace Server.Game.World
                     {
                         var lootItems = GenerateDungeonLoot();
 
-                        if (allPlayerIds.Count == 1)
+                        if (allCharacters.Count == 1)
                         {
-                            var onlyPlayerId = allPlayerIds.First();
+                            var characterId = allCharacters.First();
                             Console.WriteLine("只有一个玩家");
-                            // 添加给玩家的背包
-                            //var completedPayload = new ServerDungeonCompleted();
-                            //regionState.GatewaySend.AddSendToPlayers(allPlayerIds, Protocol.DungeonCompleted, completedPayload);
-                            Context.Actor.AddTell($"PlayerActor_{onlyPlayerId}", new A_ItemsAcquired(lootItems));
-                            // 触发副本完成（注册销毁定时器）
-                            HandleDungeonCompleted("副本通关了");
+                            await Actor.TellAsync(GameField.GetActor<CharacterActor>(characterId), new A_ItemAcquired(null));
+                            await Actor.TellGateway(characterId, Protocol.SC_EntityDespawn, despawnBytes);
+                            await HandleDungeonCompleted("副本通关了");
                         }
-                        else if (allPlayerIds.Count > 1)
+                        else if (allCharacters.Count > 1)
                         {
                             var entries = new List<DungeonLootEntry>();
                             foreach (var item in lootItems)
@@ -101,43 +112,46 @@ namespace Server.Game.World
                                     RollPool = HelperUtility.ShuffleRollPool()
                                 };
 
-                                foreach (var playerId in allPlayerIds)
+                                foreach (var playerId in allCharacters)
                                 {
-                                    entry.PlayerChoices[playerId] = new LootChoice();
+                                    entry.CharacterChoices[playerId] = new LootChoice();
                                 }
                                 entries.Add(entry);
                             }
 
                             pendingLoot.Clear();
                             pendingLoot.AddRange(entries);
-                            Context.Gateway.AddSend(allPlayerIds, Protocol.SC_DungeonLootInfo, lootItems);
+                            var lootItemsBytes = MessagePackSerializer.Serialize(lootItems);
+                            foreach (var characterId in allCharacters)
+                            {
+                                await Actor.TellGateway(characterId, Protocol.SC_DungeonLootInfo, lootItemsBytes);
+                                await Actor.TellGateway(characterId, Protocol.SC_EntityDespawn, despawnBytes);
+                            }
+                           
                         }
                     }
                 }
             }
-
             Context.RemoveEntity(entityId);
-            Context.Gateway.AddSend(allPlayerIds, Protocol.SC_EntityDespawn,
-                new ServerEntityDespawn(Context.Tick, new HashSet<int> { entityId }));
         }
 
-        public void HandleDungeonCompleted(string cause)
+        public async Task HandleDungeonCompleted(string cause)
         {
             // 通知所有玩家离开副本
-            foreach (var playerId in Context.Players)
+            foreach (var charcterId in Context.Characters)
             {
-
+                await Actor.TellAsync(GameField.GetActor<CharacterActor>(charcterId), new A_LevelDungeon("副本时间到了"));
             }
             Console.WriteLine("副本时间到了");
             Context.WaitDestory.Add(Context.Id);
         }
 
-        private void UpdateDungeonLimitTime(float deltaTime)
+        private async Task UpdateDungeonLimitTime(float deltaTime)
         {
             LimitTime -= deltaTime;
             if (LimitTime <= 0)
             {
-                HandleDungeonCompleted("副本时间到了");
+                await HandleDungeonCompleted("副本时间到了");
             }
         }
 
@@ -159,12 +173,12 @@ namespace Server.Game.World
         }
 
 
-        public void HandleLootChoice(int entityId, string itemId, bool isRoll)
+        public async Task HandleLootChoice(string characterId, string itemId, bool isRoll)
         {
             var entry = pendingLoot.FirstOrDefault(l => l.Item.TemplateId == itemId);
             if (entry == null) return;
-            if (!Context.TryGetEntity(entityId, out var entity)) return;
-            if (!entry.PlayerChoices.TryGetValue(entity.Profile.PlayerId, out var choice)) return;
+            if (!Context.TryGetEntityByCharacterId(characterId, out var entity)) return;
+            if (!entry.CharacterChoices.TryGetValue(characterId, out var choice)) return;
 
             if (isRoll)
             {
@@ -176,35 +190,32 @@ namespace Server.Game.World
                 choice.ChoiceType = LootChoiceType.Pass;
                 choice.RollValue = 0;
             }
-
-            Context.Gateway.AddSend(
-                Context.Players,
-                Protocol.SC_DungeonLootChoice,
-                new ServerDungeonLootChoice
-                {
-                    EntityName = entity.Identity.Name,
-                    LootChoiceType = choice.ChoiceType,
-                    RollValue = choice.RollValue,
-                    ItemId = itemId
-                });
-
+            var payload = new ServerDungeonLootChoice
+            {
+                EntityName = entity.Identity.Name,
+                LootChoiceType = choice.ChoiceType,
+                RollValue = choice.RollValue,
+                ItemId = itemId
+            };
+            var bytes = MessagePackSerializer.Serialize(payload);
+            await Actor.TellGateway(characterId, Protocol.SC_DungeonLootChoice, bytes);
             if (entry.AllPlayersDecided)
             {
-                ResolveSingleLoot(entry);
+                await ResolveSingleLoot(entry);
             }
 
-            if (pendingLoot.All(l => l.WinnerPlayerId != null || !l.HasAnyRoll))
+            if (pendingLoot.All(l => l.WinnerCharacter != null || !l.HasAnyRoll))
             {
-                HandleDungeonCompleted("副本通关了");
+                await HandleDungeonCompleted("副本通关了");
             }
         }
 
 
-        private void ResolveSingleLoot(DungeonLootEntry entry)
+        private async Task ResolveSingleLoot(DungeonLootEntry entry)
         {
             if (!entry.HasAnyRoll)
             {
-                entry.WinnerPlayerId = string.Empty;
+                entry.WinnerCharacter = string.Empty;
                 return;
             }
 
@@ -212,25 +223,25 @@ namespace Server.Game.World
             int bestRoll = int.MinValue;
             var allRolls = new Dictionary<string, int>();
 
-            foreach (var (playerId, choice) in entry.PlayerChoices)
+            foreach (var (characterId, choice) in entry.CharacterChoices)
             {
                 if (choice.ChoiceType != LootChoiceType.Rolled)
                     continue;
 
-                allRolls[playerId] = choice.RollValue;
+                allRolls[characterId] = choice.RollValue;
 
                 if (choice.RollValue > bestRoll)
                 {
                     bestRoll = choice.RollValue;
-                    winner = playerId;
+                    winner = characterId;
                 }
             }
 
-            entry.WinnerPlayerId = winner;
+            entry.WinnerCharacter = winner;
 
             if (!string.IsNullOrEmpty(winner))
             {
-                Context.Actor.AddTell($"PlayerActor_{winner}", new A_ItemAcquired(entry.Item));
+                await Actor.TellAsync(GameField.GetActor<CharacterActor>(winner), new A_ItemAcquired(entry.Item));
             }
         }
 

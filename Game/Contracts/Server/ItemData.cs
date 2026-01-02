@@ -11,6 +11,7 @@ namespace Server.Game.Contracts.Server
 
     public enum ItemType
     {
+        None,
         Equip,
         Consumable,
         Material
@@ -18,11 +19,13 @@ namespace Server.Game.Contracts.Server
 
     public enum QualityType
     {
+        None,
         Common,
         Uncommon,
         Rare,
         Epic
     }
+
 
     [MessagePackObject]
     [Union(0, typeof(EquipData))]

@@ -2,8 +2,8 @@
 using Server.DataBase.Entities;
 using Server.Game.Actor.Core;
 using Server.Game.Actor.Domain.AAuth;
+using Server.Game.Actor.Domain.ACharacter;
 using Server.Game.Actor.Domain.ATime;
-using Server.Game.Actor.Domain.Gateway;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
 using Server.Game.World.AStar;
@@ -21,21 +21,15 @@ namespace Server.Game.World
         private int mapId;
         private RegionWorld regionWorld;
 
-        private readonly ActorEventBus bus;
-
-        private readonly BatchGatewaySend gatewaySend;
-        private readonly BatchActorSend actorSend;
+        private ActorEventBus EventBus => System.EventBus;
         private readonly List<int> waitDestoryDungeon;
 
         private readonly Queue<IActorMessage> messageQueue;
 
 
-        public RegionActor(string actorId, int mapId, ActorEventBus bus) : base(actorId)
+        public RegionActor(string actorId, int mapId) : base(actorId)
         {
-            this.bus = bus;
             this.mapId = mapId;
-            gatewaySend = new BatchGatewaySend();
-            actorSend = new BatchActorSend();
             waitDestoryDungeon = new List<int>();
 
             messageQueue = new Queue<IActorMessage>();
@@ -47,13 +41,11 @@ namespace Server.Game.World
         protected override async Task OnStart()
         {
             await base.OnStart();
-            bus.Subscribe<TickUpdateEvent>(ActorId);
+            EventBus.Subscribe<TickUpdateEvent>(ActorId);
             if(RegionTemplateConfig.TryGetRegionTemplateById(mapId, out var template)){
                 var context = new EntityContext
                 {
                     Id = mapId,
-                    Actor = actorSend,
-                    Gateway = gatewaySend,
                     WaitDestory = waitDestoryDungeon,
                 };
                 var buff = new BuffSystem();
@@ -64,7 +56,7 @@ namespace Server.Game.World
                 var pathfinder = new AStarPathfind(nav);
 
 
-                regionWorld = new RegionWorld(context, skill, buff, areaBuff, aoi, nav, pathfinder);
+                regionWorld = new RegionWorld(this, context, skill, buff, areaBuff, aoi, nav, pathfinder);
             }
 
         }
@@ -89,22 +81,22 @@ namespace Server.Game.World
 
         #region Message Handlers
 
-        private void HandleCharacterSpawn(A_CharacterSpawn message)
+        private async Task HandleCharacterSpawn(A_CharacterSpawn message)
         {
-            regionWorld.HandleCharacterSpawn(message.Runtime);
+            await regionWorld.HandleCharacterSpawn(message.Runtime);
 
         }
 
-        private void HandleCharacterDespawn(A_CharacterDespawn message)
+        private async Task HandleCharacterDespawn(A_CharacterDespawn message)
         {
-            regionWorld.HandleCharacterDespawn(message.EntityId);
+            await regionWorld.HandleCharacterDespawn(message.EntityId);
             
         }
 
-        private void HandleCharacterMove(A_CharacterMove message)
+        private async Task CS_HandleCharacterMove(CS_CharacterMove message)
         {
 
-            regionWorld.HandleCharacterMove(
+            await regionWorld.HandleCharacterMove(
                 message.ClientTick,
                 message.EntityId,
                 message.Position,
@@ -114,10 +106,18 @@ namespace Server.Game.World
         }
 
 
-        private void HandleCharacterSkillRelease(A_CharacterCastSkill message)
+        private Task CS_HandleCharacterCastSkill(CS_CharacterCastSkill message)
         {
 
-            regionWorld.HandleCharacterCastSkill(message.ClientTick, message.SkillId, message.EntityId, message.InputType, message.TargetPosition, message.TargetDirection, message.TargetEntityId);
+            regionWorld.HandleCharacterCastSkill(
+                message.ClientTick, 
+                message.SkillId, 
+                message.EntityId, 
+                message.InputType, 
+                message.TargetPosition, 
+                message.TargetDirection, 
+                message.TargetEntityId);
+            return Task.CompletedTask;
         }
 
         #endregion
@@ -127,8 +127,6 @@ namespace Server.Game.World
         private async Task OnTickUpdateEvent(TickUpdateEvent args)
         {
             tick = args.Tick;
-            gatewaySend.ClearSend();
-            actorSend.ClearSend();
            
 
             // 处理队列中的所有消息
@@ -136,25 +134,15 @@ namespace Server.Game.World
             {
                 switch (message)
                 {
-                    case A_CharacterSpawn spawn: HandleCharacterSpawn(spawn); break;
-                    case A_CharacterDespawn despawn: HandleCharacterDespawn(despawn); break;
-                    case A_CharacterMove move: HandleCharacterMove(move); break;
-                    case A_CharacterCastSkill skill: HandleCharacterSkillRelease(skill); break;
+                    case A_CharacterSpawn spawn: await HandleCharacterSpawn(spawn); break;
+                    case A_CharacterDespawn despawn: await HandleCharacterDespawn(despawn); break;
+                    case CS_CharacterMove move: await CS_HandleCharacterMove(move); break;
+                    case CS_CharacterCastSkill skill: await CS_HandleCharacterCastSkill(skill); break;
    
                 }
             }
 
-            regionWorld.OnTickUpdate(args.Tick, args.DeltaTime);
-
-
-            // 统一发送网关消息
-            await TellGateway(gatewaySend.DeepCopy());
-
-            // 统一发送Actor消息
-            foreach (var (targetActorId, msg) in actorSend.Commnads)
-            {
-                await TellAsync(targetActorId, msg);
-            }
+            await regionWorld.OnTickUpdate(args.Tick, args.DeltaTime);
           
         }
 

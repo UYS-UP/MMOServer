@@ -1,6 +1,6 @@
 ﻿using Server.DataBase.Entities;
 using Server.Game.Actor.Core;
-using Server.Game.Actor.Domain.Gateway;
+using Server.Game.Actor.Domain.ASession;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
@@ -19,7 +19,7 @@ namespace Server.Game.Actor.Domain.ACharacter
     {
         private PlayerActorState state;
 
-        private ActorEventBus bus;
+        private ActorEventBus EventBus => System.EventBus;
 
         private readonly StorageManager storage;
         private readonly QuestManager quest;
@@ -35,7 +35,8 @@ namespace Server.Game.Actor.Domain.ACharacter
 
             public Vector3 Position { get; set; }
             public float Yaw { get; set; }
-            public float Exp { get; set; }
+            public long Exp { get; set; }
+            public float Hp { get; set; }
 
             public string Name { get; set; }
             public int Level { get; set; }
@@ -50,24 +51,30 @@ namespace Server.Game.Actor.Domain.ACharacter
                 Name = dbChar.Name;
                 Level = dbChar.Level;
                 Exp = dbChar.Exp;
+                Hp = dbChar.Hp;
                 BaseAttributes = dbChar.Attributes;
                 EntityId = Counter.NextId();
                 MapId = dbChar.MapId;
                 Position = new Vector3(dbChar.X, dbChar.Y, dbChar.Z);
                 Yaw = dbChar.Yaw;
                 DungeonId = -1;
+
             }
             
         }
 
-        public CharacterActor(string actorId, Character character, ActorEventBus bus) : base(actorId)
+        public CharacterActor(string actorId, Character character) : base(actorId)
         {
-            this.bus = bus;
-            state = new PlayerActorState(character);
-            state.ExtraAttributes = attribute.CalculateCharacterAttributes(character);
+        
+
+            attribute = new AttributeManager();
             storage = new StorageManager();
             quest = new QuestManager();
-            attribute = new AttributeManager();
+            state = new PlayerActorState(character);
+   
+            state.ExtraAttributes = attribute.CalculateCharacterAttributes(character);
+
+
             var questNodes = new Dictionary<string, QuestNode>();
             questNodes.Add("001_01", new QuestNode
             {
@@ -115,10 +122,11 @@ namespace Server.Game.Actor.Domain.ACharacter
             quest.OnActivateNode += OnActivateNode;
             quest.OnQuestCompleted += OnQuestCompleted;
 
-            // 告知玩家进入场景
-            await TellGateway(new SendToPlayer(state.PlayerId, 
-                Protocol.SC_EnterRegion, 
-                new ServerEnterRegion { MapId = state.MapId }));
+            var sessionActor = System.SessionRouter.GetByPlayerId(state.PlayerId);
+            await TellAsync(sessionActor, new BindCharacterIdAndEntityId(state.CharacterId, state.EntityId));
+            await TellGateway(state.PlayerId, 
+                Protocol.SC_EnterGame, 
+                new ServerEnterGame { MapId = state.MapId, CharacterId = state.CharacterId });
         }
 
 
@@ -149,34 +157,11 @@ namespace Server.Game.Actor.Domain.ACharacter
                     await CS_HandleCharacterLevelDungeon(cs_CharacterLevelDungeon);
                     break;
 
-                case CS_CharacterMove cs_CharacterMove:
-                    await CS_HandleCharacterMove(cs_CharacterMove);
-                    break;
-                case CS_CharacterCastSkill cs_CharacterCastSkill:
-                    await CS_HandleCharacterCastSkill(cs_CharacterCastSkill);
-                    break;
-
-                case CS_StartDungeon cs_StartDungeon:
-                    await CS_HandleStartDungeon(cs_StartDungeon);
-                    break;
-                case CS_DungeonLootChoice cs_DungeonLootChoice:
-                    await CS_DungeonLootChoice(cs_DungeonLootChoice);
-                    break;
-
-
                 case CS_QueryInventory cs_QueryInventory:
                     await CS_HandleQueryInventory(cs_QueryInventory);
                     break;
                 case CS_SwapStorageSlot cs_SwapInventorySlot:
                     await CS_HandleSwapStorageSlot(cs_SwapInventorySlot);
-                    break;
-
-
-                case CS_CreateTeam cs_CreateDungeonTeam:
-                    await CS_HandleCreateTeam(cs_CreateDungeonTeam);
-                    break;
-                case CS_TeamInvite cs_TeamInvite:
-                    await CS_HandleTeamInvite(cs_TeamInvite);
                     break;
 
 
@@ -207,21 +192,22 @@ namespace Server.Game.Actor.Domain.ACharacter
 
         private async void OnActivateNode(QuestNode node)
         {
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_QuestAccepted, node));
+            await TellGateway(state.PlayerId, Protocol.SC_QuestAccepted, node);
         }
 
         private async void OnQuestCompleted(string nodeId)
         {
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_QuestCompleted, nodeId));
+            await TellGateway(state.PlayerId, Protocol.SC_QuestCompleted, nodeId);
         }
 
 
-        private EntityRuntime CreateRuntimeFromState()
+        private async Task<EntityRuntime> CreateRuntimeFromState()
         {
             var entity = new EntityRuntime();
             var identity = new IdentityComponent
             {
                 EntityId = state.EntityId,
+                CharacterId = state.CharacterId,
                 Name = state.Name,
                 Type = EntityType.Character,
                 TemplateId = string.Empty,
@@ -241,6 +227,7 @@ namespace Server.Game.Actor.Domain.ACharacter
             var stats = new StatsComponent
             {
                 Level = state.Level,
+                CurrentHp = state.Hp,
                 CurrentEx = state.Exp,
                 
                 BaseStats = new Dictionary<AttributeType, float>(state.BaseAttributes),
@@ -260,19 +247,14 @@ namespace Server.Game.Actor.Domain.ACharacter
                 SpawnPoint = Vector3.Zero
             };
 
-            var profile = new CharacterProfileComponent
-            {
-                PlayerId = state.PlayerId,
-                CharacterId = state.CharacterId,
-            };
-
-            entity.Add(profile);
             entity.Add(worldRef);
             entity.Add(skillBook);
             entity.Add(stats);
             entity.Add(kinematics);
             entity.Add(identity);
-
+            var sessionActor = System.SessionRouter.GetByPlayerId(state.PlayerId);
+           
+            await TellAsync(sessionActor, new CharacterWorldSync(state.MapId, state.DungeonId));
             return entity;
         }
     }

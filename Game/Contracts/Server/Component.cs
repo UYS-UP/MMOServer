@@ -8,9 +8,10 @@ namespace Server.Game.Contracts.Server
 
     public class IdentityComponent : IEntityComponent
     {
-        public int EntityId;         // 运行时唯一ID (如 Runtime_GUID)
+        public int EntityId;
+        public string CharacterId;
         public EntityType Type;
-        public string TemplateId;       // 配置表ID (怪物、NPC、武器等)
+        public string TemplateId; 
         public string Name;
     }
 
@@ -27,7 +28,7 @@ namespace Server.Game.Contracts.Server
     {
         public int Level;
         public float CurrentHp;
-        public float CurrentEx;
+        public long CurrentEx;
 
         public Dictionary<AttributeType, float> BaseStats = new Dictionary<AttributeType, float>();
         public Dictionary<AttributeType, float> ExtraAttributes = new Dictionary<AttributeType, float>();
@@ -46,11 +47,6 @@ namespace Server.Game.Contracts.Server
         public Vector3 SpawnPoint;
     }
 
-    public class CharacterProfileComponent : IEntityComponent
-    {
-        public string PlayerId;
-        public string CharacterId;
-    }
 
     public class MonsterComponent : IEntityComponent
     {
@@ -70,7 +66,7 @@ namespace Server.Game.Contracts.Server
     {
         None,
         MaxHp,
-        MaxEx,
+        MaxExp,
         MaxStamina,
         Attack,
         Defence,

@@ -1,6 +1,9 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using MessagePack;
 using NPOI.SS.Formula.Functions;
 using Server.DataBase.Entities;
+using Server.Game.Actor.Core;
+using Server.Game.Actor.Domain.ASession;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Common;
 using Server.Game.Contracts.Network;
@@ -30,13 +33,16 @@ namespace Server.Game.World
         public readonly AOIService AOI;
         public readonly NavVolumeService Nav;
         public readonly ICombatContext Combat;
+        public readonly ActorBase Actor;
 
         private readonly AStarPathfind pathfinder;
         private int tickCounter;
 
         private readonly Queue<IWorldEvent> eventQueue = new Queue<IWorldEvent>();
 
+
         protected EntityWorld(
+            ActorBase actor,
             EntityContext context,
             SkillSystem skill,
             BuffSystem buff,
@@ -51,6 +57,7 @@ namespace Server.Game.World
             AreaBuff = areaBuff;
             AOI = aoi;
             Nav = nav;
+            Actor = actor;
 
             this.pathfinder = pathfinder;
 
@@ -69,16 +76,16 @@ namespace Server.Game.World
             eventQueue.Enqueue(worldEvent);
         }
 
-        protected virtual void ProccessWorldEvents()
+        protected virtual async Task ProccessWorldEvents()
         {
             while(eventQueue.Count > 0)
             {
                 var ev = eventQueue.Dequeue();
-                HandleWorldEvent(ev);
+                await HandleWorldEvent(ev);
             }
         }
 
-        protected virtual void HandleWorldEvent(IWorldEvent ev)
+        protected virtual async Task HandleWorldEvent(IWorldEvent ev)
         {
             switch(ev)
             {
@@ -91,58 +98,59 @@ namespace Server.Game.World
                             Source = damageWorldEvent.Source,
                             Tick = Context.Tick,
                         };
-                        BroadcastToVisible(damageWorldEvent.Source, Protocol.SC_EntityDamage, payload, true);
+                        await BroadcastToVisible(damageWorldEvent.Source, Protocol.SC_EntityDamage, payload, true);
                         break;
                     }
                 case ExecuteSkillWorldEvent executeSkillWorldEvent:
                     {
-                        // Console.WriteLine("ExecuteSkill:" + executeSkillWorldEvent.SkillId);
                         var payload = new ServerEntityCastSkill(Context.Tick, executeSkillWorldEvent.Caster.EntityId, executeSkillWorldEvent.SkillId,
                                 executeSkillWorldEvent.Caster.Kinematics.Position, executeSkillWorldEvent.Caster.Kinematics.Yaw, executeSkillWorldEvent.Caster.Kinematics.State);
-                        BroadcastToVisible(executeSkillWorldEvent.Caster.EntityId, Protocol.SC_EntityCastSkill, payload, false);
+                        await BroadcastToVisible(executeSkillWorldEvent.Caster.EntityId, Protocol.SC_EntityCastSkill, payload, false);
                     }
                     break;
             }
         }
 
 
-        private void BroadcastToVisible(int entityId, Protocol protocol, object payload, bool isInclude = false)
+        private async Task BroadcastToVisible(int entityId, Protocol protocol, object payload, bool isInclude = false)
         {
             var wathcers = AOI.GetVisibleSet(entityId);
             if(isInclude) wathcers.Add(entityId);
             if (wathcers.Count == 0) return;
-            var playerIds = Context.GetPlayerIdsByEntityIds(wathcers);
-            if(playerIds.Count == 0) return;
-            Context.Gateway.AddSend(playerIds, protocol, payload);
+            var characterIds = Context.GetCharacterIdsByEntityIds(wathcers);
+            if(characterIds.Count == 0) return;
+            var bytes = MessagePackSerializer.Serialize(payload);
+            foreach ( var characterId in characterIds)
+            {
+                await Actor.TellGateway(characterId, protocol, bytes);
+            }
+            
             
            
         }
 
 
-        public virtual void HandleCharacterSpawn(EntityRuntime entity)
+        public virtual Task HandleCharacterSpawn(EntityRuntime entity)
         {
-            
+            return Task.CompletedTask;
         }
 
 
-        public void HandleCharacterDespawn(int entityId)
+        public async Task HandleCharacterDespawn(int entityId)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
 
-            // 1. 销毁实体
             Context.RemoveEntity(entityId);
-
-            // 2. 向AOI范围内的其他玩家广播实体销毁
 
             var payload = new ServerEntityDespawn(
                 Context.Tick,
                 new HashSet<int> { entityId }
             );
-            BroadcastToVisible(entityId, Protocol.SC_EntityDespawn, payload);
+            await BroadcastToVisible(entityId, Protocol.SC_EntityDespawn, payload);
         }
 
 
-        public void HandleCharacterMove(int clientTick, int entityId, Vector3 pos, float yaw, Vector3 dir)
+        public async Task HandleCharacterMove(int clientTick, int entityId, Vector3 pos, float yaw, Vector3 dir)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
             bool isValid = Nav.IsValidVector3(pos);
@@ -158,15 +166,15 @@ namespace Server.Game.World
                entity.Kinematics.Position, entity.Kinematics.Yaw,
                entity.Kinematics.Direction, entity.Kinematics.Speed,
                isValid);
+            var bytes = MessagePackSerializer.Serialize(payload);
+            await Actor.TellGateway(entity.Identity.CharacterId, Protocol.SC_CharacterMove, bytes);
 
-            Context.Gateway.AddSend(entity.Profile.PlayerId, Protocol.SC_CharacterMove, payload);
         }
 
         public void HandleEntityMove(int entityId, Vector3 pos, float yaw, Vector3 dir)
         {
             if (!Context.TryGetEntity(entityId, out var entity)) return;
             bool isValid = Nav.IsValidVector3(pos);
-            // Console.WriteLine($"Entity Pos: {pos}, Yaw: {yaw}, Dir: {dir}");
             if (isValid)
             {
                 entity.Kinematics.Position = pos;
@@ -200,7 +208,7 @@ namespace Server.Game.World
             entity.HFSM.Ctx.OnRequestSkill(castData);
         }
 
-        public virtual void OnTickUpdate(int tick, float deltaTime)
+        public virtual async Task OnTickUpdate(int tick, float deltaTime)
         {
             tickCounter++;
             Context.Tick = tick;
@@ -211,16 +219,16 @@ namespace Server.Game.World
 
             UpdateAI(deltaTime);
             UpdateFSM(deltaTime);
-            ProccessWorldEvents();
+            await ProccessWorldEvents();
 
             if (tickCounter % 2 == 0)
             {
-                BroadcastMovement();
+                await BroadcastMovement();
             }
         }
 
 
-        private void BroadcastMovement()
+        private async Task BroadcastMovement()
         {
             foreach (var kv in Context.Entities)
             {
@@ -228,38 +236,37 @@ namespace Server.Game.World
                 var (enterWatchers, leaveWatchers) = AOI.Update(entity.EntityId, entity.Kinematics.Position);
                 if (enterWatchers.Count > 0)
                 {
-                    var players = Context.GetPlayerIdsByEntityIds(enterWatchers);
-                    if (players.Count != 0)
+                    var characterIds = Context.GetCharacterIdsByEntityIds(enterWatchers);
+                    if (characterIds.Count != 0)
                     {
                         var spawnEntity = Context.GetNetworkEntityByEntityId(entity.EntityId);
                         var payload = new ServerEntitySpawn(
                             Context.Tick,
                             spawnEntity
                         );
-
-                        Context.Gateway.AddSend(
-                            players,
-                            Protocol.SC_EntitySpawn,
-                            payload
-                        );
+                        var bytes = MessagePackSerializer.Serialize(payload);
+                        foreach (var characterId in characterIds)
+                        {
+                            await Actor.TellGateway(characterId, Protocol.SC_EntitySpawn, bytes);
+                        }
                     }
                 }
 
                 if (leaveWatchers.Count > 0)
                 {
-                    var players = Context.GetPlayerIdsByEntityIds(leaveWatchers);
-                    if (players.Count != 0)
+                    var characterIds = Context.GetCharacterIdsByEntityIds(leaveWatchers);
+                    if (characterIds.Count != 0)
                     {
                         var payload = new ServerEntityDespawn(
                             Context.Tick,
                             new HashSet<int> { entity.EntityId }
                         );
-
-                        Context.Gateway.AddSend(
-                            players,
-                            Protocol.SC_EntityDespawn,
-                            payload
-                        );
+                        var bytes = MessagePackSerializer.Serialize(payload);
+                        foreach (var characterId in characterIds)
+                        {
+                            await Actor.TellGateway(characterId, Protocol.SC_EntityDespawn, bytes);
+                        }
+   
                     }
 
 
@@ -288,7 +295,7 @@ namespace Server.Game.World
                         entity.Kinematics.Speed
                     );
                     Context.UpdateEntityLastBroadcast(entity.EntityId, snap);
-                    BroadcastToVisible(entity.EntityId, Protocol.SC_EntityMove, payload);
+                    await BroadcastToVisible(entity.EntityId, Protocol.SC_EntityMove, payload);
 
                 }
 
@@ -309,10 +316,10 @@ namespace Server.Game.World
         }
 
 
-        protected virtual void HandleEntityDeath(int entityId, EntityType entityType)
+        protected virtual async Task HandleEntityDeath(int entityId, EntityType entityType)
         {
             var payload = new ServerEntityDespawn(Context.Tick, new HashSet<int> { entityId });
-            BroadcastToVisible(entityId, Protocol.SC_EntityDespawn, payload);
+            await BroadcastToVisible(entityId, Protocol.SC_EntityDespawn, payload);
 
             AOI.Remove(entityId);
             Context.RemoveEntity(entityId);

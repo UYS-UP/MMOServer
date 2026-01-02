@@ -132,7 +132,13 @@ namespace Server.Game.Contracts.Network
     }
 
     [MessagePackObject]
-    public class ServerAddItem
+    public class ServerEntityStatsUpdate
+    {
+
+    }
+
+    [MessagePackObject]
+    public class ServerSlotUpdated
     {
         [Key(0)] public Dictionary<SlotKey, ItemData> Items;
         [Key(1)] public int MaxSize;
@@ -351,6 +357,14 @@ namespace Server.Game.Contracts.Network
             Requests = requests;
             Friends = friends;
         }
+    }
+
+
+    [MessagePackObject]
+    public class ServerEnterGame
+    {
+        [Key(0)] public string CharacterId;
+        [Key(1)] public int MapId;
     }
 
     [MessagePackObject]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.Network;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace Server.Game.Actor.Core
 {
     public interface IActorSystem
     {
+        ActorEventBus EventBus { get; }
+        SessionRouter SessionRouter { get; }
         ActorBase GetActor(string actorId);
         Task<string> CreateActor<T>(T actor) where T : ActorBase;
         bool IsActorAlive(string actorId);

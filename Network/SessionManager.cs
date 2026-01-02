@@ -15,7 +15,6 @@ namespace Server.Network
     {
         private readonly ConcurrentDictionary<EndPoint, ISession> sessions = new();
         private readonly ConcurrentDictionary<Guid, EndPoint> sessionIdToEndPoint = new();
-        private readonly ConcurrentDictionary<string, Guid> accountToSessionId = new();
 
         public int ConnectionCount => sessions.Count;
 
@@ -33,26 +32,6 @@ namespace Server.Network
             return ses;
         }
 
-        /// <summary>
-        /// 绑定账号到会话（登录成功后由上层调用；供 NetworkGatewayActor 发包按账号寻址）
-        /// </summary>
-        public void BindSessionToAccount(Guid sessionId, string accountId)
-        {
-            if (string.IsNullOrEmpty(accountId)) return;
-
-            if (sessionIdToEndPoint.TryGetValue(sessionId, out var ep) &&
-                sessions.TryGetValue(ep, out var ses))
-            {
-                // 清理旧绑定（若同一账号重登）
-                if (!string.IsNullOrEmpty(ses.PlayerId) && accountToSessionId.TryGetValue(ses.PlayerId, out var oldSid))
-                {
-                    if (oldSid == sessionId) accountToSessionId.TryRemove(ses.PlayerId, out _);
-                }
-
-                ses.PlayerId = accountId;
-                accountToSessionId[accountId] = sessionId;
-            }
-        }
 
         /// <summary>
         /// 根据会话ID移除会话；返回被移除的会话以便上层触发 OnSessionClosed → 通知 SessionActor
@@ -65,11 +44,6 @@ namespace Server.Network
             if (sessions.TryRemove(ep, out var ses))
             {
                 removed = ses;
-
-                if (!string.IsNullOrEmpty(ses.PlayerId))
-                    accountToSessionId.TryRemove(ses.PlayerId, out _);
-
-                // 仅关闭网络与本地状态（领域事件由 SessionActor 统一发布）
                 ses.Close();
 
                 sessionIdToEndPoint.TryRemove(sessionId, out _);
@@ -87,12 +61,6 @@ namespace Server.Network
                    && sessions.TryGetValue(ep, out session);
         }
 
-        public bool TryGetSessionByAccount(string accountId, out ISession session)
-        {
-            session = null;
-            return accountToSessionId.TryGetValue(accountId ?? string.Empty, out var sid)
-                   && TryGetSession(sid, out session);
-        }
 
         public IEnumerable<ISession> GetAllSessions() => sessions.Values;
         public IEnumerable<Guid> GetAllSessionIds() => sessionIdToEndPoint.Keys;
@@ -105,7 +73,6 @@ namespace Server.Network
                 sessions.TryRemove(kv.Key, out _);
             }
             sessionIdToEndPoint.Clear();
-            accountToSessionId.Clear();
         }
 
         #region Inner Session

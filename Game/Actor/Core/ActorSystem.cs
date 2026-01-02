@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.Network;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,14 @@ namespace Server.Game.Actor.Core
     public class ActorSystem : IActorSystem
     {
         private readonly ConcurrentDictionary<string, ActorBase> actors = new ConcurrentDictionary<string, ActorBase>();
+        public  ActorEventBus EventBus { get; }
+        public  SessionRouter SessionRouter { get; }
+
+        public ActorSystem()
+        {
+            this.EventBus = new ActorEventBus(this);
+            this.SessionRouter = new SessionRouter();
+        }
 
         public ActorBase GetActor(string actorId)
         {

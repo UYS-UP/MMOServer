@@ -47,6 +47,21 @@ namespace Server.Game.Contracts.Network
         }
     }
 
+
+    [MessagePackObject]
+    public class ClientUseItem
+    {
+        [Key(0)] public SlotKey Slot { get; set; }
+        [Key(1)] public string InstanceId { get; set; }
+    }
+
+    [MessagePackObject]
+    public class ClientDropItem
+    {
+        [Key(0)] public SlotKey Slot { get; set; }
+        [Key(1)] public string InstanceId { get; set; }
+    }
+
     [MessagePackObject]
     public class ClientCreateCharacter
     {
@@ -122,13 +137,6 @@ namespace Server.Game.Contracts.Network
     }
 
     [MessagePackObject]
-    public class ClientCreateDungeonTeam
-    {
-        [Key(0)] public string TemplateId;
-        [Key(1)] public string TeamName;
-    }
-
-    [MessagePackObject]
     public class ClientEnterGame { 
         [Key(0)] public string CharacterId; 
     }
@@ -153,6 +161,19 @@ namespace Server.Game.Contracts.Network
     public class ClientEnterDungeon 
     {
         [Key(0)] public string DungeonTemplateId;
+    }
+
+    [MessagePackObject]
+    public class ClientCreateTeam
+    {
+        [Key(0)] public string CharacterName;
+        [Key(1)] public int CharacterLevel;
+    }
+
+    [MessagePackObject]
+    public class ClientQuitTeam
+    {
+        [Key(0)] public int TeamId;
     }
 
     [MessagePackObject]

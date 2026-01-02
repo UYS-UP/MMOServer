@@ -1,4 +1,5 @@
-﻿using Server.Data.Game.Json.ItemJson;
+﻿using Org.BouncyCastle.Math.EC.Multiplier;
+using Server.Data.Game.Json.ItemJson;
 using Server.DataBase.Entities;
 using Server.Game.Contracts.Server;
 using System;
@@ -12,6 +13,48 @@ namespace Server.Game.Actor.Domain.ACharacter
     public class AttributeManager
     {
         
+        public Dictionary<AttributeType, float> CalculateAttributeChange(EquipData newItem, EquipData oldItem)
+        {
+            var delta = new Dictionary<AttributeType, float>();
+            if (newItem != null)
+            {
+                var newStats = GetItemTotalStats(newItem);
+                foreach (var kvp in newStats)
+                {
+                    AddStat(delta, kvp.Key, kvp.Value);
+                }
+            }
+
+            if (oldItem != null)
+            {
+                var oldStats = GetItemTotalStats(oldItem);
+                foreach (var kvp in oldStats)
+                {
+                    // 减去旧属性值
+                    AddStat(delta, kvp.Key, -kvp.Value);
+                }
+            }
+            return delta;
+        }
+
+        public Dictionary<AttributeType, float> GetItemTotalStats(EquipData equip)
+        {
+            var total = new Dictionary<AttributeType, float>();
+            if (equip.BaseAttributes != null)
+            {
+                foreach (var kvp in equip.BaseAttributes)
+                {
+                    AddStat(total, kvp.Key, kvp.Value);
+                }
+            }
+
+            if (equip.ForgeLevel > 0)
+            {
+                var keys = new List<AttributeType>(total.Keys);
+                foreach (var k in keys) total[k] *= (1 + equip.ForgeLevel * 0.05f);
+            }
+            return total;
+        }
 
 
         public Dictionary<AttributeType, float> CalculateCharacterAttributes(Character character)

@@ -1,5 +1,5 @@
 ﻿using Server.DataBase.Entities;
-using Server.Game.Actor.Domain.Gateway;
+using Server.Game.Actor.Domain.ASession;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Network;
 using Server.Game.Contracts.Server;
@@ -26,12 +26,12 @@ namespace Server.Game.Actor.Domain.ACharacter
                     items[changedSlot] = value;
                 }
             }
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerAddItem { Items = items, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) }));
+            await TellGateway(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerSlotUpdated { Items = items, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) });
 
             var progress = quest.OnEvent(message);
             if (progress.Count == 0) return;
 
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_QuestUpdated, new ServerQuestProgressUpdate { QuestUpdates = progress }));
+            await TellGateway(state.PlayerId, Protocol.SC_QuestUpdated, new ServerQuestProgressUpdate { QuestUpdates = progress });
 
         }
 
@@ -51,13 +51,13 @@ namespace Server.Game.Actor.Domain.ACharacter
 
             if (items.Count > 0)
             {
-                await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerAddItem { Items = items, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) }));
+                await TellGateway(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerSlotUpdated { Items = items, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) });
             }
 
             var progress = quest.OnEvent(message);
             if (progress.Count == 0) return;
 
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_QuestUpdated, new ServerQuestProgressUpdate { QuestUpdates = progress }));
+            await TellGateway(state.PlayerId, Protocol.SC_QuestUpdated, new ServerQuestProgressUpdate { QuestUpdates = progress });
 
         }
 
@@ -73,24 +73,29 @@ namespace Server.Game.Actor.Domain.ACharacter
             }
             if (items.Count > 0)
             {
-                await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerAddItem { Items = items, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) }));
+                await TellGateway(state.PlayerId, Protocol.SC_AddInventoryItem, new ServerSlotUpdated { Items = items, MaxSize = storage.GetMaxOccupiedSlotIndex(SlotContainerType.Inventory) });
             }
 
             var progress = quest.OnEvent(message);
             if (progress.Count == 0) return;
 
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_QuestUpdated, new ServerQuestProgressUpdate { QuestUpdates = progress }));
+            await TellGateway(state.PlayerId, Protocol.SC_QuestUpdated, new ServerQuestProgressUpdate { QuestUpdates = progress });
 
         }
 
         private async Task HandleLevelDungeon(A_LevelDungeon message)
         {
             state.DungeonId = -1;
-            await TellGateway(new SendToPlayer(state.PlayerId, Protocol.SC_LevelDungeon, new ServerLevelDungeon
+            var sessionActor = System.SessionRouter.GetByPlayerId(state.PlayerId);
+            await TellAsync(sessionActor, new CharacterWorldSync(state.MapId, state.DungeonId));
+            await TellGateway(
+                state.PlayerId, 
+                Protocol.SC_LevelDungeon, 
+                new ServerLevelDungeon
             {
                 Cause = string.Empty,
                 MapId = state.MapId,
-            }));
+            });
         }
 
 

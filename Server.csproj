@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Game\Actor\Domain\AGateway\" />
     <Folder Include="Game\Actor\Domain\ASocial\" />
   </ItemGroup>
 

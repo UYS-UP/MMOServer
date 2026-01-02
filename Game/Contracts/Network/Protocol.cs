@@ -14,7 +14,7 @@ namespace Server.Game.Contracts.Network
         SC_Login,
         SC_Register,
         SC_CreateCharacter,
-
+        SC_EnterGame,
         SC_EnterRegion,
         SC_LevelDungeon,
         SC_EnterDungeon,
@@ -29,6 +29,7 @@ namespace Server.Game.Contracts.Network
         SC_ApplyBuff,
         SC_EntityDamage,
 
+        SC_EntityStatsUpdate,
 
         SC_DungeonLootInfo,
         SC_DungeonLootChoice,
@@ -40,6 +41,8 @@ namespace Server.Game.Contracts.Network
         SC_QueryInventory,
         SC_AddInventoryItem,
         SC_SwapStorageSlot,
+        SC_UseItem,
+        SC_DropItem,
 
         SC_FriendListSync,
 
@@ -68,8 +71,9 @@ namespace Server.Game.Contracts.Network
         CS_QueryInventory,
         CS_SwapStorageSlot,
         CS_UseItem,
+        CS_DropItem,
 
-        CS_CreateDungeonTeam,
+        CS_CreateTeam,
         CS_TeamInvite,
         CS_AcceptInvite,
 
@@ -85,6 +89,7 @@ namespace Server.Game.Contracts.Network
         CS_AcceptQuest,
         CS_SubmitQuest,
         GM_AddItem,
+        CS_QuitTeam,
     }
 
     public enum StateCode

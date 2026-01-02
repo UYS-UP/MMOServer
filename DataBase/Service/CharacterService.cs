@@ -32,6 +32,7 @@ namespace Server.DataBase.Service
                     CharacterId = Guid.NewGuid().ToString(),
                     PlayerId = playerId,
                     Name = name,
+                    Hp = 1000,
                     Level = 1,
                     Exp = 0,
                     Gold = 0,
@@ -39,8 +40,9 @@ namespace Server.DataBase.Service
                     ServerId = serverId,
                     Attributes = new Dictionary<AttributeType, float>
                 {
-                    { AttributeType.MaxHp, 100 },
-                    { AttributeType.MaxEx, 100 }
+                    { AttributeType.MaxHp, 1000},
+                    { AttributeType.MaxExp, 1000},
+                    { AttributeType.Attack, 50 }
                 },
                     CreateTime = DateTime.UtcNow,
                     LastLoginTime = DateTime.UtcNow

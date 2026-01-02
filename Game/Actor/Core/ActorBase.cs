@@ -1,7 +1,10 @@
-﻿using NPOI.SS.Formula.Functions;
+﻿using MessagePack;
+using NPOI.SS.Formula.Functions;
 using Org.BouncyCastle.Asn1.Ocsp;
-using Server.Game.Actor.Domain.Gateway;
+using Server.Game.Actor.Domain.ASession;
 using Server.Game.Contracts.Actor;
+using Server.Game.Contracts.Common;
+using Server.Game.Contracts.Network;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -97,9 +100,18 @@ namespace Server.Game.Actor.Core
             }
         }
 
-        public async ValueTask TellGateway(IActorMessage message)
+        public async ValueTask TellGateway<T>(string playerId, Protocol protocol, T payload)
         {
-            await TellAsync(nameof(GatewayActor), message);
+            var sessionActor = System.SessionRouter.GetByPlayerId(playerId);
+            var bytes = MessagePackSerializer.Serialize<T>(payload);
+            await TellAsync(sessionActor, new SendTo(protocol, bytes));
+        }
+
+
+        public async ValueTask TellGateway(string characterId, Protocol protocol, byte[] bytes)
+        {
+            var sessionActor = System.SessionRouter.GetByCharacterId(characterId);
+            await TellAsync(sessionActor, new SendTo(protocol, bytes));
         }
 
         // 子类实现消息处理逻辑

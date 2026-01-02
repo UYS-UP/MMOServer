@@ -1,8 +1,10 @@
-﻿using Org.BouncyCastle.Asn1.Ocsp;
+﻿using Google.Protobuf;
+using MessagePack;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Ocsp;
 using Server.Data;
 using Server.Game.Actor.Core;
-using Server.Game.Actor.Domain.Gateway;
+using Server.Game.Actor.Domain.ACharacter;
 using Server.Game.Contracts.Actor;
 using Server.Game.Contracts.Common;
 using Server.Game.Contracts.Network;
@@ -29,62 +31,71 @@ namespace Server.Game.Actor.Domain.Team
         {
             switch (message)
             {
-                case A_CreateTeam createDungeonTeam:
+                case CS_CreateTeam createDungeonTeam:
                     await HandleCreateDungeonTeam(createDungeonTeam);
                     break;
-                case A_StartDungeon startDungeon:
+                case CS_StartDungeon startDungeon:
                     await HandleStartDungeon(startDungeon);
                     break;
-                case A_QuitTeam quitTeam:
+                case CS_QuitTeam quitTeam:
                     await HandleQuitTeam(quitTeam);
                     break;
-                case A_EnterTeam enterTeam:
+                case CS_EnterTeam enterTeam:
                     await HandleEnterTeam(enterTeam);
                     break;
 
             }
         }
 
-        private async Task HandleQuitTeam(A_QuitTeam message)
+        private async Task HandleQuitTeam(CS_QuitTeam message)
         {
             if (!teams.TryGetValue(message.TeamId, out var team)) return;
-            if (!team.IsLeader(message.PlayerId))
+            if (!team.IsLeader(message.CharacterId))
             {
                 // 如果退出的是队长，直接解散
-                await TellGateway(new SendToPlayers(team.GetMemberPlayerIds(), Protocol.SC_TeamQuited, "队伍已解散"));
+                var bytes = MessagePackSerializer.Serialize("队伍已经解散");
+                foreach(var member in team.Members)
+                {
+                    await TellGateway(member.Key, Protocol.SC_TeamQuited, bytes);
+                }
+               
                 teams.Remove(message.TeamId);
                 return;
             }
 
-            await TellGateway(new SendToPlayer(message.PlayerId, Protocol.SC_TeamQuited, "退出队伍成功"));
-            team.Members.Remove(message.PlayerId);
+            await TellGateway(message.CharacterId, 
+                Protocol.SC_TeamQuited, 
+                MessagePackSerializer.Serialize("退出队伍成功"));
+            team.Members.Remove(message.CharacterId);
 
         }
 
-        private async Task HandleCreateDungeonTeam(A_CreateTeam message)
+        private async Task HandleCreateDungeonTeam(CS_CreateTeam message)
         {
             // 3. 通知客户端
             var leader = new TeamMember
             {
                 CharacterId = message.CharacterId,
                 Level = message.CharacterLevel,
-                PlayerId = message.PlayerId,
                 Name = message.CharacterName
             };
 
-            var team = new TeamData(++nextTeamId, message.TeamName, leader, 5);
+            var team = new TeamData(++nextTeamId, leader, 5);
 
             teams.Add(team.TeamId, team);
-            await TellGateway(new SendToPlayer(message.PlayerId, Protocol.SC_TeamCreated, new ServerCreateDungeonTeam(true, "创建成功", team)));
+
+            var bytes = MessagePackSerializer.Serialize(new ServerCreateDungeonTeam(true, "创建成功", team));
+            await TellGateway(message.CharacterId, Protocol.SC_TeamCreated, bytes);
         }
 
 
-        private async Task HandleStartDungeon(A_StartDungeon message)
+        private async Task HandleStartDungeon(CS_StartDungeon message)
         {
             if (!teams.TryGetValue(message.TeamId, out var team)) return;
-            if (!team.IsLeader(message.PlayerId))
+            if (!team.IsLeader(message.CharacterId))
             {
-                await TellGateway(new SendToPlayer(message.PlayerId, Protocol.SC_StartDungeon, "只有队长可以发起进入副本"));
+                var bytes = MessagePackSerializer.Serialize("只有队长可以发起进入副本");
+                await TellGateway(message.CharacterId, Protocol.SC_StartDungeon, bytes);
                 return;
             }
 
@@ -95,19 +106,20 @@ namespace Server.Game.Actor.Domain.Team
             
         }
 
-        private async Task HandleEnterTeam(A_EnterTeam message)
+        private async Task HandleEnterTeam(CS_EnterTeam message)
         {
+            byte[] bytes;
             if(!teams.TryGetValue(message.TeamId, out var team))
             {
-                await TellGateway(new SendToPlayer(message.PlayerId, Protocol.SC_EnterTeam, 
-                    new ServerEnterTeam(false, "队伍不存在", null)));
+                bytes = MessagePackSerializer.Serialize(new ServerEnterTeam(false, "队伍不存在", null));
+                await TellGateway(message.CharacterId, Protocol.SC_EnterTeam, bytes);
                 return;
             }
 
             if(team.Members.Count >= team.MaxPlayers)
             {
-                await TellGateway(new SendToPlayer(message.PlayerId, Protocol.SC_EnterTeam,
-                    new ServerEnterTeam(false, "队伍人数已满", null)));
+                bytes = MessagePackSerializer.Serialize(new ServerEnterTeam(false, "队伍人数已满", null));
+                await TellGateway(message.CharacterId, Protocol.SC_EnterTeam, bytes);
                 return;
             }
 
@@ -115,14 +127,12 @@ namespace Server.Game.Actor.Domain.Team
             {
                 CharacterId = message.CharacterId,
                 Level = message.Level,
-                PlayerId = message.PlayerId,
                 Name = message.CharacterName
             };
 
-            team.Members[member.PlayerId] = member;
-
-            await TellGateway(new SendToPlayer(message.PlayerId, Protocol.SC_EnterTeam,
-                new ServerEnterTeam(true, "加入队伍成功", team)));
+            team.Members[member.CharacterId] = member;
+            bytes = MessagePackSerializer.Serialize(new ServerEnterTeam(true, "加入队伍成功", team));
+            await TellGateway(message.CharacterId, Protocol.SC_EnterTeam, bytes);
 
 
 
